@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<project name="replace" description="Akeeba Replace" default="all" >
+	<import file="${phing.dir}/../../buildfiles/phing/common.xml" />
+
+	<property name="dirs.kickstart" value="../source" />
+	<property name="dirs.translations" value="../translations" />
+
+	<!--
+	====================================================================================================
+	Tasks - General
+	====================================================================================================
+	-->
+
+	<target name="git" description="Makes only packages, not the documentation"
+			depends="new-release,setup-properties,plugin,standalone">
+	</target>
+	
+	<target name="documentation" description="Creates the documentation packages"
+		depends="doc-main-pdf">
+	</target>
+
+	<!--
+	====================================================================================================
+	Tasks - Documentation
+	====================================================================================================
+	-->
+
+    <target name="doc-main-pdf" description="Documentation for Kickstart in PDF format">
+		<phingcall target="docbook-pdf">
+			<property name="docs.input" value="replace.xml" />
+		</phingcall>
+	</target>
+
+	<!--
+	====================================================================================================
+	Tasks - Utilities
+	====================================================================================================
+	-->
+	
+	<target name="plugin" depends="setup-properties">
+
+	</target>
+
+	<target name="standalone" depends="setup-properties">
+
+	</target>
+
+	<!--
+	====================================================================================================
+	Tasks - Project management
+	====================================================================================================
+	-->
+
+	<target name="docsdeploy" depends="docsdeploy-replace">
+		<echo>All Kickstart documentation has been uploaded</echo>
+	</target>
+	
+	<target name="docsdeploy-replace" >
+		<phingcall target="docbook-deploy">
+			<property name="docsdeploy.path.source" value="" />
+			<property name="docsdeploy.path.target" value="replace" />
+		</phingcall>
+	</target>
+</project>
