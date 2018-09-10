@@ -15,6 +15,7 @@
     "Database/Query/Pdo.php",
     "Detection/DetectionInterface.php",
     "Detection/WordPress.php",
-    "Replacement/Replacement.php"
+    "Replacement/Replacement.php",
+    "Replacement/Timer.php"
   ]
 }
