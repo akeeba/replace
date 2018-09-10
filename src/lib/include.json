@@ -1,5 +1,18 @@
 {
   "order": [
+    "Database/DatabaseInterface.php",
+    "Database/Driver.php",
+    "Database/Query.php",
+    "Database/QueryElement.php",
+    "Database/QueryLimitable.php",
+    "Database/QueryPreparable.php",
+    "Database/Driver/Mysqli.php",
+    "Database/Driver/Mysql.php",
+    "Database/Driver/Pdo.php",
+    "Database/Driver/Pdomysql.php",
+    "Database/Query/Mysqli.php",
+    "Database/Query/Mysql.php",
+    "Database/Query/Pdo.php",
     "Detection/DetectionInterface.php",
     "Detection/WordPress.php",
     "Replacement/Replacement.php"
