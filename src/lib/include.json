@@ -1,5 +1,7 @@
 {
   "order": [
+    "Detection/DetectionInterface.php",
+    "Detection/WordPress.php",
     "Replacement/Replacement.php"
   ]
 }
