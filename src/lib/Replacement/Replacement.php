@@ -6,7 +6,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
  */
 
-namespace Akeeba\Replace;
+namespace Akeeba\Replace\Replacement;
 
 /**
  * A class to intelligently handle replacement of plain text and serialized data.
