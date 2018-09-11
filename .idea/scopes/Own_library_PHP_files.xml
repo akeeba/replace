@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Own library PHP files" pattern="file[Akeeba Replace]:src/lib//*.php" />
+</component>

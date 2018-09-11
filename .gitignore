@@ -70,3 +70,5 @@ release/**
 
 src/wp/lib
 src/wp/readme.txt
+
+vendor

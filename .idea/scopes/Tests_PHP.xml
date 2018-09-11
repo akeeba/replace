@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Tests PHP" pattern="file[Akeeba Replace]:Tests//*.php" />
+</component>
