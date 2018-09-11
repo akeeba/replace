@@ -1,40 +1,27 @@
 # Akeeba Replace
 
-A database replace script for WordPress
+A database replace script for WordPress.
 
-## Prerequisites
+[Download from our GitHub releases](https://github.com/akeeba/replace/releases).
 
-In order to build the scripts in this distribution you need to have the following tools:
+## Under Development
 
-- A command line environment. bash under Linux / Mac OS X works best. On Windows you will need to run most tools using an elevated privileges (administrator) command prompt.
+This script and plugin is currently under development. It's not ready to be used (yet). Stay tuned!
 
-- The PHP CLI binary in your path
+## Main features
 
-- Command line Subversion and Git binaries(*)
+### Currently implemented
 
-- PEAR and Phing installed, with the Net_FTP and VersionControl_SVN PEAR packages installed
+> This section will be filled in as we develop each feature, also noting the version it was made available in.
 
-- libxml and libxslt tools if you intend to build the documentation PDF files
+### Planned features
 
-You will also need the following path structure on your system
-
-- buildfiles	Akeeba Build Tools (https://github.com/akeeba/buildfiles)
-
-You will need to use the exact folder names specified here.
-
-## Useful Phing tasks
-
-All of the following commands are to be run from the build subdirectory.
-
-1. Relinking internal files
-
-   This is required the first time you clone a repository.
-
-        phing link
-
-1. Creating a dev release installation package
-
-   This creates the distributable ZIP packages inside release directory.
-
-        phing git
-
+* WordPress plugin (with WP-CLI integration), standalone script and CLI tool.
+* Automated tests in the library to ensure code quality.
+* Quick presets for moving sites between domains and / or hosts.
+* Mass replace the contents in your database.
+* Safe replacement of serialized data.
+* Do it live on your database, make a dry run or export to SQL for applying it with external tools.
+* Automatic backups of the data being replaced with restore option.
+* Change the collation and storage engine of the database tables and / or columns.
+* Change the database table name prefix.
