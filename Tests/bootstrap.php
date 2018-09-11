@@ -50,3 +50,11 @@ if (false == include __DIR__ . '/../src/lib/Autoloader/Autoloader.php')
 
 // Register the test classes with our PSR-4 autoloader
 \Akeeba\Replace\Autoloader\Autoloader::getInstance()->addMap('Akeeba\\Replace\\Tests\\', __DIR__);
+
+// Load the environment variables from the .env file(s)
+$dotEnv = new \Dotenv\Dotenv(__DIR__);
+$dotEnv->load();
+
+// Make sure the tests are properly configured
+$dotEnv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
+$dotEnv->required(['DB_HOST', 'DB_NAME', 'DB_USER'])->notEmpty();

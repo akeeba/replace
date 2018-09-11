@@ -154,7 +154,7 @@ abstract class Driver implements DatabaseInterface
 			}
 
 			// Derive the class name from the type.
-			$class = str_ireplace('.php', '', '\\Akeeba\\Restore\\Database\\Driver\\' . ucfirst(trim($fileName)));
+			$class = str_ireplace('.php', '', '\\Akeeba\\Replace\\Database\\Driver\\' . ucfirst(trim($fileName)));
 
 			// If the class doesn't exist we have nothing left to do but look at the next type. We did our best.
 			if (!class_exists($class))
@@ -213,7 +213,7 @@ abstract class Driver implements DatabaseInterface
 		{
 
 			// Derive the class name from the driver.
-			$class = '\\Akeeba\\Restore\\Database\\Driver\\' . ucfirst(strtolower($options['driver']));
+			$class = '\\Akeeba\\Replace\\Database\\Driver\\' . ucfirst(strtolower($options['driver']));
 
 			// If the class still doesn't exist we have nothing left to do but throw an exception.  We did our best.
 			if (!class_exists($class))
@@ -305,7 +305,7 @@ abstract class Driver implements DatabaseInterface
 	{
 		if (empty($args))
 		{
-			return '';
+			return null;
 		}
 
 		switch ($method)
@@ -318,7 +318,7 @@ abstract class Driver implements DatabaseInterface
 				return $this->quoteName($args[0], isset($args[1]) ? $args[1] : null);
 				break;
 			default:
-				return '';
+				return null;
 		}
 	}
 
@@ -653,7 +653,7 @@ abstract class Driver implements DatabaseInterface
 		if ($new)
 		{
 			// Derive the class name from the driver.
-			$class = '\\Akeeba\\Restore\\Database\\Query\\' . ucfirst($this->name);
+			$class = '\\Akeeba\\Replace\\Database\\Query\\' . ucfirst($this->name);
 
 			// Make sure we have a query class for this driver.
 			if (!class_exists($class))

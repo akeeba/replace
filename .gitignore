@@ -71,4 +71,6 @@ release/**
 src/wp/lib
 src/wp/readme.txt
 
+Tests/.env
+
 vendor
