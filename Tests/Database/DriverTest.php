@@ -43,8 +43,9 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 	protected function setUp($resetContainer = true)
 	{
 		$this->instance = new Driver\Fake([
-			'database' => 'mightymouse',
-			'prefix'   => 'kot_',
+			'database'  => 'mightymouse',
+			'prefix'    => 'kot_',
+			'nameQuote' => '[]',
 		]);
 	}
 
@@ -157,10 +158,10 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 		$this->assertThat(
 			$this->instance->splitSql('SELECT * FROM #__foo;SELECT * FROM #__bar;'),
 			$this->equalTo(
-				array(
+				[
 					'SELECT * FROM #__foo;',
-					'SELECT * FROM #__bar;'
-				)
+					'SELECT * FROM #__bar;',
+				]
 			),
 			'splitSql method should split a string of multiple queries into an array.'
 		);
@@ -237,13 +238,13 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertThat(
 			$this->instance->quote('test'),
-			$this->equalTo("'-test-'"),
+			$this->equalTo("'_test_'"),
 			'Tests the with escaping (default).'
 		);
 
 		$this->assertEquals(
-			array("'-test1-'", "'-test2-'"),
-			$this->instance->quote(array('test1', 'test2')),
+			["'_test1_'", "'_test2_'"],
+			$this->instance->quote(['test1', 'test2']),
 			'Check that the array is quoted.'
 		);
 	}
@@ -252,31 +253,31 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertThat(
 			$this->instance->quote(true),
-			$this->equalTo("'-1-'"),
+			$this->equalTo("'_1_'"),
 			'Tests handling of boolean true with escaping (default).'
 		);
 
 		$this->assertThat(
 			$this->instance->quote(false),
-			$this->equalTo("'--'"),
+			$this->equalTo("'__'"),
 			'Tests handling of boolean false with escaping (default).'
 		);
 
 		$this->assertThat(
 			$this->instance->quote(null),
-			$this->equalTo("'--'"),
+			$this->equalTo("'__'"),
 			'Tests handling of null with escaping (default).'
 		);
 
 		$this->assertThat(
 			$this->instance->quote(42),
-			$this->equalTo("'-42-'"),
+			$this->equalTo("'_42_'"),
 			'Tests handling of integer with escaping (default).'
 		);
 
 		$this->assertThat(
 			$this->instance->quote(3.14),
-			$this->equalTo("'-3.14-'"),
+			$this->equalTo("'_3.14_'"),
 			'Tests handling of float with escaping (default).'
 		);
 	}
@@ -296,36 +297,36 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertThat(
-			$this->instance->quoteName(array('a', 'test')),
-			$this->equalTo(array('[a]', '[test]')),
+			$this->instance->quoteName(['a', 'test']),
+			$this->equalTo(['[a]', '[test]']),
 			'Tests the left-right quotes on an array.'
 		);
 
 		$this->assertThat(
-			$this->instance->quoteName(array('a.b', 'test.quote')),
-			$this->equalTo(array('[a].[b]', '[test].[quote]')),
+			$this->instance->quoteName(['a.b', 'test.quote']),
+			$this->equalTo(['[a].[b]', '[test].[quote]']),
 			'Tests the left-right quotes on an array.'
 		);
 
 		$this->assertThat(
-			$this->instance->quoteName(array('a.b', 'test.quote'), array(null, 'alias')),
-			$this->equalTo(array('[a].[b]', '[test].[quote] AS [alias]')),
+			$this->instance->quoteName(['a.b', 'test.quote'], [null, 'alias']),
+			$this->equalTo(['[a].[b]', '[test].[quote] AS [alias]']),
 			'Tests the left-right quotes on an array.'
 		);
 
 		$this->assertThat(
-			$this->instance->quoteName(array('a.b', 'test.quote'), array('alias1', 'alias2')),
-			$this->equalTo(array('[a].[b] AS [alias1]', '[test].[quote] AS [alias2]')),
+			$this->instance->quoteName(['a.b', 'test.quote'], ['alias1', 'alias2']),
+			$this->equalTo(['[a].[b] AS [alias1]', '[test].[quote] AS [alias2]']),
 			'Tests the left-right quotes on an array.'
 		);
 
 		$this->assertThat(
-			$this->instance->quoteName((object) array('a', 'test')),
-			$this->equalTo(array('[a]', '[test]')),
+			$this->instance->quoteName((object) ['a', 'test']),
+			$this->equalTo(['[a]', '[test]']),
 			'Tests the left-right quotes on an object.'
 		);
 
-		$refl = new \ReflectionObject($this->instance);
+		$refl     = new \ReflectionObject($this->instance);
 		$property = $refl->getProperty('nameQuote');
 		$property->setAccessible(true);
 		$property->setValue($this->instance, '/');

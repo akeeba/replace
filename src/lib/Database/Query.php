@@ -135,7 +135,7 @@ abstract class Query
 	{
 		if (empty($args))
 		{
-			return '';
+			return null;
 		}
 
 		switch ($method)
@@ -153,7 +153,7 @@ abstract class Query
 				break;
 		}
 
-		return '';
+		return null;
 	}
 
 	/**
@@ -1293,9 +1293,24 @@ abstract class Query
 	{
 		foreach ($this as $k => $v)
 		{
-			if (is_object($v) || is_array($v))
+			// Do not deep clone the database driver (we must simply relink to the same driver)
+			if ($k == 'db')
 			{
-				$this->{$k} = unserialize(serialize($v));
+				continue;
+			}
+
+			if (is_object($v))
+			{
+				$this->{$k} = clone($v);
+
+				continue;
+			}
+
+			if (is_array($v))
+			{
+				$this->{$k} = array_merge($v);
+
+				continue;
 			}
 		}
 	}

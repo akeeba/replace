@@ -7,7 +7,7 @@
  *
  */
 
-namespace Akeeba\Replace\Test\Timer;
+namespace Akeeba\Replace\Tests\Timer;
 
 use Akeeba\Replace\Timer\Timer;
 

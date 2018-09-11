@@ -9,23 +9,37 @@
 
 namespace Akeeba\Replace\Database\Driver;
 
+require_once __DIR__ . '/../Query/Fake.php';
+
 use Akeeba\Replace\Database\Driver;
+use Akeeba\Replace\Database\Query\Fake as FakeQuery;
 
 /**
  * Fake database driver. Does absolutely nothing of substance.
  *
- * @package Akeeba\Replace\Test\Stubs\Database
+ * @package Akeeba\Replace\Tests\Stubs\Database
  */
 class Fake extends Driver
 {
 
 	public $name = 'fake';
 
-	protected $nameQuote = '[]';
+	protected $nameQuote = '``';
 
 	protected $nullDate = '1BC';
 
 	protected static $dbMinimum = '12.1';
+
+	public function __construct(array $options = [])
+	{
+		parent::__construct($options);
+
+		if (isset($options['nameQuote']))
+		{
+			$this->nameQuote = $options['nameQuote'];
+		}
+	}
+
 
 	public function connect()
 	{
@@ -49,7 +63,7 @@ class Fake extends Driver
 
 	public function escape($text, $extra = false)
 	{
-		return $extra ? "/$text//" : "-$text-";
+		return $extra ? "/$text//" : "_{$text}_";
 	}
 
 	protected function fetchArray($cursor = null)
@@ -85,11 +99,6 @@ class Fake extends Driver
 	public function getNumRows($cursor = null)
 	{
 		return 0;
-	}
-
-	public function getQuery($new = false)
-	{
-		return null;
 	}
 
 	public function getTableColumns($table, $typeOnly = true)
