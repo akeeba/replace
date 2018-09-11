@@ -29,13 +29,28 @@ class WordPress implements DetectionInterface
 	protected $scriptName = 'wordpress';
 
 	/**
+	 * The name of the configuration file I am going to be reading, defaults to wp-config.php
+	 *
+	 * @var   string
+	 */
+	protected $configFile = 'wp-config.php';
+
+	/**
 	 * Creates a new oracle objects
 	 *
-	 * @param   string  $path  The directory path to scan
+	 * IMPORTANT: The $configFile parameter is used for testing. You should not need this in production.
+	 *
+	 * @param   string  $path        The directory path to scan
+	 * @paream  string  $configFile  The name of the configuration file, default wp-config.php
 	 */
-	public function __construct($path)
+	public function __construct($path, $configFile = 'wp-config.php')
 	{
 		$this->path = $path;
+
+		if (!empty($configFile))
+		{
+			$this->configFile = $configFile;
+		}
 	}
 
 	/**
@@ -45,7 +60,7 @@ class WordPress implements DetectionInterface
 	 */
 	public function isRecognised()
 	{
-		if (!@file_exists($this->path . '/wp-config.php') && !@file_exists($this->path . '/../wp-config.php'))
+		if (!@file_exists($this->path . '/' . $this->configFile) && !@file_exists($this->path . '/../' . $this->configFile))
 		{
 			return false;
 		}
@@ -95,11 +110,11 @@ class WordPress implements DetectionInterface
 			'prefix'	=> '',
 		);
 
-		$filePath = $this->path . '/wp-config.php';
+		$filePath = $this->path . '/' . $this->configFile;
 
 		if (!@file_exists($filePath))
 		{
-			$filePath = $this->path . '/../wp-config.php';
+			$filePath = $this->path . '/../' . $this->configFile;
 		}
 
 		$fileContents = file($filePath);

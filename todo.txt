@@ -1,5 +1,11 @@
 Tests:
 ================================================================================
+Before we begin...
+    Create a SQL file to set up the database
+    Create a SQL file to create missing database tables, truncate them
+    How to best run these SQL files? Bootstrap? Something else?
+    Create XML(?) datasets with sample data (I'll need to pepper some serialized and replaceable data in there as well)
+    Create a test case to repopulate the tables, see https://phpunit.de/manual/5.0/en/database.html
 
 Driver\Mysql
 Query\Mysql
@@ -12,47 +18,132 @@ Query\Pdo
 
 Driver\Pdomysql
 
-Detection\WordPress
-    I may have to provide the path to a WordPress instance?
+Integrate with Travis CI
+    Make sure the tests (especially DB) run properly
+    Link the test status in the README
 
-Code
+Detection\WordPress
+    Create two sample directories, one with the files this class is looking for and one with missing files.
+    Remember to pass $configFile in the test cases. This lets me use alternative wp-config.php files to catch weird cases.
+
+Code + Tests (Library)
 ================================================================================
+
+Add RegEx support to replacer
+    Add RegEx support -- Special worry about UTF data!
+    Test RegEx support
+
+Timer interface
+
+Logger interface (use PSR?)
+
+Engine part interface
 
 Engine part
     Dependency: timer
     Dependency: logger
 
-Database iterator (engine part)
-    Dependency: DB driver
-    Dependency: logger
-    Dependency: table iterator
+Database iterator Interface (extends engine part interface)
     Input: list of filters
-    Gets the available table names, runs the iterator against each one
 
-Database table iterator (engine part)
+Database iterator
+    Dependency: DB driver
+    Dependency: table iterator(s)
+    Gets the available table names
+    Runs the iterator(s) against each one
+    !! Tests should run against simulated data
+
+Table iterator Interface (extends engine part interface)
+    Input: table name (string)
+    Input: table information
+    Input: column information
+
+Table modifying iterator
     Dependency: DB driver
     Dependency: logger
+    Dependency: table callback(s)
+    Dependency: table DDL backup callback(s)
     Input: table name (string)
+    Input: table information
+    Input: column information
+    Runs the table callback(s) against the table. Run the backup callbacks if the new table information differs.
+
+Table Callback Interface
+    Input: table name (string)
+    Input: table information
+    Input: column information
+    Return: new table and column information
+
+Collation Change table callback
+    Dependency: writer interface, used to write to SQL files. No writer = no export.
+    Dependency: logger
+    Configuration: new collation for table, column
+    Configuration: dry run
+    The resulting DDL may be run (if not dry run) and/or output to a SQL file (if writer is provided)
+
+Engine Change table callback
+    Dependency: writer interface, used to write to SQL files. No writer = no export.
+    Dependency: logger
+    Configuration: preferred engine, default InnoDB
+    Configuration: dry run
+    The resulting DDL may be run (if not dry run) and/or output to a SQL file (if writer is provided)
+
+Table DDL backup Interface
+    Dependency: writer interface
+    Input: table name (string)
+    Input: old table information
+    Input: new table information
+    Input: old column information
+    Input: new column information
+
+Collation Change DDL backup callback
+    The resulting DDL is written to the backup SQL file
+
+Engine Change DDL backup callback
+    The resulting DDL is written to the backup SQL file
+
+Data processing table iterator (engine part)
+    Dependency: DB driver
+    Dependency: logger
+    Dependency: row processing callback
+    Dependency: row backup callback
     Fetches column information and table size, processes the table in chunks
     Each chunk consists of many rows
     For each row we call one or more callbacks (DO NOT pass the DB connection to the callbacks!)
+    !! Tests should run against simulated data
 
-Replace callback
+Row Callback interface
+    Input: Original Row
+    Input: table name (string)
+    Input: table information
+    Input: column information
+    Return: processed row
+
+Row Backup Callback interface
+    Input: Original Row
+    Input: Modified Row
+    Input: table name (string)
+    Input: table information
+    Input: column information
+    Return: void
+
+Plain text replace row callback
     Dependency: writer interface, used to write to SQL files. No writer = no export.
     Dependency: DB driver
     Dependency: logger
     Configuration: do it live or dry run (dry run does NOT execute SQL)
-    Input: list of rows / cursor
-    Input: column definition
 
-Backup callback
+RegEx replace row callback
+    extending the plain text callback, only differs in the way it handles the replacement
+
+Row Backup callback
     Dependency: writer interface, used to write to backup SQL files
     Dependency: DB driver
     Dependency: logger
-    Input: list of rows / cursor
-    Input: column definition
 
-Writer interface & implementation
+Writer interface
+
+Writer implementation
     Dependency: logger
     Configuration: file
 
