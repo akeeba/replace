@@ -1,0 +1,60 @@
+Tests:
+================================================================================
+
+Driver\Mysql
+Query\Mysql
+
+Driver\Mysqli
+Query\Mysqli
+
+Driver\Pdo
+Query\Pdo
+
+Driver\Pdomysql
+
+Detection\WordPress
+    I may have to provide the path to a WordPress instance?
+
+Code
+================================================================================
+
+Engine part
+    Dependency: timer
+    Dependency: logger
+
+Database iterator (engine part)
+    Dependency: DB driver
+    Dependency: logger
+    Dependency: table iterator
+    Input: list of filters
+    Gets the available table names, runs the iterator against each one
+
+Database table iterator (engine part)
+    Dependency: DB driver
+    Dependency: logger
+    Input: table name (string)
+    Fetches column information and table size, processes the table in chunks
+    Each chunk consists of many rows
+    For each row we call one or more callbacks (DO NOT pass the DB connection to the callbacks!)
+
+Replace callback
+    Dependency: writer interface, used to write to SQL files. No writer = no export.
+    Dependency: DB driver
+    Dependency: logger
+    Configuration: do it live or dry run (dry run does NOT execute SQL)
+    Input: list of rows / cursor
+    Input: column definition
+
+Backup callback
+    Dependency: writer interface, used to write to backup SQL files
+    Dependency: DB driver
+    Dependency: logger
+    Input: list of rows / cursor
+    Input: column definition
+
+Writer interface & implementation
+    Dependency: logger
+    Configuration: file
+
+Logger
+    PSR logger implementation?
