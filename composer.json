@@ -20,7 +20,8 @@
   "require-dev": {
     "phpunit/phpunit": "~5",
     "phpunit/dbunit": "~1.2",
-    "vlucas/phpdotenv": "~2.4"
+    "vlucas/phpdotenv": "~2.4",
+    "fzaninotto/faker": "^1.8"
   },
   "autoload" : {
     "psr-4": {
