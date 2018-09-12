@@ -51,10 +51,36 @@ if (false == include __DIR__ . '/../src/lib/Autoloader/Autoloader.php')
 // Register the test classes with our PSR-4 autoloader
 \Akeeba\Replace\Autoloader\Autoloader::getInstance()->addMap('Akeeba\\Replace\\Tests\\', __DIR__);
 
-// Load the environment variables from the .env file(s)
-$dotEnv = new \Dotenv\Dotenv(__DIR__);
-$dotEnv->load();
+/**
+ * Load the environment variables from the .env file(s)
+ *
+ * We are catching the InvalidPathException exception which we expect in the Travis CI environment. In that case we are
+ * checking if the environment variables are set manually.
+ **/
+try
+{
+	$dotEnv = new \Dotenv\Dotenv(__DIR__);
+	$dotEnv->load();
 
-// Make sure the tests are properly configured
-$dotEnv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
-$dotEnv->required(['DB_HOST', 'DB_NAME', 'DB_USER'])->notEmpty();
+	// Make sure the tests are properly configured
+	$dotEnv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
+	$dotEnv->required(['DB_HOST', 'DB_NAME', 'DB_USER'])->notEmpty();
+}
+catch (\Dotenv\Exception\InvalidPathException $e)
+{
+	foreach (['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'] as $k)
+	{
+		if (!isset($_ENV[$k]))
+		{
+			throw $e;
+		}
+	}
+
+	foreach (['DB_HOST', 'DB_NAME', 'DB_USER'] as $k)
+	{
+		if (empty($k))
+		{
+			throw new RuntimeException("Environment variable $k must not be empty.");
+		}
+	}
+}
