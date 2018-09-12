@@ -324,7 +324,7 @@ class Mysql extends Mysqli
 
 		if (!mysql_select_db($database, $this->connection))
 		{
-			throw new \RuntimeException('Could not connect to database');
+			throw new \RuntimeException('Could not connect to database.');
 		}
 
 		$this->_database = $database;

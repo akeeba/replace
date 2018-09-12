@@ -9,7 +9,6 @@
 
 namespace Akeeba\Replace\Tests\Database\Driver;
 
-use Akeeba\Replace\Database\Driver\Mysqli;
 use Akeeba\Replace\Tests\Database\DriverTestCase;
 
 class MysqliTest extends DriverTestCase
@@ -175,7 +174,7 @@ class MysqliTest extends DriverTestCase
 		$title->Type = 'varchar(50)';
 		$title->Null = 'NO';
 		$title->Key = '';
-		$title->Collation = 'utf8_general_ci';
+		$title->Collation = 'utf8mb4_unicode_520_ci';
 		$title->Extra = '';
 		$title->Privileges = 'select,insert,update,references';
 		$title->Comment = '';
@@ -197,7 +196,7 @@ class MysqliTest extends DriverTestCase
 		$description->Type = 'varchar(255)';
 		$description->Null = 'NO';
 		$description->Key = '';
-		$description->Collation = 'utf8_general_ci';
+		$description->Collation = 'utf8mb4_unicode_520_ci';
 		$description->Extra = '';
 		$description->Privileges = 'select,insert,update,references';
 		$description->Comment = '';
@@ -669,7 +668,7 @@ class MysqliTest extends DriverTestCase
 	public function testIsSupported()
 	{
 		$driver = self::getDriver();
-		$this->assertThat(\Awf\Database\Driver\Mysqli::isSupported(), $this->isTrue(), __LINE__);
+		$this->assertThat(\Akeeba\Replace\Database\Driver\Mysqli::isSupported(), $this->isTrue(), __LINE__);
 	}
 
 	/**
