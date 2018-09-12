@@ -72,5 +72,6 @@ src/wp/lib
 src/wp/readme.txt
 
 Tests/.env
+Tests/report.txt
 
 vendor
