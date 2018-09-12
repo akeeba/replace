@@ -3,6 +3,9 @@
 ##
 ## This file tells Travis CI how to automatically run our tests every time we
 ## commit code to the repository.
+##
+## I have disabled it for now because we can't afford $129 / month for Travis.
+## I'd much rather run the Unit Tests manually :/
 ################################################################################
 
 ## Testing targets (WHAT to test)
