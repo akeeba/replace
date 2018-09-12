@@ -24,6 +24,11 @@ class Pdomysql extends Pdo
      */
     public $name = 'pdomysql';
 
+	/**
+	 * @var    string  The database technology family supported, e.g. mysql, mssql
+	 */
+	public static $dbtech = 'mysql';
+
     /**
      * The character(s) used to quote SQL statement names such as table names or field names,
      * etc. The child classes should define this as necessary.  If a single character string the

@@ -65,6 +65,13 @@ abstract class Pdo extends Driver
 	 */
 	protected $executed = false;
 
+	/**
+	 * How many levels deep our transaction is
+	 *
+	 * @var   int
+	 */
+	protected $transactionDepth = 0;
+
 	public static $dbtech = 'pdo';
 
 	/**
@@ -111,7 +118,7 @@ abstract class Pdo extends Driver
 	 */
 	public function connect()
 	{
-		if ($this->connection)
+		if (is_object($this->connection))
 		{
 			return;
 		}
@@ -315,7 +322,7 @@ abstract class Pdo extends Driver
 	public function disconnect()
 	{
 		$this->freeResult();
-		unset($this->connection);
+		$this->connection = null;
 	}
 
 	/**
@@ -376,7 +383,6 @@ abstract class Pdo extends Driver
 
 		if ($this->limit > 0 || $this->offset > 0)
 		{
-			// @TODO
 			$sql .= ' LIMIT ' . $this->offset . ', ' . $this->limit;
 		}
 
@@ -460,7 +466,7 @@ abstract class Pdo extends Driver
 			}
 		}
 
-		return $this->prepared;
+		return true;
 	}
 
 	/**
@@ -538,6 +544,11 @@ abstract class Pdo extends Driver
 	 */
 	public function connected()
 	{
+		if (is_null($this->connection))
+		{
+			return false;
+		}
+
 		// Flag to prevent recursion into this function.
 		static $checkingConnected = false;
 
@@ -962,7 +973,7 @@ abstract class Pdo extends Driver
         if ($new)
         {
             // We are going to use the generic PDO driver not matter what
-            $class = '\\Awf\\Database\\Query\\Pdo';
+            $class = '\\Akeeba\\Replace\\Database\\Query\\Pdo';
 
             // Make sure we have a query class for this driver.
             if (!class_exists($class))

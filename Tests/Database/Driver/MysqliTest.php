@@ -25,7 +25,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testConnected()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 
 		$driver->connect();
 		$this->assertTrue($driver->connected(), 'Driver must report itself connected after successful connection');
@@ -41,12 +41,12 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testDropTable()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 
 		// Make sure dropping a table (if it exists) works
 		$this->assertThat(
 			$driver->dropTable('#__bar', true),
-			$this->isInstanceOf('\\Akeeba\\Replace\\Database\\Driver\\Mysqli'),
+			$this->isInstanceOf(get_class($driver)),
 			'The table is dropped if present.'
 		);
 
@@ -68,7 +68,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testEscape($text, $extra, $expected)
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 
 		$this->assertEquals($expected, $driver->escape($text, $extra));
 	}
@@ -80,7 +80,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testGetAffectedRows()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 
 		$query = $driver->getQuery(true);
 		$query->delete();
@@ -99,7 +99,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testGetCollation()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 
 		$this->assertEquals('utf8mb4_unicode_520_ci', $driver->getCollation(), 'The getCollation method should return the collation of the database, not the first created table.');
 	}
@@ -111,7 +111,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testGetNumRows()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 
 		$query = $driver->getQuery(true);
 		$query->select('*');
@@ -131,7 +131,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testGetTableCreate()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$create = $driver->getTableCreate('#__dbtest');
 
 		$this->assertInternalType('array', $create, 'The statement to create the table is returned in an array.');
@@ -147,7 +147,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testGetTableColumns()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$tableCol = array('id' => 'int unsigned', 'title' => 'varchar', 'start_date' => 'datetime', 'description' => 'varchar');
 
 		$this->assertEquals(
@@ -219,7 +219,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testGetTableKeys()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 
 		$tableKeys = $driver->getTableKeys('#__dbtest');
 		$expected  = array(
@@ -253,7 +253,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testGetTableList()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$tableList  = $driver->getTableList();
 
 		$this->assertInternalType('array', $tableList, 'The list of tables for the database is returned in an array.');
@@ -270,7 +270,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testGetVersion()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$version = $driver->getVersion();
 		$this->assertGreaterThan(
 			0,
@@ -287,7 +287,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testInsertid()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$driver->truncateTable('#__dbtest');
 
 		$query = $driver->getQuery(true)
@@ -308,7 +308,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testLoadAssoc()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$query = $driver->getQuery(true);
 		$query->select('title');
 		$query->from('#__dbtest');
@@ -325,7 +325,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testLoadAssocList()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$query = $driver->getQuery(true);
 		$query->select('title');
 		$query->from('#__dbtest');
@@ -350,7 +350,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testLoadColumn()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$query = $driver->getQuery(true);
 		$query->select('title');
 		$query->from('#__dbtest');
@@ -367,7 +367,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testLoadObject()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$query = $driver->getQuery(true);
 		$query->select('*');
 		$query->from('#__dbtest');
@@ -391,7 +391,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testLoadObjectList()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$query = $driver->getQuery(true);
 		$query->select('*');
 		$query->from('#__dbtest');
@@ -443,7 +443,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testLoadResult()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$query = $driver->getQuery(true);
 		$query->select('id');
 		$query->from('#__dbtest');
@@ -462,7 +462,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testLoadRow()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$query = $driver->getQuery(true);
 		$query->select('*');
 		$query->from('#__dbtest');
@@ -482,7 +482,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testLoadRowList()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$query = $driver->getQuery(true);
 		$query->select('*');
 		$query->from('#__dbtest');
@@ -502,7 +502,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testRenameTable()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$newTableName = 'bak_renamed';
 
 		// Drop the cloned table if it already exists
@@ -533,8 +533,8 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testExecute()
 	{
-		$driver = self::getDriver();
-		$driver->setQuery("REPLACE INTO `#__dbtest` SET `id` = 5, `title` = 'testTitle'");
+		$driver = static::getDriver();
+		$driver->setQuery("REPLACE INTO `#__dbtest` SET `id` = 5, `title` = 'testTitle', `start_date` = '2018-09-12 00:00:00', `description` = 'Test'");
 
 		$this->assertTrue($driver->execute());
 
@@ -548,7 +548,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testSelect()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 
 		$this->expectExceptionMessage('Could not connect to database.');
 		$driver->select('DOES_NOT_EXIST');
@@ -561,7 +561,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testSetUTF()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$driver->setUTF();
 
 		$query = "show variables like 'character_set_client'";
@@ -577,7 +577,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testTransactionCommit()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$driver->transactionStart();
 		$queryIns = $driver->getQuery(true);
 		$queryIns->insert('#__dbtest')
@@ -613,7 +613,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testTransactionRollback($toSavepoint, $tupleCount)
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$driver->transactionStart();
 
 		/* try to insert this tuple, inserted only when savepoint != null */
@@ -667,7 +667,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testIsSupported()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$this->assertThat(\Akeeba\Replace\Database\Driver\Mysqli::isSupported(), $this->isTrue(), __LINE__);
 	}
 
@@ -680,7 +680,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testInsertObject()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$sampleData = (object)array(
 			'id'          => null,
 			'title'       => 'test_insert',
@@ -743,7 +743,7 @@ class MysqliTest extends DriverTestCase
 	 */
 	public function testUpdateObject()
 	{
-		$driver = self::getDriver();
+		$driver = static::getDriver();
 		$sampleData = (object)array(
 			'id'          => null,
 			'title'       => 'test_insert',
