@@ -15,7 +15,6 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @var    Driver
-	 * @since  1.0
 	 */
 	protected $instance;
 
@@ -23,7 +22,6 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 	 * A store to track if logging is working.
 	 *
 	 * @var    array
-	 * @since  1.0
 	 */
 	protected $logs;
 

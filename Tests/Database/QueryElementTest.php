@@ -33,8 +33,6 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 	 * - string    expected value of __toString() for element after append
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function dataTestAppend()
 	{
@@ -124,8 +122,6 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 	 * Test data for test__toString.
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function dataTestToString()
 	{
@@ -164,8 +160,6 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 	 * @param   array  $expected  values for expected fields
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 * @dataProvider  dataTestConstruct
 	 */
 	public function test__Construct($element, $expected)
@@ -194,8 +188,6 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $expected  The expected value.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 * @dataProvider  dataTestToString
 	 */
 	public function test__toString($name, $elements, $glue, $expected)
@@ -217,8 +209,6 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $string    expected value of toString (not used in this test)
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 * @dataProvider dataTestAppend
 	 */
 
@@ -235,8 +225,6 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 	 * Tests the Awf\Database\QueryElement::__clone method properly clones an array.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__clone_array()
 	{
@@ -256,8 +244,6 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 	 * Tests the Awf\Database\QueryElement::__clone method properly clones an object.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__clone_object()
 	{

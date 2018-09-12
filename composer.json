@@ -2,11 +2,17 @@
   "name": "akeeba/replace",
   "type": "project",
   "description": "Akeeba Replace",
-  "require" : {
+  "require": {
     "php": ">=5.4.0",
-    "ext-mysqli": "*"
+    "ext-mysqli": "*",
+    "ext-pdo": "*"
   },
-  "keywords": ["database","replace","php","mysql"],
+  "keywords": [
+    "database",
+    "replace",
+    "php",
+    "mysql"
+  ],
   "homepage": "https://github.com/akeeba/replace",
   "license": "GPL-3.0+",
   "authors": [
@@ -23,10 +29,9 @@
     "vlucas/phpdotenv": "~2.4",
     "fzaninotto/faker": "~1.8"
   },
-  "autoload" : {
+  "autoload": {
     "psr-4": {
       "Akeeba\\Replace\\Tests\\": "Tests"
     }
   }
-
 }

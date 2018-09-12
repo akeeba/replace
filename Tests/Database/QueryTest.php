@@ -15,7 +15,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * A mock of the Driver object for testing purposes.
 	 *
 	 * @var    \Akeeba\Replace\Database\Driver
-	 * @since  1.0
 	 */
 	protected $dbo;
 
@@ -23,7 +22,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * The instance of the object to test.
 	 *
 	 * @var    \Akeeba\Replace\Database\Query
-	 * @since  1.0
 	 */
 	private $instance;
 
@@ -40,15 +38,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * This method is called before a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	protected function setUp()
 	{
 		parent::setUp();
 
 		$this->dbo = new \Akeeba\Replace\Database\Driver\Fake([
-			'prefix' => 'test_'
+			'prefix' => 'test_',
 		]);
 
 		$this->instance = $this->dbo->getQuery(true);
@@ -58,8 +54,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Data for the testNullDate test.
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function providerTestNullDate()
 	{
@@ -74,8 +68,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Data for the testNullDate test.
 	 *
 	 * @return  array
-	 *
-	 * @since   1.0
 	 */
 	public function providerTestQuote()
 	{
@@ -94,7 +86,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::__call
-	 * @since   1.0
 	 */
 	public function test__call()
 	{
@@ -129,7 +120,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::__get
-	 * @since   1.0
 	 */
 	public function test__get()
 	{
@@ -141,8 +131,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for FROM clause with subquery.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringFrom_subquery()
 	{
@@ -164,8 +152,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for INSERT INTO clause with subquery.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringInsert_subquery()
 	{
@@ -191,8 +177,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for year extraction from date.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringYear()
 	{
@@ -208,8 +192,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for month extraction from date.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringMonth()
 	{
@@ -225,8 +207,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for day extraction from date.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringDay()
 	{
@@ -242,8 +222,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for hour extraction from date.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringHour()
 	{
@@ -259,8 +237,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for minute extraction from date.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringMinute()
 	{
@@ -276,8 +252,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for seconds extraction from date.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringSecond()
 	{
@@ -293,8 +267,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for the \Akeeba\Replace\Database\Query::__string method for a 'select' case.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringSelect()
 	{
@@ -325,8 +297,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * Test for the \Akeeba\Replace\Database\Query::__string method for a 'update' case.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function test__toStringUpdate()
 	{
@@ -353,7 +323,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::__toString
-	 * @since   1.0
 	 */
 	public function test__toStringUnion()
 	{
@@ -369,7 +338,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::call
-	 * @since   1.0
 	 */
 	public function testCall()
 	{
@@ -384,7 +352,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::__toString
-	 * @since   1.0
 	 */
 	public function testCall__toString()
 	{
@@ -397,7 +364,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::castAsChar
-	 * @since   1.0
 	 */
 	public function testCastAsChar()
 	{
@@ -414,7 +380,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::charLength
-	 * @since   1.0
 	 */
 	public function testCharLength()
 	{
@@ -440,7 +405,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::clear
-	 * @since   1.0
 	 */
 	public function testClear_all()
 	{
@@ -494,7 +458,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::clear
-	 * @since   1.0
 	 */
 	public function testClear_clause()
 	{
@@ -554,7 +517,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::clear
-	 * @since   1.0
 	 */
 	public function testClear_type()
 	{
@@ -621,7 +583,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::columns
-	 * @since   1.0
 	 */
 	public function testColumns()
 	{
@@ -653,7 +614,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::concatenate
-	 * @since   1.0
 	 */
 	public function testConcatenate()
 	{
@@ -676,7 +636,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::currentTimestamp
-	 * @since   1.0
 	 */
 	public function testCurrentTimestamp()
 	{
@@ -692,7 +651,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::dateFormat
-	 * @since   1.0
 	 */
 	public function testDateFormat()
 	{
@@ -709,7 +667,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             \Akeeba\Replace\Database\Query::dateFormat
 	 * @expectedException  \RuntimeException
-	 * @since              1.0
 	 */
 	public function testDateFormatException()
 	{
@@ -725,7 +682,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::delete
-	 * @since   1.0
 	 */
 	public function testDelete()
 	{
@@ -760,7 +716,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::__toString
-	 * @since   1.0
 	 */
 	public function testDelete__toString()
 	{
@@ -780,7 +735,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::dump
-	 * @since   1.0
 	 */
 	public function testDump()
 	{
@@ -804,7 +758,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::escape
-	 * @since   1.0
 	 */
 	public function testEscape()
 	{
@@ -821,7 +774,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             \Akeeba\Replace\Database\Query::escape
 	 * @expectedException  \RuntimeException
-	 * @since              1.0
 	 */
 	public function testEscapeException()
 	{
@@ -837,7 +789,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::exec
-	 * @since   1.0
 	 */
 	public function testExec()
 	{
@@ -852,7 +803,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::__toString
-	 * @since   1.0
 	 */
 	public function testExec__toString()
 	{
@@ -865,7 +815,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::from
-	 * @since   1.0
 	 */
 	public function testFrom()
 	{
@@ -897,7 +846,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::group
-	 * @since   1.0
 	 */
 	public function testGroup()
 	{
@@ -929,7 +877,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::having
-	 * @since   1.0
 	 */
 	public function testHaving()
 	{
@@ -972,7 +919,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::innerJoin
-	 * @since   1.0
 	 */
 	public function testInnerJoin()
 	{
@@ -1001,7 +947,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::insert
-	 * @since   1.0
 	 */
 	public function testInsert()
 	{
@@ -1030,7 +975,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::join
-	 * @since   1.0
 	 */
 	public function testJoin()
 	{
@@ -1065,7 +1009,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::leftJoin
-	 * @since   1.0
 	 */
 	public function testLeftJoin()
 	{
@@ -1094,7 +1037,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::length
-	 * @since   1.0
 	 */
 	public function testLength()
 	{
@@ -1115,7 +1057,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        \Akeeba\Replace\Database\Query::nullDate
 	 * @dataProvider  providerTestNullDate
-	 * @since         1.0
 	 */
 	public function testNullDate($quoted, $expected)
 	{
@@ -1133,7 +1074,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             \Akeeba\Replace\Database\Query::nullDate
 	 * @expectedException  \RuntimeException
-	 * @since              1.0
 	 */
 	public function testNullDateException()
 	{
@@ -1149,7 +1089,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::order
-	 * @since   1.0
 	 */
 	public function testOrder()
 	{
@@ -1193,7 +1132,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::outerJoin
-	 * @since   1.0
 	 */
 	public function testOuterJoin()
 	{
@@ -1226,7 +1164,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers        \Akeeba\Replace\Database\Query::quote
-	 * @since         1.0
 	 * @dataProvider  providerTestQuote
 	 */
 	public function testQuote($text, $escape, $expected)
@@ -1241,7 +1178,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             \Akeeba\Replace\Database\Query::quote
 	 * @expectedException  \RuntimeException
-	 * @since              1.0
 	 */
 	public function testQuoteException()
 	{
@@ -1257,7 +1193,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::quoteName
-	 * @since   1.0
 	 */
 	public function testQuoteName()
 	{
@@ -1275,7 +1210,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             \Akeeba\Replace\Database\Query::quoteName
 	 * @expectedException  \RuntimeException
-	 * @since              1.0
 	 */
 	public function testQuoteNameException()
 	{
@@ -1291,7 +1225,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::rightJoin
-	 * @since   1.0
 	 */
 	public function testRightJoin()
 	{
@@ -1320,7 +1253,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::select
-	 * @since   1.0
 	 */
 	public function testSelect()
 	{
@@ -1369,7 +1301,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::set
-	 * @since   1.0
 	 */
 	public function testSet()
 	{
@@ -1426,7 +1357,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::setQuery
-	 * @since   1.0
 	 */
 	public function testSetQuery()
 	{
@@ -1441,7 +1371,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::__toString
-	 * @since   1.0
 	 */
 	public function testSetQuery__toString()
 	{
@@ -1454,7 +1383,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::update
-	 * @since   1.0
 	 */
 	public function testUpdate()
 	{
@@ -1483,7 +1411,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::values
-	 * @since   1.0
 	 */
 	public function testValues()
 	{
@@ -1520,7 +1447,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::where
-	 * @since   1.0
 	 */
 	public function testWhere()
 	{
@@ -1572,7 +1498,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
 	 */
 	public function test__clone_array()
 	{
@@ -1599,7 +1524,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.0
 	 */
 	public function test__clone_object()
 	{
@@ -1625,7 +1549,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::union
-	 * @since   1.0
 	 */
 	public function testUnionChain()
 	{
@@ -1642,7 +1565,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::union
-	 * @since   1.0
 	 */
 	public function testUnionClear()
 	{
@@ -1663,7 +1585,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::union
-	 * @since   1.0
 	 */
 	public function testUnionUnion()
 	{
@@ -1683,7 +1604,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::union
-	 * @since   1.0
 	 */
 	public function testUnionDistinctString()
 	{
@@ -1703,7 +1623,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::union
-	 * @since   1.0
 	 */
 	public function testUnionDistinctTrue()
 	{
@@ -1723,7 +1642,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::union
-	 * @since   1.0
 	 */
 	public function testUnionDistinctFalse()
 	{
@@ -1743,7 +1661,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::union
-	 * @since   1.0
 	 */
 	public function testUnionArray()
 	{
@@ -1763,7 +1680,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::union
-	 * @since   1.0
 	 */
 	public function testUnionTwo()
 	{
@@ -1784,7 +1700,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::unionDistinct
-	 * @since   1.0
 	 */
 	public function testUnionDistinct()
 	{
@@ -1804,7 +1719,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::unionDistinct
-	 * @since   1.0
 	 */
 	public function testUnionDistinctArray()
 	{
@@ -1824,7 +1738,6 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  \Akeeba\Replace\Database\Query::format
-	 * @since   1.0
 	 */
 	public function testFormat()
 	{
@@ -1850,7 +1763,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 	private function setObjectAttribute($object, $attributeName, $value)
 	{
-		$refObject = new \ReflectionObject($object);
+		$refObject   = new \ReflectionObject($object);
 		$refProperty = $refObject->getProperty($attributeName);
 
 		if ($refProperty->isPublic())

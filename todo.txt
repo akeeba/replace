@@ -1,9 +1,7 @@
 Tests:
 ================================================================================
 Before we begin...
-    Create a SQL file to set up the database
     Create a SQL file to create missing database tables, truncate them
-    How to best run these SQL files? Bootstrap? Something else?
     Create XML(?) datasets with sample data (I'll need to pepper some serialized and replaceable data in there as well)
     Create a test case to repopulate the tables, see https://phpunit.de/manual/5.0/en/database.html
 

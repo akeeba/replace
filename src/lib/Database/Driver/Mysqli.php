@@ -271,6 +271,28 @@ class Mysqli extends Driver
 
 		$tables = $this->getTableList();
 
+		$dbName = $this->getDatabase();
+		$query = <<< SQL
+SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA`
+WHERE `schema_name` = "$dbName";
+SQL;
+
+		$this->setQuery($query);
+
+		try
+		{
+			$collation = $this->loadResult();
+		}
+		catch (\RuntimeException $e)
+		{
+			$collation = null;
+		}
+
+		if (!is_null($collation))
+		{
+			return $collation;
+		}
+
 		$this->setQuery('SHOW FULL COLUMNS FROM ' . $tables[0]);
 		$array = $this->loadAssocList();
 
