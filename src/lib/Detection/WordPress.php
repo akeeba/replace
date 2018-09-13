@@ -42,6 +42,8 @@ class WordPress implements DetectionInterface
 	 *
 	 * @param   string  $path        The directory path to scan
 	 * @paream  string  $configFile  The name of the configuration file, default wp-config.php
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function __construct($path, $configFile = 'wp-config.php')
 	{
@@ -87,6 +89,8 @@ class WordPress implements DetectionInterface
 	 * Return the name of the CMS / script
 	 *
 	 * @return  string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function getName()
 	{
@@ -96,9 +100,11 @@ class WordPress implements DetectionInterface
 	/**
 	 * Return the database connection information for this CMS / script
 	 *
+	 * @param   bool  $allowTokenizer  Allow using the (faster, better) PHP tokenizer extension?
+	 *
 	 * @return  array
 	 */
-	public function getDbInformation()
+	public function getDbInformation($allowTokenizer = true)
 	{
 		$ret = array(
 			'driver'	=> 'mysqli',
@@ -108,6 +114,8 @@ class WordPress implements DetectionInterface
 			'password'	=> '',
 			'name'		=> '',
 			'prefix'	=> '',
+			'charset'	=> '',
+			'collate'	=> '',
 		);
 
 		$filePath = $this->path . '/' . $this->configFile;
@@ -117,51 +125,32 @@ class WordPress implements DetectionInterface
 			$filePath = $this->path . '/../' . $this->configFile;
 		}
 
-		$fileContents = file($filePath);
-
-		foreach ($fileContents as $line)
+		if (!@file_exists($filePath))
 		{
-			$line = trim($line);
-
-			if (strpos($line, 'define') !== false)
-			{
-				list ($key, $value) = $this->parseDefine($line);
-
-				switch (strtoupper($key))
-				{
-					case 'DB_NAME':
-						$ret['name'] = $value;
-						break;
-
-					case 'DB_USER':
-						$ret['username'] = $value;
-						break;
-
-					case 'DB_PASSWORD':
-						$ret['password'] = $value;
-						break;
-
-					case 'DB_HOST':
-						$ret['host'] = $value;
-						break;
-
-				}
-			}
-			elseif (strpos($line, '$table_prefix') === 0)
-			{
-				$parts = explode('=', $line, 2);
-				$prefixData = trim($parts[1]);
-				$ret['prefix'] = $this->parseStringDefinition($prefixData);
-			}
+			return $ret;
 		}
 
-		return $ret;
+		$hasTokenizer = $allowTokenizer && function_exists('token_get_all');
+		$fileContents = file_get_contents($filePath);
+
+		if ($hasTokenizer)
+		{
+			$newValues = $this->parseWithTokenizer($fileContents);
+		}
+		else
+		{
+			$newValues = $this->parseWithoutTokenizer($fileContents);
+		}
+
+		return array_merge($ret, $newValues);
 	}
 
 	/**
 	 * Return extra databases required by the CMS / script (ie Drupal multi-site)
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function getExtraDb()
 	{
@@ -266,5 +255,118 @@ class WordPress implements DetectionInterface
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Parse the wp-config.php file using the PHP tokenizer extension. We use the tokenizer to remove all comments, then
+	 * our regular code to parse the resulting file. Profit!
+	 *
+	 * @param   string $fileContents The contents of the file
+	 *
+	 * @return  array
+	 */
+	protected function parseWithTokenizer($fileContents)
+	{
+		$tokens = token_get_all($fileContents);
+
+		$commentTokens = [T_COMMENT];
+
+		if (defined('T_DOC_COMMENT'))
+		{
+			$commentTokens[] = T_DOC_COMMENT;
+		}
+
+		if (defined('T_ML_COMMENT'))
+		{
+			$commentTokens[] = T_ML_COMMENT;
+		}
+
+		$newStr  = '';
+
+		foreach ($tokens as $token)
+		{
+			if (is_array($token))
+			{
+				if (in_array($token[0], $commentTokens))
+				{
+					/**
+					 * If the comment ended in a newline we need to output the newline. Otherwise we will have
+					 * run-together lines which won't be parsed correctly by parseWithoutTokenizer.
+					 */
+					if (substr($token[1], -1) == "\n")
+					{
+						$newStr .= "\n";
+					}
+
+					continue;
+				}
+
+				$token = $token[1];
+			}
+
+			$newStr .= $token;
+		}
+
+		return $this->parseWithoutTokenizer($newStr);
+	}
+
+	/**
+	 * Parse the wp-config.php file without using the PHP tokenizer extension
+	 *
+	 * @param   string $fileContents The contents of the wp-config.php file
+	 *
+	 * @return  array
+	 */
+	protected function parseWithoutTokenizer($fileContents)
+	{
+		$fileContents = explode("\n", $fileContents);
+		$fileContents = array_map('trim', $fileContents);
+		$ret          = [];
+
+		foreach ($fileContents as $line)
+		{
+			$line = trim($line);
+
+			if (strpos($line, 'define') !== false)
+			{
+				list ($key, $value) = $this->parseDefine($line);
+
+				switch (strtoupper($key))
+				{
+					case 'DB_NAME':
+						$ret['name'] = $value;
+						break;
+
+					case 'DB_USER':
+						$ret['username'] = $value;
+						break;
+
+					case 'DB_PASSWORD':
+						$ret['password'] = $value;
+						break;
+
+					case 'DB_HOST':
+						$ret['host'] = $value;
+						break;
+
+					case 'DB_CHARSET':
+						$ret['charset'] = $value;
+						break;
+
+					case 'DB_COLLATE':
+						$ret['collate'] = $value;
+						break;
+
+				}
+			}
+			elseif (strpos($line, '$table_prefix') === 0)
+			{
+				$parts         = explode('=', $line, 2);
+				$prefixData    = trim($parts[1]);
+				$ret['prefix'] = $this->parseStringDefinition($prefixData);
+			}
+		}
+
+		return $ret;
 	}
 }
