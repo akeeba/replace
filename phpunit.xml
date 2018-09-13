@@ -13,21 +13,36 @@
     </testsuites>
 
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+        <!-- ### Code Coverage Exclusions ### -->
+        <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="false">
             <directory suffix=".php">src</directory>
             <exclude>
+                <!-- Folders with non-code files -->
+                <directory suffix=".php">build</directory>
+                <directory suffix=".php">documentation</directory>
+                <directory suffix=".php">release</directory>
+                <directory suffix=".php">Tests</directory>
+                <directory suffix=".php">vendor</directory>
+
+                <!-- User Interfaces -->
                 <directory suffix=".php">src/akeebareplace</directory>
                 <directory suffix=".php">src/standalone</directory>
+
+                <!-- PSR-4 Autoloader -->
                 <directory suffix=".php">src/lib/Autoloader</directory>
 
-                <!-- Exclude interfaces from code coverage -->
+                <!-- Interfaces -->
                 <file>src/lib/Database/DatabaseInterface.php</file>
                 <file>src/lib/Database/QueryLimitable.php</file>
                 <file>src/lib/Database/QueryPreparable.php</file>
                 <file>src/lib/Detection/DetectionInterface.php</file>
 
-                <!-- Exclude exceptions from code coverage -->
+                <!-- Exceptions -->
                 <!-- (None so far) -->
+
+                <!-- Trivial classes -->
+                <file>src/lib/Database/Query/Mysql.php</file>
+                <file>src/lib/Database/Query/Pdo.php</file>
             </exclude>
         </whitelist>
     </filter>

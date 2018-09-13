@@ -6,6 +6,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
  */
 
+// Export the test path as a constant
+define('AKEEBA_TEST_ROOT', __DIR__);
+
 // Maximise error reporting.
 ini_set('zend.ze1_compatibility_mode', '0');
 error_reporting(E_ALL & ~E_STRICT);

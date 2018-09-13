@@ -21,11 +21,11 @@ class ReplacementProvider
 
 		return [
 			'Object'     => [
-				file_get_contents(__DIR__ . '/../_data/serialized_namespace_complex_utf8.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_complex_utf8.txt'),
 				true,
 			],
 			'Array'      => [
-				file_get_contents(__DIR__ . '/../_data/serialized_array.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_array.txt'),
 				true,
 			],
 			'Null'       => [
@@ -57,7 +57,7 @@ class ReplacementProvider
 				false
 			],
 			'Malformed' => [
-				' ' . file_get_contents(__DIR__ . '/../_data/serialized_array.txt'),
+				' ' . file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_array.txt'),
 				false
 			]
 		];
@@ -106,75 +106,75 @@ class ReplacementProvider
 			],
 
 			'Replace ASCII in array' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_array.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_array.txt'),
 				'This is a test',
 				'The quick brown fox jumps over the lazy dog',
 				false, true
 			],
 			'Replace UTF8 in array' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_array.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_array.txt'),
 				'Αυτό είναι μια δοκιμή',
 				'Νίψον ανομήματα μη μόναν όψιν',
 				false, true
 			],
 			'Replace UTF8MB4 in array' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_array.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_array.txt'),
 				'🐈👌',
 				'Cat Hand',
 				false, true
 			],
 			'Replacement string not found in array' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_array.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_array.txt'),
 				'I do not exist',
 				'This should never happen',
 				true, true
 			],
 
 			'Replace ASCII with ASCII in simple object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_simple_ascii.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_simple_ascii.txt'),
 				'http://www.example.com',
 				'https://www.akeebabackup.com',
 				false, true
 			],
 			'Replace ASCII with UTF8 in simple object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_simple_ascii.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_simple_ascii.txt'),
 				'http://www.example.com',
 				'https://www.παράδειγμα.com',
 				false, true
 			],
 			'Replace UTF8 with ASCII in simple object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_simple_utf8.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_simple_utf8.txt'),
 				'http://www.δοκιμή.com',
 				'https://www.akeebabackup.com',
 				false, true
 			],
 			'Replace UTF8 with UTF8 in simple object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_simple_utf8.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_simple_utf8.txt'),
 				'http://www.δοκιμή.com',
 				'https://www.παράδειγμα.com',
 				false, true
 			],
 
 			'Replace ASCII with ASCII in complex object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_complex_ascii.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_complex_ascii.txt'),
 				'http://www.example.com',
 				'https://www.akeebabackup.com',
 				false, true
 			],
 			'Replace ASCII with UTF8 in complex object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_complex_ascii.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_complex_ascii.txt'),
 				'http://www.example.com',
 				'https://www.παράδειγμα.com',
 				false, true
 			],
 			'Replace UTF8 with ASCII in complex object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_complex_utf8.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_complex_utf8.txt'),
 				'http://www.δοκιμή.com',
 				'https://www.akeebabackup.com',
 				false, true
 			],
 			'Replace UTF8 with UTF8 in complex object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_complex_utf8.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_complex_utf8.txt'),
 				'http://www.δοκιμή.com',
 				'https://www.παράδειγμα.com',
 				false, true
@@ -182,50 +182,50 @@ class ReplacementProvider
 
 
 			'Replace ASCII with ASCII in simple namespaced object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_namespace_simple_ascii.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_simple_ascii.txt'),
 				'http://www.example.com',
 				'https://www.akeebabackup.com',
 				false, true
 			],
 			'Replace ASCII with UTF8 in simple namespaced object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_namespace_simple_ascii.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_simple_ascii.txt'),
 				'http://www.example.com',
 				'https://www.παράδειγμα.com',
 				false, true
 			],
 			'Replace UTF8 with ASCII in simple namespaced object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_namespace_simple_utf8.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_simple_utf8.txt'),
 				'http://www.δοκιμή.com',
 				'https://www.akeebabackup.com',
 				false, true
 			],
 			'Replace UTF8 with UTF8 in simple namespaced object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_namespace_simple_utf8.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_simple_utf8.txt'),
 				'http://www.δοκιμή.com',
 				'https://www.παράδειγμα.com',
 				false, true
 			],
 
 			'Replace ASCII with ASCII in namespaced complex object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_namespace_complex_ascii.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_complex_ascii.txt'),
 				'http://www.example.com',
 				'https://www.akeebabackup.com',
 				false, true
 			],
 			'Replace ASCII with UTF8 in namespaced complex object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_namespace_complex_ascii.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_complex_ascii.txt'),
 				'http://www.example.com',
 				'https://www.παράδειγμα.com',
 				false, true
 			],
 			'Replace UTF8 with ASCII in namespaced complex object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_namespace_complex_utf8.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_complex_utf8.txt'),
 				'http://www.δοκιμή.com',
 				'https://www.akeebabackup.com',
 				false, true
 			],
 			'Replace UTF8 with UTF8 in namespaced complex object' => [
-				file_get_contents(__DIR__ . '/../_data/serialized_namespace_complex_utf8.txt'),
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_complex_utf8.txt'),
 				'http://www.δοκιμή.com',
 				'https://www.παράδειγμα.com',
 				false, true

@@ -29,7 +29,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	{
 		parent::setUpBeforeClass();
 
-		require_once __DIR__ . '/../Stubs/Database/Driver/Fake.php';
+		require_once AKEEBA_TEST_ROOT . '/Stubs/Database/Driver/Fake.php';
 	}
 
 	/**

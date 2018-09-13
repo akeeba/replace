@@ -1,24 +1,6 @@
 Tests:
 ================================================================================
-Before we begin...
-    Create a SQL file to create missing database tables, truncate them
-    Create XML(?) datasets with sample data (I'll need to pepper some serialized and replaceable data in there as well)
-    Create a test case to repopulate the tables, see https://phpunit.de/manual/5.0/en/database.html
-
-Driver\Mysql
-Query\Mysql
-
-Driver\Mysqli
-Query\Mysqli
-
 Driver\Pdo
-Query\Pdo
-
-Driver\Pdomysql
-
-Integrate with Travis CI
-    Make sure the tests (especially DB) run properly
-    Link the test status in the README
 
 Detection\WordPress
     Create two sample directories, one with the files this class is looking for and one with missing files.

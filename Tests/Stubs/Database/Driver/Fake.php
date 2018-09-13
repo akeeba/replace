@@ -9,7 +9,7 @@
 
 namespace Akeeba\Replace\Database\Driver;
 
-require_once __DIR__ . '/../Query/Fake.php';
+require_once AKEEBA_TEST_ROOT . '/Stubs/Database/Query/Fake.php';
 
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Query\Fake as FakeQuery;

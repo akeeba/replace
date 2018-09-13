@@ -62,7 +62,7 @@ class DriverTestCase extends \PHPUnit_Extensions_Database_TestCase
 		}
 
 		// Get the schema filename based on the driver's database technology
-		$schemaFilename = __DIR__ . '/../_data/schema/' . strtolower($class::$dbtech) . '.sql';
+		$schemaFilename = AKEEBA_TEST_ROOT . '/_data/schema/' . strtolower($class::$dbtech) . '.sql';
 
 		// Make sure the database tables exist
 		$pdo = new \PDO("mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']};charset=utf8", $_ENV['DB_USER'], $_ENV['DB_PASS']);
@@ -91,7 +91,7 @@ class DriverTestCase extends \PHPUnit_Extensions_Database_TestCase
 	 */
 	protected function getDataSet()
 	{
-		return new \PHPUnit_Extensions_Database_DataSet_XmlDataSet(__DIR__ . '/../_data/schema/database.xml');
+		return new \PHPUnit_Extensions_Database_DataSet_XmlDataSet(AKEEBA_TEST_ROOT . '/_data/schema/database.xml');
 	}
 
 }
