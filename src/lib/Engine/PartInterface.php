@@ -58,4 +58,14 @@ interface PartInterface
 	 * @return  int
 	 */
 	public function getState();
+
+	/**
+	 * Propagate errors and warnings from an object, if the object supports the ErrorAwareInterface and / or
+	 * WarningsAwareInterface.
+	 *
+	 * @param   object  $object  The object to propagate from
+	 *
+	 * @return  void
+	 */
+	public function propagateFromObject($object);
 }

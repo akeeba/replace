@@ -142,7 +142,7 @@ class ErrorAwareTest extends \PHPUnit_Framework_TestCase
 		$parentObject->setError($exception);
 
 		$actual = $childObject->getError();
-		$this->assertNull($actual, "No error must be set in the shild object before we inherit from our parent.");
+		$this->assertNull($actual, "No error must be set in the child object before we inherit from our parent.");
 
 		$childObject->inheritErrorFrom($parentObject);
 
