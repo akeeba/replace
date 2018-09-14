@@ -85,7 +85,7 @@ final class PartStatus implements StatusInterface
 			'Warnings' => [],
 		];
 
-		$options['Done'] = $part->getState() == PartInterface::STATE_POSTRUN;
+		$options['Done'] = $part->getState() == PartInterface::STATE_FINALIZED;
 
 		if ($part instanceof DomainAwareInterface)
 		{
@@ -118,6 +118,8 @@ final class PartStatus implements StatusInterface
 	 * @param   array  $retArray
 	 *
 	 * @return  PartStatus
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function fromReturnArray(array $retArray)
 	{
@@ -239,6 +241,8 @@ final class PartStatus implements StatusInterface
 	 * Is the part done processing?
 	 *
 	 * @return  bool
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function isDone()
 	{
@@ -249,6 +253,8 @@ final class PartStatus implements StatusInterface
 	 * Get the domain of the engine part
 	 *
 	 * @return  string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function getDomain()
 	{
@@ -259,6 +265,8 @@ final class PartStatus implements StatusInterface
 	 * Get the step of the engine part
 	 *
 	 * @return  string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function getStep()
 	{
@@ -269,6 +277,8 @@ final class PartStatus implements StatusInterface
 	 * Get the substep of the engine part
 	 *
 	 * @return  string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function getSubstep()
 	{
@@ -279,6 +289,8 @@ final class PartStatus implements StatusInterface
 	 * Get the error exception or null if no error is set
 	 *
 	 * @return  ErrorException
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function getError()
 	{
@@ -289,6 +301,8 @@ final class PartStatus implements StatusInterface
 	 * Get the array of warning exceptions (warnings queue)
 	 *
 	 * @return  WarningException[]
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function getWarnings()
 	{

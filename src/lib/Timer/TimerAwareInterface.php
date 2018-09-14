@@ -9,20 +9,9 @@
 
 namespace Akeeba\Replace\Timer;
 
-/**
- * A Trait to implement the TimerAwareInterface
- *
- * @package Akeeba\Replace\Timer
- */
-trait TimerAware
-{
-	/**
-	 * The timer object
-	 *
-	 * @var  TimerInterface
-	 */
-	protected $timer = null;
 
+interface TimerAwareInterface
+{
 	/**
 	 * Assigns a Timer object.
 	 *
@@ -33,18 +22,12 @@ trait TimerAware
 	 *
 	 * @return  void
 	 */
-	public function setTimer(TimerInterface $timer)
-	{
-		$this->timer = $timer;
-	}
+	public function setTimer(TimerInterface $timer);
 
 	/**
 	 * Returns a reference to the timer object. This should only be used internally.
 	 *
 	 * @return  TimerInterface
 	 */
-	public function getTimer()
-	{
-		return $this->timer;
-	}
+	public function getTimer();
 }

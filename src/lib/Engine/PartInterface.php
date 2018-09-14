@@ -29,6 +29,8 @@ interface PartInterface
 
 	const STATE_POSTRUN = 4;
 
+	const STATE_FINALIZED = 5;
+
 	/**
 	 * Pass configuration parameters to the Engine Part. You need to do this before the first call to tick().
 	 *
@@ -61,11 +63,20 @@ interface PartInterface
 
 	/**
 	 * Propagate errors and warnings from an object, if the object supports the ErrorAwareInterface and / or
-	 * WarningsAwareInterface.
+	 * WarningsAwareInterface. Also propagates the step and substep if the object supports StepAwareInterface.
 	 *
 	 * @param   object  $object  The object to propagate from
 	 *
 	 * @return  void
 	 */
 	public function propagateFromObject($object);
+
+	/**
+	 * Symmetrical function to propagateFromObject.
+	 *
+	 * @param   object  $object  The object to propagate to
+	 *
+	 * @return  void
+	 */
+	public function propagateToObject($object);
 }

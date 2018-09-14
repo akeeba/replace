@@ -37,8 +37,11 @@
                 <!-- Trivial classes -->
                 <file>src/lib/Database/Query/Mysql.php</file>
                 <file>src/lib/Database/Query/Pdo.php</file>
+
+                <!-- Trivial traits (they are just collections of property getters and setters) -->
                 <file>src/lib/Engine/DomainAware.php</file>
                 <file>src/lib/Engine/StepAware.php</file>
+                <file>src/lib/Timer/TimerAware.php</file>
             </exclude>
         </whitelist>
     </filter>
