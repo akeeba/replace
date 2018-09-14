@@ -30,8 +30,18 @@ abstract class AbstractPart implements PartInterface, TimerAwareInterface, Error
 	use StepAware;
 	use DomainAware;
 
+	/**
+	 * The current state of the engine part
+	 *
+	 * @var  int
+	 */
 	protected $state = PartInterface::STATE_INIT;
 
+	/**
+	 * The configuration parameters for this engine part
+	 *
+	 * @var  array
+	 */
 	protected $parameters = array();
 
 	/**
