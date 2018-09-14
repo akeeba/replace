@@ -37,6 +37,8 @@
                 <!-- Trivial classes -->
                 <file>src/lib/Database/Query/Mysql.php</file>
                 <file>src/lib/Database/Query/Pdo.php</file>
+                <file>src/lib/Engine/DomainAware.php</file>
+                <file>src/lib/Engine/StepAware.php</file>
             </exclude>
         </whitelist>
     </filter>
