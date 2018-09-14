@@ -1,0 +1,156 @@
+<?php
+/**
+ * @package   AkeebaReplaceTests
+ * @copyright Copyright (c)2018 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @author    Nicholas K. Dionysopoulos
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
+ *
+ */
+
+namespace Akeeba\Replace\Tests\Engine\ErrorHandling;
+
+use Akeeba\Replace\Engine\ErrorHandling\ErrorAware;
+use Akeeba\Replace\Engine\ErrorHandling\ErrorAwareInterface;
+use Akeeba\Replace\Engine\ErrorHandling\ErrorException;
+
+class ErrorAwareTest extends \PHPUnit_Framework_TestCase
+{
+	/**
+	 * @covers \Akeeba\Replace\Engine\ErrorHandling\ErrorAware::setError
+	 */
+	public function testSetError()
+	{
+		/** @var ErrorAware $dummyObject */
+		$dummyObject = $this->getObjectForTrait('\\Akeeba\\Replace\\Engine\\ErrorHandling\\ErrorAware');
+
+		$expected    = new ErrorException('Foo bar baz');
+
+		$dummyObject->setError($expected);
+		$actual = $this->getObjectAttribute($dummyObject, 'error');
+		$this->assertSame($expected, $actual, "Setting an error must assign the error object");
+	}
+
+	/**
+	 * @covers \Akeeba\Replace\Engine\ErrorHandling\ErrorAware::setErrorMessage
+	 */
+	public function testSetErrorMessageWithObject()
+	{
+		/** @var ErrorAware $dummyObject */
+		$dummyObject = $this->getObjectForTrait('\\Akeeba\\Replace\\Engine\\ErrorHandling\\ErrorAware');
+		$errorObject = new ErrorException('Foo bar baz');
+
+		$this->expectException('\\InvalidArgumentException');
+		$this->expectExceptionMessage('Parameter $message to ');
+		$dummyObject->setErrorMessage($errorObject);
+	}
+
+	/**
+	 * @covers \Akeeba\Replace\Engine\ErrorHandling\ErrorAware::setErrorMessage
+	 */
+	public function testSetErrorMessageWithString()
+	{
+		/** @var ErrorAware $dummyObject */
+		$dummyObject = $this->getObjectForTrait('\\Akeeba\\Replace\\Engine\\ErrorHandling\\ErrorAware');
+
+		$message = 'Foo bar baz';
+		$actual  = $dummyObject->setErrorMessage($message);
+		$this->assertInternalType('object', $actual, 'setErrorMessage must return an object when a non-empty string is passed');
+		$this->assertEquals('Akeeba\Replace\Engine\ErrorHandling\ErrorException', get_class($actual), 'setErrorMessage must return an ExceptionException object when a non-empty string is passed');
+		$this->assertEquals($message, $actual->getMessage(), 'setErrorMessage must return an ExceptionException object with the correct message');
+		$this->assertEquals(0, $actual->getCode(), 'setErrorMessage must return an ExceptionException object with the correct code (zero)');
+		$internal = $this->getObjectAttribute($dummyObject, 'error');
+		$this->assertSame($actual, $internal, "The returned object must be a reference to the internal object");
+	}
+
+	/**
+	 * @covers \Akeeba\Replace\Engine\ErrorHandling\ErrorAware::setErrorMessage
+	 */
+	public function testSetErrorMessageWithNull()
+	{
+		/** @var ErrorAware $dummyObject */
+		$dummyObject = $this->getObjectForTrait('\\Akeeba\\Replace\\Engine\\ErrorHandling\\ErrorAware');
+
+		$message = '';
+		$actual  = $dummyObject->setErrorMessage($message);
+		$this->assertInternalType('null', $actual, 'setErrorMessage must return null when a non-empty string is passed');
+		$internal = $this->getObjectAttribute($dummyObject, 'error');
+		$this->assertNull($internal, "The internal error object must be cleared when setting an empty error message");
+	}
+
+	/**
+	 * @covers \Akeeba\Replace\Engine\ErrorHandling\ErrorAware::getError
+	 */
+	public function testGetError()
+	{
+		/** @var ErrorAware $dummyObject */
+		$dummyObject = $this->getObjectForTrait('\\Akeeba\\Replace\\Engine\\ErrorHandling\\ErrorAware');
+
+		$actual = $dummyObject->getError();
+		$this->assertNull($actual, "getError must return null when there is no error");
+
+		$exception = new ErrorException('Foo bar baz');
+		$dummyObject->setError($exception);
+
+		$actual = $dummyObject->getError();
+		$this->assertSame($exception, $actual, "getError must return the assigned object");
+
+	}
+
+	public function testResetError()
+	{
+		/** @var ErrorAware $dummyObject */
+		$dummyObject = $this->getObjectForTrait('\\Akeeba\\Replace\\Engine\\ErrorHandling\\ErrorAware');
+
+		$exception = new ErrorException('Foo bar baz');
+		$dummyObject->setError($exception);
+		$actual = $dummyObject->getError();
+
+		if ($actual !== $exception)
+		{
+			// We failed to set an exception. Therefore a positive test result does not necessarily indicate success!
+			$this->markAsRisky();
+		}
+
+		$dummyObject->resetError();
+		$actual = $dummyObject->getError();
+		$this->assertNull($actual, "reset() failed to reset the error object");
+	}
+
+	public function testInheritErrorFrom()
+	{
+		/**
+		 * IMPORTANT! The $parentObject needs to implement the ErrorAwareInterface. This is only possible by using a
+		 *            dummy abstract class and getMockForAbstractClass(). That's because getObjectForTrait() will return
+		 *            an object which does not implement any interface. Moreover, traits cannot be implementing
+		 *            interfaces (as of PHP 7.2) even if they actually contain all the methods to do so. That's a PHP
+		 *            shortcoming.
+		 */
+
+		/** @var ErrorAware|ErrorAwareInterface $parentObject */
+		$parentObject = $this->getMockForAbstractClass('Akeeba\Replace\Tests\Stubs\Engine\ErrorHandling\ErrorAwareTraitDummy');
+
+		/** @var ErrorAware $childObject */
+		$childObject = $this->getObjectForTrait('\\Akeeba\\Replace\\Engine\\ErrorHandling\\ErrorAware');
+
+		if ($childObject === $parentObject)
+		{
+			// Should never happen: same object returned by PHPUnit. This makes our test inconclusive.
+			$this->markAsRisky();
+		}
+
+		$exception = new ErrorException('Foo bar baz');
+		$parentObject->setError($exception);
+
+		$actual = $childObject->getError();
+		$this->assertNull($actual, "No error must be set in the shild object before we inherit from our parent.");
+
+		$childObject->inheritErrorFrom($parentObject);
+
+		$actual = $childObject->getError();
+		$this->assertSame($exception, $actual, "Inheriting an error must set a reference to the original error exception");
+
+		$actual = $parentObject->getError();
+		$this->assertNull($actual, "After inheriting from the parent, the parent's error must be cleared.");
+
+	}
+}
