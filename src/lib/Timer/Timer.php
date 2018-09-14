@@ -11,7 +11,7 @@ namespace Akeeba\Replace\Timer;
 /**
  * Timeout prevention timer
  */
-class Timer
+class Timer implements TimerInterface
 {
 	/** 
 	 * Maximum execution time allowance per step

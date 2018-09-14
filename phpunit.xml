@@ -32,13 +32,7 @@
                 <directory suffix=".php">src/lib/Autoloader</directory>
 
                 <!-- Interfaces -->
-                <file>src/lib/Database/DatabaseInterface.php</file>
-                <file>src/lib/Database/QueryLimitable.php</file>
-                <file>src/lib/Database/QueryPreparable.php</file>
-                <file>src/lib/Detection/DetectionInterface.php</file>
-
-                <!-- Exceptions -->
-                <!-- (None so far) -->
+                <directory suffix="Interface.php">src</directory>
 
                 <!-- Trivial classes -->
                 <file>src/lib/Database/Query/Mysql.php</file>
