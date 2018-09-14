@@ -145,7 +145,7 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		/** @var WarningsAware $dummyObject */
 		$dummyObject = $this->getObjectForTrait('Akeeba\Replace\Engine\ErrorHandling\WarningsAware');
 
-		$this->assertEmpty($this->getObjectAttribute($dummyObject, 'warnings'), 'Initial queu must be empty');
+		$this->assertEmpty($this->getObjectAttribute($dummyObject, 'warnings'), 'Initial queue must be empty');
 
 		$message = 'Foo bar';
 		$actual  = $dummyObject->addWarningMessage($message);
@@ -157,6 +157,29 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		$internal = $this->getObjectAttribute($dummyObject, 'warnings');
 		$this->assertSame($actual, $internal[0], "The returned object must be a reference to the internal object");
 
+	}
+
+	public function testAddWarningMessageWithEmpty()
+	{
+		/** @var WarningsAware $dummyObject */
+		$dummyObject = $this->getObjectForTrait('Akeeba\Replace\Engine\ErrorHandling\WarningsAware');
+
+		$this->assertEmpty($this->getObjectAttribute($dummyObject, 'warnings'), 'Initial queue must be empty');
+
+		$message = '';
+		$actual  = $dummyObject->addWarningMessage($message);
+
+		$this->assertNull($actual, 'addWarningMessage with an empty string must return null');
+		$internal = $this->getObjectAttribute($dummyObject, 'warnings');
+		$this->assertCount(0, $internal, "addWarningMessage with an empty string must not add to the queue (testing with an empty queue)");
+
+		$dummyObject->addWarningMessage('Foo');
+		$internal = $this->getObjectAttribute($dummyObject, 'warnings');
+		$this->assertCount(1, $internal, "addWarningMessage with a non-empty string must add to the queue");
+
+		$dummyObject->addWarningMessage('');
+		$internal = $this->getObjectAttribute($dummyObject, 'warnings');
+		$this->assertCount(1, $internal, "addWarningMessage with an empty string must not add to the queue (testing with a primed queue)");
 	}
 
 	public function testResetWarnings()
