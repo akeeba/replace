@@ -329,7 +329,8 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->instance->select('*')
 			->union('SELECT id FROM a');
 
-		$this->assertEquals("SELECT *\nUNION (SELECT id FROM a)", trim($this->instance));
+		$eol = PHP_EOL;
+		$this->assertEquals("SELECT *{$eol}UNION (SELECT id FROM a)", trim($this->instance));
 	}
 
 	/**
