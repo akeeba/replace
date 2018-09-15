@@ -153,12 +153,12 @@ final class PartStatus implements StatusInterface
 
 		if (isset($parameters['Step']))
 		{
-			$this->domain = $parameters['Step'];
+			$this->step = $parameters['Step'];
 		}
 
 		if (isset($parameters['Substep']))
 		{
-			$this->domain = $parameters['Substep'];
+			$this->substep = $parameters['Substep'];
 		}
 
 		if (isset($parameters['Error']))
