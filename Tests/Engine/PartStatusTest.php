@@ -116,18 +116,7 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 
 	public function testFromPart()
 	{
-		$timer = $this->getMockBuilder(Timer::class)->getMock();
-		/** @var AbstractPart $part */
-		$part   = new AbstractPartStub($timer, []);
-
-		$this->callObjectMethod($part, 'setDomain', 'foo');
-		$this->callObjectMethod($part, 'setStep', 'bar');
-		$this->callObjectMethod($part, 'setSubstep', 'bat');
-		$part->setErrorMessage('Foo bar baz');
-		$part->addWarningMessage('Foo');
-		$part->addWarningMessage('Bar');
-		$part->addWarningMessage('Baz');
-
+		$part   = $this->makeDummyPart();
 		$status = PartStatus::fromPart($part);
 
 		$this->assertFalse($status->isDone());
@@ -140,8 +129,26 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 
 	public function testToArray()
 	{
-		// TODO Implement me
-		$this->markTestIncomplete(sprintf('TODO: Implement %s test', __METHOD__));
+		$part   = $this->makeDummyPart();
+		$status = PartStatus::fromPart($part);
+
+		$actual = $status->toArray();
+
+		$expected = [
+			'HasRun' => 1,
+			'Done' => 0,
+			'Domain' => 'foo',
+			'Step' => 'bar',
+			'Substep' => 'bat',
+			'Error' => 'Foo bar baz',
+			'Warnings' => [
+				'Foo',
+				'Bar',
+				'Baz',
+			]
+		];
+
+		$this->assertEquals($expected, $actual);
 	}
 
 	private function callObjectMethod($object, $method, $params)
@@ -150,5 +157,25 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 		$refMethod = $refObj->getMethod($method);
 		$refMethod->setAccessible(true);
 		$refMethod->invoke($object, $params);
+	}
+
+	/**
+	 * @return AbstractPart
+	 */
+	private function makeDummyPart()
+	{
+		$timer = $this->getMockBuilder(Timer::class)->getMock();
+		/** @var AbstractPart $part */
+		$part = new AbstractPartStub($timer, []);
+
+		$this->callObjectMethod($part, 'setDomain', 'foo');
+		$this->callObjectMethod($part, 'setStep', 'bar');
+		$this->callObjectMethod($part, 'setSubstep', 'bat');
+		$part->setErrorMessage('Foo bar baz');
+		$part->addWarningMessage('Foo');
+		$part->addWarningMessage('Bar');
+		$part->addWarningMessage('Baz');
+
+		return $part;
 	}
 }
