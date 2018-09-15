@@ -89,6 +89,7 @@ abstract class AbstractPart implements PartInterface, TimerAwareInterface, Error
 		{
 			case PartInterface::STATE_INIT:
 				$this->prepare();
+				$this->nextState();
 				break;
 
 			case PartInterface::STATE_PREPARED:
@@ -98,6 +99,7 @@ abstract class AbstractPart implements PartInterface, TimerAwareInterface, Error
 
 			case PartInterface::STATE_POSTRUN:
 				$this->finalize();
+				$this->nextState();
 				break;
 		}
 
@@ -134,17 +136,13 @@ abstract class AbstractPart implements PartInterface, TimerAwareInterface, Error
 
 	/**
 	 * Executes when the state is STATE_INIT. You are supposed to set up internal objects and do any other kind of
-	 * preparatory work which does not take too much time; this is executed outside of a timer context (unless you
-	 * implement such logic yourself). After you're done call nextState() to set the internal state to STATE_PREPARED.
+	 * preparatory work which does not take too much time.
 	 *
 	 * @return  void
 	 *
 	 * @codeCoverageIgnore
 	 */
-	protected function prepare()
-	{
-		$this->nextState();
-	}
+	abstract protected function prepare();
 
 	/**
 	 * Main processing. Calls _afterPrepare() exactly once and process() at least once.
@@ -178,33 +176,27 @@ abstract class AbstractPart implements PartInterface, TimerAwareInterface, Error
 	 */
 	protected function afterPrepare()
 	{
+
 	}
 
 	/**
 	 * Main processing. Here you do the bulk of the work. When you no longer have any more work to do return boolean
 	 * false.
 	 *
-	 * @return  bool
+	 * @return  bool  false to indicate you are done, true to indicate more work is to be done.
 	 *
 	 * @codeCoverageIgnore
 	 */
-	protected function process()
-	{
-		return false;
-	}
+	abstract protected function process();
 
 	/**
-	 * Finalization. Here you are supposed to perform any kind of tear down after your work is done. Remember to call
-	 * nextState afterwards.
+	 * Finalization. Here you are supposed to perform any kind of tear down after your work is done.
 	 *
 	 * @return  void
 	 *
 	 * @codeCoverageIgnore
 	 */
-	protected function finalize()
-	{
-		$this->nextState();
-	}
+	abstract protected function finalize();
 
 	/**
 	 * Returns the status object for this Engine Part.
