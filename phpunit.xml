@@ -34,14 +34,16 @@
                 <!-- Interfaces -->
                 <directory suffix="Interface.php">src</directory>
 
-                <!-- Trivial classes -->
+                <!-- Trivial classes (only there for inheritance or they just have empty implementations (no code) -->
                 <file>src/lib/Database/Query/Mysql.php</file>
                 <file>src/lib/Database/Query/Pdo.php</file>
+                <file>src/lib/Logger/NullLogger.php</file>
 
                 <!-- Trivial traits (they are just collections of property getters and setters) -->
                 <file>src/lib/Engine/DomainAware.php</file>
                 <file>src/lib/Engine/StepAware.php</file>
                 <file>src/lib/Timer/TimerAware.php</file>
+                <file>src/lib/Logger/LoggerAware.php</file>
             </exclude>
         </whitelist>
     </filter>

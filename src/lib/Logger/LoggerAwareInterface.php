@@ -10,19 +10,12 @@
 namespace Akeeba\Replace\Logger;
 
 /**
- * A Trait to implement the LoggerAwareInterface
+ * Interface to a class which knows about using a logger
  *
  * @package Akeeba\Replace\Logger
  */
-trait LoggerAware
+interface LoggerAwareInterface
 {
-	/**
-	 * The logger object used to log things in this class
-	 *
-	 * @var  LoggerInterface
-	 */
-	private $logger = null;
-
 	/**
 	 * Assigns a Logger to the object.
 	 *
@@ -33,18 +26,12 @@ trait LoggerAware
 	 *
 	 * @return  void
 	 */
-	public function setLogger(LoggerInterface $logger)
-	{
-		$this->logger = $logger;
-	}
+	public function setLogger(LoggerInterface $logger);
 
 	/**
 	 * Returns a reference to the logger object. This should only be used internally.
 	 *
 	 * @return  LoggerInterface
 	 */
-	public function getLogger()
-	{
-		return $this->logger;
-	}
+	public function getLogger();
 }

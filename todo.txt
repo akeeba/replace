@@ -1,25 +1,14 @@
 Tests:
 ================================================================================
-Driver\Pdo
+Observable
+AbstractLogger
 
 Code + Tests (Library)
 ================================================================================
 
-Callback aware
-	addCallback(callable $callable)
-	trigger(array &$parameters)
-
 Add RegEx support to replacer
     Add RegEx support -- Special worry about UTF data!
     Test RegEx support
-
-Logger interface (use PSR?)
-
-Engine part interface
-
-Engine part
-    Dependency: timer
-    Dependency: logger
 
 Database iterator Interface (extends engine part interface)
     Input: list of filters
