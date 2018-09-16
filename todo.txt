@@ -1,7 +1,30 @@
 Tests:
 ================================================================================
-Observable
 AbstractLogger
+
+
+Driver needs to get __sleep and __wakeup. Disconnect on __sleep and __destroy. Reconnect on __wakeup.
+
+I need a special DB driver TRAIT for WordPress. This will be untestable since WP is using constants (grunt...). However, it's a trivial class so not all is lost.
+
+Copy the code from Akeeba\Engine\Driver\WordPress constructor for that driver.
+
+What the trait does:
+    disconnect sets the connection to null WITHOUT disconnecting
+    connect set the connection to something we get from WP (see the aforementioned driver)
+
+Create two concrete classes WordPressMySQL and WordPressMySQLi implementing the trait
+
+Create a helper which returns the correct driver object (WordPressMySQL, WordPressMySQLi, MySQL or MySQLi) depending on whether I run inside WP or outside of it. If I am outside I will need a path to a WP site to extract the connection parameters.
+
+Remove observable. This leads to security issues with unserialization (arbitrary callbacks can be injected to the serialized transient object and lead to arbitrary code execution).
+
+Instead, we will accept a list of objects in the constructor's $parameters.
+
+Depending on which interface they implement they will be added to a different private array variable. The idea is that I have on array for processing objects which run always and a different one for objects which only run when the table / row definition is modified.
+
+We will be calling a hardcoded method name (based on the interface) as needed.
+
 
 Code + Tests (Library)
 ================================================================================
