@@ -121,7 +121,7 @@ class Replacement
 	public static function isSerialised($string)
 	{
 		$scalar     = ['s:', 'i:', 'b:', 'd:', 'r:'];
-		$structured = ['a:', 'O:'];
+		$structured = ['a:', 'O:', 'C:'];
 
 		// Is it null?
 		if ($string == 'N;')
