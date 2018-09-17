@@ -91,7 +91,7 @@ abstract class AbstractLogger implements LoggerInterface
 	 */
 	public final function error($message)
 	{
-		$this->Log(LoggerInterface::SEVERITY_ERROR, $message);
+		$this->log(LoggerInterface::SEVERITY_ERROR, $message);
 	}
 
 	/**

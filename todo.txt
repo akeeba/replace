@@ -1,6 +1,6 @@
 Tests:
 ================================================================================
-AbstractLogger
+
 
 
 We are not going to use Observable. Instead, we will accept a list of objects in the constructor's $parameters.
