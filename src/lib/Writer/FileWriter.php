@@ -62,6 +62,8 @@ class FileWriter implements WriterInterface
 	 * @param   int  $bytes
 	 *
 	 * @return  void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function setMaxFileSize($bytes)
 	{
@@ -95,7 +97,7 @@ class FileWriter implements WriterInterface
 		$expected = $this->byteLen($string);
 
 		// Non-zero part size: if we would get past the part size limit create a new part and update $curPos.
-		if ($curPos + $expected > $this->maxFileSize)
+		if (($curPos > 0) && ($this->maxFileSize > 0) && ($curPos + $expected > $this->maxFileSize))
 		{
 			$this->close();
 			$this->numParts++;
@@ -117,7 +119,7 @@ class FileWriter implements WriterInterface
 		// Writing failed after we created a new part file. We have run out of disk space :(
 		if ($curPos == 0)
 		{
-			throw new RuntimeException("It looks like you run out of disk space. I tried writing $expected bytes, onll $written were written. Plase make some more space in your hosting account and retry.");
+			throw new RuntimeException("It looks like you run out of disk space. I tried writing $expected bytes, only $written were written. Please make some more space in your hosting account and retry.");
 		}
 
 		/**
@@ -295,6 +297,8 @@ class FileWriter implements WriterInterface
 	 * Reopen the file when the object is unserialized
 	 *
 	 * @return  void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function __wakeup()
 	{
@@ -305,6 +309,8 @@ class FileWriter implements WriterInterface
 	 * Close the file pointer when the object is disposed of.
 	 *
 	 * @return  void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function __destruct()
 	{
