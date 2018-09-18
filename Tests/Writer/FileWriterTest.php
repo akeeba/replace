@@ -227,6 +227,26 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Write a line to a .php file without expecting trouble
+	 *
+	 * @return void
+	 */
+	public function testWriteLineWithPHPFileNoProblem()
+	{
+		$filePath = $this->root->url() . '/foobar.php';
+		$dummy    = new FileWriter($filePath, false);
+
+		$preamble = $this->getObjectAttribute($dummy, 'phpPreamble');
+
+		$line = 'In PHP we trust';
+		$dummy->writeLine($line, "\n");
+
+		unset($dummy);
+
+		$this->assertEquals($preamble . "\n" . $line . "\n", file_get_contents($filePath));
+	}
+
+	/**
 	 * Write two lines, expect a new part file to be generated (line size smaller than part size)
 	 *
 	 * @return void
@@ -247,6 +267,32 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($this->root->hasChild('foobar.t01'), 'Part #1 must exist.');
 		$this->assertEquals($line . "\n", file_get_contents($filePath), 'Part #0 must have the first line.');
 		$this->assertEquals($line . "\n", file_get_contents($filePart2), 'Part #1 must have the second line');
+
+	}
+
+	/**
+	 * Write two lines to a .php file, expect a new part file to be generated (line size smaller than part size)
+	 *
+	 * @return void
+	 */
+	public function testWriteLineWithPHPFileChunked()
+	{
+		$filePath = $this->root->url() . '/foobar.php';
+		$filePart2 = $this->root->url() . '/foobar.01.php';
+		$dummy    = new FileWriter($filePath, false);
+		$dummy->setMaxFileSize(113);
+
+		$preamble = $this->getObjectAttribute($dummy, 'phpPreamble');
+
+		$line = 'In PHP we trust';
+		$dummy->writeLine($line, "\n");
+		$dummy->writeLine($line, "\n");
+
+		unset($dummy);
+
+		$this->assertTrue($this->root->hasChild('foobar.01.php'), 'Part #1 must exist.');
+		$this->assertEquals($preamble . "\n" . $line . "\n", file_get_contents($filePath), 'Part #0 must have the first line.');
+		$this->assertEquals($preamble . "\n" . $line . "\n", file_get_contents($filePart2), 'Part #1 must have the second line');
 
 	}
 

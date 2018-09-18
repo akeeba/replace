@@ -52,6 +52,13 @@ class FileWriter implements WriterInterface
 	protected $fp = null;
 
 	/**
+	 * Preamble to add to .php files
+	 *
+	 * @var  string
+	 */
+	protected $phpPreamble = "<?php die(); // This line is to protect the file from prying eyes. Please ignore it. ?>";
+
+	/**
 	 * Create a file writer
 	 *
 	 * @param   string  $filePath  Absolute file path to the file to write
@@ -125,7 +132,13 @@ class FileWriter implements WriterInterface
 			$curPos   = ftell($this->fp);
 		}
 
-		$written  = fwrite($this->fp, $string);
+		if (($curPos == 0) && (substr($this->filePath, -4) === '.php'))
+		{
+			// PHP files get a special line added to them in the beginning of the file
+			@fwrite($this->fp, $this->phpPreamble . $eol);
+		}
+
+		$written  = @fwrite($this->fp, $string);
 
 		// Treat our memory nicely (especially if we have to recurse).
 		unset($string);
@@ -262,17 +275,22 @@ class FileWriter implements WriterInterface
 			/**
 			 * No extension: files are number foo, foo.01, foo.02, ...
 			 */
-			$extension = '.';
+			$extension = '.' . sprintf('%02u', $partNumber);
+		}
+		elseif ($extension == '.php')
+		{
+			/**
+			 * With PHP extension: .php, .01.php, .02.php, ...
+			 */
+			$extension = '.' . sprintf('%02u', $partNumber) . '.php';
 		}
 		else
 		{
 			/**
 			 * With extension: .sql, .s01, .s02, ...
 			 */
-			$extension = substr($extension, 0, -2);
+			$extension = substr($extension, 0, -2) . sprintf('%02u', $partNumber);
 		}
-
-		$extension .= sprintf('%02u', $partNumber);
 
 		return $dirName . DIRECTORY_SEPARATOR . $baseName . $extension;
 	}
