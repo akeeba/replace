@@ -14,7 +14,7 @@ namespace Akeeba\Replace\Engine\Core;
  *
  * @package Akeeba\Replace\Engine\Core
  */
-final class Configuration
+class Configuration
 {
 	/**
 	 * Output SQL file path. Empty = no SQL output
@@ -123,32 +123,13 @@ final class Configuration
 	 * Creates a Configuration object from a configuration keyed array.
 	 *
 	 * @param   array  $params  A key-value array with the configuration variables.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function __construct(array $params)
 	{
-		if (empty($params))
-		{
-			return;
-		}
-
-		foreach ($params as $k => $v)
-		{
-			if (!property_exists($this, $k))
-			{
-				continue;
-			}
-
-			$method = 'set' . ucfirst($k);
-
-			if (!method_exists($this, $method))
-			{
-				continue;
-			}
-
-			call_user_func_array([$this, $method], [$v]);
-		}
+		$this->setFromParameters($params);
 	}
-
 
 	/**
 	 * Return the output SQL file path. Empty = no SQL output
@@ -168,6 +149,8 @@ final class Configuration
 	 * @param   string  $outputSQLFile
 	 *
 	 * @return  Configuration
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function setOutputSQLFile($outputSQLFile)
 	{
@@ -199,6 +182,8 @@ final class Configuration
 	 * @param   string  $backupSQLFile
 	 *
 	 * @return  Configuration
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function setBackupSQLFile($backupSQLFile)
 	{
@@ -230,6 +215,8 @@ final class Configuration
 	 * @param   bool  $liveMode
 	 *
 	 * @return  Configuration
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function setLiveMode($liveMode)
 	{
@@ -367,6 +354,8 @@ final class Configuration
 	 * @param   bool  $allTables  False = include only those tables matching the configured prefix.
 	 *
 	 * @return  Configuration
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function setAllTables($allTables)
 	{
@@ -402,7 +391,7 @@ final class Configuration
 
 		foreach ($excludeTables as $table)
 		{
-			if (is_string($table))
+			if (!is_string($table))
 			{
 				continue;
 			}
@@ -414,7 +403,7 @@ final class Configuration
 				continue;
 			}
 
-			$this->excludeTables = [];
+			$this->excludeTables[] = $table;
 		}
 
 		$this->excludeTables = array_unique($this->excludeTables);
@@ -445,9 +434,19 @@ final class Configuration
 	{
 		$this->excludeRows = [];
 
-		foreach ($excludeRows as $table => $row)
+		foreach ($excludeRows as $table => $rows)
 		{
-			if (is_string($table))
+			if (!is_array($rows))
+			{
+				continue;
+			}
+
+			if (empty($rows))
+			{
+				continue;
+			}
+
+			if (!is_string($table))
 			{
 				continue;
 			}
@@ -459,12 +458,36 @@ final class Configuration
 				continue;
 			}
 
+			$addRows = [];
+
+			foreach ($rows as $row)
+			{
+				if (!is_string($row))
+				{
+					continue;
+				}
+
+				$row = trim($row);
+
+				if (empty($row))
+				{
+					continue;
+				}
+
+				$addRows[] = $row;
+			}
+
+			if (empty($addRows))
+			{
+				continue;
+			}
+
 			if (!isset($this->excludeRows[$table]))
 			{
 				$this->excludeRows[$table] = [];
 			}
 
-			$this->excludeRows[$table][] = $row;
+			$this->excludeRows[$table] = array_merge($this->excludeRows[$table], $addRows);
 		}
 
 		$this->excludeRows = array_map(function ($rows) {
@@ -492,6 +515,8 @@ final class Configuration
 	 * @param   bool  $regularExpressions
 	 *
 	 * @return  Configuration
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function setRegularExpressions($regularExpressions)
 	{
@@ -520,9 +545,16 @@ final class Configuration
 	 * @param   array  $replacements
 	 *
 	 * @return  Configuration
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function setReplacements(array $replacements)
 	{
+		if (!is_array($replacements))
+		{
+			return $this;
+		}
+
 		$this->replacements = $replacements;
 
 		return $this;
@@ -546,6 +578,8 @@ final class Configuration
 	 * @param   string  $databaseCollation
 	 *
 	 * @return  Configuration
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function setDatabaseCollation($databaseCollation)
 	{
@@ -577,6 +611,8 @@ final class Configuration
 	 * @param   string  $tableCollation
 	 *
 	 * @return  Configuration
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function setTableCollation($tableCollation)
 	{
@@ -589,4 +625,36 @@ final class Configuration
 
 		return $this;
 	}
+
+	/**
+	 * Populates the Configuration from a key-value parameters array.
+	 *
+	 * @param   array  $params  A key-value array with the configuration variables.
+	 *
+	 * @return void
+	 */
+	public function setFromParameters(array $params)
+	{
+		if (empty($params))
+		{
+			return;
+		}
+
+		foreach ($params as $k => $v)
+		{
+			if (!property_exists($this, $k))
+			{
+				continue;
+			}
+
+			$method = 'set' . ucfirst($k);
+
+			if (!method_exists($this, $method))
+			{
+				continue;
+			}
+
+			call_user_func_array([$this, $method], [$v]);
+		}
+}
 }
