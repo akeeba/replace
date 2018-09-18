@@ -9,6 +9,7 @@
 
 namespace Akeeba\Replace\Engine;
 
+use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Engine\ErrorHandling\ErrorAware;
 use Akeeba\Replace\Engine\ErrorHandling\ErrorAwareInterface;
 use Akeeba\Replace\Engine\ErrorHandling\WarningsAware;
@@ -40,9 +41,9 @@ abstract class AbstractPart implements PartInterface, TimerAwareInterface, Error
 	/**
 	 * The configuration parameters for this engine part
 	 *
-	 * @var  array
+	 * @var  Configuration
 	 */
-	protected $parameters = array();
+	protected $config;
 
 	/**
 	 * AbstractPart constructor.
@@ -54,25 +55,8 @@ abstract class AbstractPart implements PartInterface, TimerAwareInterface, Error
 	{
 		$this->setTimer($timer);
 
-		$this->state = PartInterface::STATE_INIT;
-		$this->setup($params);
-	}
-
-	/**
-	 * Pass configuration parameters to the Engine Part. You need to do this before the first call to tick().
-	 *
-	 * @param   array  $parametersArray  The configuration parameters
-	 *
-	 * @return  void
-	 */
-	public final function setup(array $parametersArray)
-	{
-		if ($this->state >= PartInterface::STATE_PREPARED)
-		{
-			throw new \LogicException("Cannot run setup() on an object that is already prepared");
-		}
-
-		$this->parameters = $parametersArray;
+		$this->state  = PartInterface::STATE_INIT;
+		$this->config = new Configuration($params);
 	}
 
 	/**

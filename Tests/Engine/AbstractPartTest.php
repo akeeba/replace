@@ -17,6 +17,7 @@
 namespace Akeeba\Replace\Tests\Engine;
 
 use Akeeba\Replace\Engine\AbstractPart;
+use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Engine\ErrorHandling\ErrorAware;
 use Akeeba\Replace\Engine\ErrorHandling\ErrorException;
 use Akeeba\Replace\Engine\ErrorHandling\WarningsAware;
@@ -33,7 +34,7 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 		// Fake timer for testing
 		$timer = $this->createMock('Akeeba\Replace\Timer\Timer');
 		// Fake parameters
-		$params = ['foo' => 'bar', 'baz' => 'bat'];
+		$params = ['liveMode' => false, 'excludeTables' => ['foo', 'bar', 'baz']];
 		// Create a dummy object from the abstract class
 		$dummy = $this->getMockForAbstractClass('Akeeba\Replace\Engine\AbstractPart', [
 			$timer, $params,
@@ -42,45 +43,15 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 		// Make sure we got the correct object type
 		$this->assertInstanceOf('Akeeba\Replace\Engine\AbstractPart', $dummy, 'TEST ERROR: We do not have the correct class.');
 
-		$actualTimer  = $this->getObjectAttribute($dummy, 'timer');
-		$actualState  = $this->getObjectAttribute($dummy, 'state');
-		$actualParams = $this->getObjectAttribute($dummy, 'parameters');
+		$actualTimer    = $this->getObjectAttribute($dummy, 'timer');
+		$actualState    = $this->getObjectAttribute($dummy, 'state');
+		$actualConfig   = $this->getObjectAttribute($dummy, 'config');
+		$expectedConfig = new Configuration($params);
 
 		$this->assertInstanceOf('Akeeba\Replace\Timer\TimerInterface', $actualTimer, 'The Timer must be set by the constructor');
 		$this->assertSame($timer, $actualTimer, 'The actual Timer object must be set by the constructor');
 		$this->assertEquals(PartInterface::STATE_INIT, $actualState, 'The initial state must be STATE_INIT');
-		$this->assertSame($params, $actualParams, 'The parameters must be set by the constructor');
-	}
-
-	public function testSetup()
-	{
-		// Fake timer for testing
-		$dummy = $this->makeDummyObject();
-
-		$newParams = ['this' => 'that', 'here' => 'there'];
-		$dummy->setup($newParams);
-
-		$actualParams = $this->getObjectAttribute($dummy, 'parameters');
-		$this->assertSame($newParams, $actualParams, 'The parameters must be replaced by setup()');
-	}
-
-	/**
-	 * An exception must be raised if we try to run setup() after the object is initialized
-	 */
-	public function testSetupAfterInitialization()
-	{
-		$dummy = $this->makeDummyObject();
-
-		$refObj = new \ReflectionObject($dummy);
-		$refProp = $refObj->getProperty('state');
-		$refProp->setAccessible(true);
-		$refProp->setValue($dummy, PartInterface::STATE_PREPARED);
-
-		$this->expectException('LogicException');
-		$this->expectExceptionMessage("Cannot run setup() on an object that is already prepared");
-
-		$newParams = ['this' => 'that', 'here' => 'there'];
-		$dummy->setup($newParams);
+		$this->assertEquals($expectedConfig, $actualConfig, 'The parameters must be set by the constructor');
 	}
 
 	public function testPropagateFromObjectInvalid()

@@ -32,15 +32,6 @@ interface PartInterface
 	const STATE_FINALIZED = 5;
 
 	/**
-	 * Pass configuration parameters to the Engine Part. You need to do this before the first call to tick().
-	 *
-	 * @param   array  $parametersArray  The configuration parameters
-	 *
-	 * @return  void
-	 */
-	public function setup(array $parametersArray);
-
-	/**
 	 * Process one or more steps, until the timer tells us that we are running out of time.
 	 *
 	 * @return  PartStatus

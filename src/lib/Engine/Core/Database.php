@@ -7,7 +7,7 @@
  *
  */
 
-namespace Akeeba\Replace\Engine\Part;
+namespace Akeeba\Replace\Engine\Core;
 
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Engine\AbstractPart;
@@ -47,17 +47,21 @@ class Database extends AbstractPart
 
 		parent::__construct($timer, $params);
 
-		// TODO I need a writer
+		// TODO How do I best get the callbacks to allow testing? Create them in the part or get them as dependencies? Or both?
 	}
 
 	protected function prepare()
 	{
-		// TODO: Implement prepare() method.
+		// TODO Setup a file writer for the output SQL file.
+		// TODO Setup a file writer for the backup SQL file.
+		// TODO Run once-per-database callbacks.
+		// TODO Get the list of tables.
+		// TODO Filter the tables
 	}
 
 	protected function process()
 	{
-		// TODO: Implement process() method.
+		// TODO Iterate each of the tables. Will have to create a table iterator part and step it.
 	}
 
 	protected function finalize()
