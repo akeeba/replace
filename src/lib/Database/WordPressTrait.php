@@ -19,6 +19,12 @@ use Akeeba\Replace\Detection\WordPress;
  */
 trait WordPressTrait
 {
+	/**
+	 * The root of the WordPress site installation. Used to automatically find connection details when we are running
+	 * outside of the WordPress application.
+	 *
+	 * @var  string|null
+	 */
 	protected $wpSiteRoot = null;
 
 	/**
@@ -115,6 +121,11 @@ trait WordPressTrait
 		return $defaultOptions;
 	}
 
+	/**
+	 * Get the WordPress database connection handler, either a mysql resource or a mysqli object
+	 *
+	 * @return  resource|\mysqli|null
+	 */
 	public static function getWordPressDBConnectionObject()
 	{
 		global $wpdb;
@@ -124,7 +135,7 @@ trait WordPressTrait
 			return null;
 		}
 
-		if (isset($wpdb->dbp))
+		if (isset($wpdb->dbh))
 		{
 			return $wpdb->dbh;
 		}
@@ -144,7 +155,14 @@ trait WordPressTrait
 		return null;
 	}
 
-	public function reinitializeConnectionWith($defaultOptions)
+	/**
+	 * Re-initializes the driver object with the specified options
+	 *
+	 * @param   array  $defaultOptions
+	 *
+	 * @return  void
+	 */
+	public function reinitializeConnectionWith(array $defaultOptions = [])
 	{
 		$options = array_merge($defaultOptions, $this->options);
 
@@ -173,5 +191,8 @@ trait WordPressTrait
 		$this->count       = 0;
 		$this->errorNum    = 0;
 		$this->log         = [];
+
+		// Remember to actually reconnect the database (in case we don't have a connection handler)
+		$this->connect();
 	}
 }
