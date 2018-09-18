@@ -1,7 +1,11 @@
 Tests:
 ================================================================================
+DatabaseDefinition
+ColumnDefinition
+TableDefinition
+SQL (response)
 
-
+Update driver with methods to return database, table and column definitions (+ tests)
 
 We are not going to use Observable. Instead, we will accept a list of objects in the constructor's $parameters.
 
@@ -114,50 +118,3 @@ Row Backup callback
     Dependency: writer interface, used to write to backup SQL files
     Dependency: DB driver
     Dependency: logger
-
-Parameters
-================================================================================
-[
-	// ### Output options
-	// Output SQL file path. Empty = no SQL output
-	'outputSQLFile' => '',
-	// Backup SQL file path. Empty = no backup
-	'backupSQLFile' => '',
-	// Should I run actions directly to the database?
-	'liveMode' => true,
-
-	// ### Actions
-s	// List of per-database action class names to instantiate
-	'perDatabaseClasses' => [],
-	// List of per-table action class names to instantiate
-	'perTableClasses' => [],
-
-	// ### Filtering
-	// Include all tables, regardless of their prefix. False = only those matching the configured prefix.
-	'allTables' => false,
-	// Table names to exclude. Either abstract (#__table) or concrete (wp_table) name accepted
-	'excludeTables' => [
-		'#__table_one',
-		'#__table_two',
-	],
-	// Table rows to exclude.
-	'excludeRows' => [
-		'#__table1' => ['row1', 'row2', ],
-		'#__table2' => ['rowA', 'rowB', ],
-		// ...
-	],
-
-	// ### Replacement options
-	// Use regular expressions?
-	'regularExpressions' => false,
-	// Replacements
-	'replacements' => [
-		$from1 => $to1,
-		$from2 => $to2,
-		// ...
-	],
-	// Change the database collation. Empty = do not change.
-	'databaseCollation' => '',
-	// Change the table / column collation. Empty = do not change.
-	'tableCollation' => '',
-]
