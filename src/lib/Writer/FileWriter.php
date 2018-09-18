@@ -11,6 +11,12 @@ namespace Akeeba\Replace\Writer;
 
 use RuntimeException;
 
+/**
+ * A Writer which records information to text files, one line at a time. Intended for use when writing to log and SQL
+ * files.
+ *
+ * @package Akeeba\Replace\Writer
+ */
 class FileWriter implements WriterInterface
 {
 	/**
@@ -27,8 +33,22 @@ class FileWriter implements WriterInterface
 	 */
 	protected $numParts = 0;
 
+	/**
+	 * Maximum part file size. The file will be split into parts which are up to this many bytes. However, when the
+	 * first line of a file exceeds that length it will NOT be split across files.
+	 *
+	 * Use zero to generally prevent splitting. If the filesystem prevents writing to a file past a certain length
+	 * splitting may still be effected, though.
+	 *
+	 * @var  int
+	 */
 	protected $maxFileSize = 0;
 
+	/**
+	 * File pointer to the text file currently open for writing
+	 *
+	 * @var  resource|null
+	 */
 	protected $fp = null;
 
 	/**
@@ -317,6 +337,13 @@ class FileWriter implements WriterInterface
 		$this->close();
 	}
 
+	/**
+	 * Get the string length in bytes. Automatically uses mbstring if available.
+	 *
+	 * @param   string  $string
+	 *
+	 * @return  int
+	 */
 	private function byteLen($string)
 	{
 		if (function_exists('mb_strlen'))
