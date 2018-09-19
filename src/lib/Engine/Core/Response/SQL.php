@@ -48,8 +48,6 @@ class SQL
 	 * Does this response define action queries?
 	 *
 	 * @return  bool
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function hasActionQueries()
 	{
@@ -60,8 +58,6 @@ class SQL
 	 * Does this response define restoration queries?
 	 *
 	 * @return  bool
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function hasRestorationQueries()
 	{
@@ -72,8 +68,6 @@ class SQL
 	 * Get the action queries.
 	 *
 	 * @return  Query[]
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function getActionQueries()
 	{
@@ -84,8 +78,6 @@ class SQL
 	 * Get the restoration query.
 	 *
 	 * @return  Query[]
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function getRestorationQueries()
 	{

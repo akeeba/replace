@@ -38,6 +38,7 @@
                 <file>src/lib/Database/Query/Mysql.php</file>
                 <file>src/lib/Database/Query/Pdo.php</file>
                 <file>src/lib/Logger/NullLogger.php</file>
+                <file>src/lib/Engine/Core/Response/SQL.php</file>
 
                 <!-- Trivial traits (they are just collections of property getters and setters) -->
                 <file>src/lib/Engine/DomainAware.php</file>
