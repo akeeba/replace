@@ -11,6 +11,7 @@ namespace Akeeba\Replace\Tests\Database;
 
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Metadata\Database;
+use Akeeba\Replace\Database\Metadata\Table;
 
 class DriverTest extends \PHPUnit_Framework_TestCase
 {
@@ -374,6 +375,43 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 		$actual = $db->getDatabaseMeta('FooBarBazBat');
 	}
+
+	public function testGetTableMeta()
+	{
+		$db     = $this->getRealDatabaseConnection();
+
+		$sql = <<< MYSQL
+CREATE TABLE IF NOT EXISTS `akr_dbtest_formeta` (
+  `id`          int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title`       varchar(50)      NOT NULL,
+  `start_date`  datetime         NOT NULL,
+  `description` varchar(255)     NOT NULL,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = MEMORY
+  DEFAULT COLLATE = utf8_general_ci
+
+MYSQL;
+		$db->setQuery($sql)->execute();
+
+		$actual = $db->getTableMeta('#__dbtest_formeta');
+
+		$this->assertInstanceOf(Table::class, $actual);
+		$this->assertEquals('akr_dbtest_formeta', $actual->getName());
+		$this->assertEquals('utf8_general_ci', $actual->getCollation());
+		$this->assertEquals('MEMORY', $actual->getEngine());
+	}
+
+	public function testGetTableMetaNotExists()
+	{
+		$db     = $this->getRealDatabaseConnection();
+
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Table ThisTableDoesNotExist does not exist in database replacetest or the current database user does not have permissions to retrieve its metadata');
+
+		$actual = $db->getTableMeta('ThisTableDoesNotExist');
+	}
+
 
 
 	/**

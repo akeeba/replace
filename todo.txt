@@ -1,9 +1,9 @@
 Tests:
 ================================================================================
 ✔ Driver::getDatabaseNameFromConnection
-✔ Driver::getDatabaseMeta  [check it calls Database::fromDatabaseResult once]
-Driver::getTableMeta  [check it calls Table::fromDatabaseResult once]
-Driver::getColumnsMeta  [check it calls Column::fromDatabaseResult multiple times]
+✔ Driver::getDatabaseMeta
+✔ Driver::getTableMeta
+Driver::getColumnsMeta
 Driver::getDatabase  (update)
 
 DatabaseDefinition::fromDatabaseResult

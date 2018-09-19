@@ -1603,7 +1603,8 @@ abstract class Driver implements DatabaseInterface
 	 */
 	public function getTableMeta($tableName)
 	{
-		$database = $this->getDatabase();
+		$database  = $this->getDatabase();
+		$tableName = $this->replacePrefix($tableName);
 
 		$query = $this->getQuery(true)
 			->select('*')
@@ -1622,13 +1623,13 @@ abstract class Driver implements DatabaseInterface
 
 		if (empty($result))
 		{
-			$query = 'SHOW TABLE STATUS WHERE ' . $this->qn('Name') . ' = ' . $this->q($tableName);
+			$query  = 'SHOW TABLE STATUS WHERE ' . $this->qn('Name') . ' = ' . $this->q($tableName);
 			$result = $this->setQuery($query)->loadAssoc();
 		}
 
 		if (empty($result))
 		{
-			throw new RuntimeException(sprintf("Table %s does not exist in database %s or the current database user does not have permissions to retrieve its metadata", $database, $tableName));
+			throw new RuntimeException(sprintf("Table %s does not exist in database %s or the current database user does not have permissions to retrieve its metadata", $tableName, $database));
 		}
 
 		return Table::fromDatabaseResult($result);
@@ -1643,7 +1644,8 @@ abstract class Driver implements DatabaseInterface
 	 */
 	public function getColumnsMeta($tableName)
 	{
-		$database = $this->getDatabase();
+		$database  = $this->getDatabase();
+		$tableName = $this->replacePrefix($tableName);
 
 		$query = $this->getQuery(true)
 			->select('*')
@@ -1662,7 +1664,7 @@ abstract class Driver implements DatabaseInterface
 
 		if (empty($result))
 		{
-			$query = 'SHOW FULL COLUMNS FROM ' . $this->qn($tableName);
+			$query  = 'SHOW FULL COLUMNS FROM ' . $this->qn($tableName);
 			$result = $this->setQuery($query)->loadAssocList('Field');
 		}
 
