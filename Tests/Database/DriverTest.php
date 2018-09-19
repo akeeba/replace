@@ -412,7 +412,46 @@ MYSQL;
 		$actual = $db->getTableMeta('ThisTableDoesNotExist');
 	}
 
+	public function testGetColumnsMeta()
+	{
+		$db     = $this->getRealDatabaseConnection();
 
+		$sql = <<< MYSQL
+CREATE TABLE IF NOT EXISTS `akr_dbtest_formeta` (
+  `id`          int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title`       varchar(50)      NOT NULL,
+  `start_date`  datetime         NOT NULL,
+  `description` varchar(255)     NOT NULL,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = MEMORY
+  DEFAULT COLLATE = utf8_general_ci
+
+MYSQL;
+		$db->setQuery($sql)->execute();
+
+		$actual = $db->getColumnsMeta('#__dbtest_formeta');
+
+		$this->assertCount(4, $actual);
+		$this->assertArrayHasKey('id', $actual);
+		$this->assertArrayHasKey('title', $actual);
+		$this->assertArrayHasKey('start_date', $actual);
+		$this->assertArrayHasKey('description', $actual);
+		$this->assertFalse($actual['id']->isText());
+		$this->assertTrue($actual['id']->isPK());
+		$this->assertTrue($actual['title']->isText());
+		$this->assertFalse($actual['title']->isPK());
+	}
+
+	public function testGetColumnsMetaNotExists()
+	{
+		$db     = $this->getRealDatabaseConnection();
+
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('Table replacetest does not exist in database ThisTableDoesNotExist or the current database user does not have permissions to retrieve its column metadata');
+
+		$actual = $db->getColumnsMeta('ThisTableDoesNotExist');
+	}
 
 	/**
 	 * Create a real database driver connected to our test database. This is required for some tests which definitely

@@ -3,7 +3,7 @@ Tests:
 ✔ Driver::getDatabaseNameFromConnection
 ✔ Driver::getDatabaseMeta
 ✔ Driver::getTableMeta
-Driver::getColumnsMeta
+✔ Driver::getColumnsMeta
 Driver::getDatabase  (update)
 
 DatabaseDefinition::fromDatabaseResult

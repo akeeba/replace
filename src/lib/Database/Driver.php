@@ -1664,8 +1664,15 @@ abstract class Driver implements DatabaseInterface
 
 		if (empty($result))
 		{
-			$query  = 'SHOW FULL COLUMNS FROM ' . $this->qn($tableName);
-			$result = $this->setQuery($query)->loadAssocList('Field');
+			try
+			{
+				$query  = 'SHOW FULL COLUMNS FROM ' . $this->qn($tableName);
+				$result = $this->setQuery($query)->loadAssocList('Field');
+			}
+			catch (RuntimeException $e)
+			{
+				$result = null;
+			}
 		}
 
 		if (empty($result))
