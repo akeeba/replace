@@ -1552,7 +1552,7 @@ abstract class Driver implements DatabaseInterface
 	 */
 	public function getDatabaseNameFromConnection()
 	{
-		$name = $this->setQuery('SELECT DATABASE()')->loadResult();
+		$name = $this->setQuery('SELECT DATABASE() AS ' . $this->qn('foo'))->loadResult();
 
 		if (empty($name))
 		{

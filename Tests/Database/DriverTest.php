@@ -145,6 +145,43 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('mightymouse', $this->instance->getDatabase());
 	}
 
+	public function testGetDatabaseFromOptions()
+	{
+		$refObj = new \ReflectionObject($this->instance);
+		$refProp = $refObj->getProperty('_database');
+		$refProp->setAccessible(true);
+		$refProp->setValue($this->instance, '');
+
+		$this->assertEquals('mightymouse', $this->instance->getDatabase());
+		$this->assertEquals('mightymouse', $this->getObjectAttribute($this->instance, '_database'));
+	}
+
+	public function testGetDatabaseFromConnection()
+	{
+		$db = $this->getRealDatabaseConnection();
+
+		// I need to do this manually since I'm about to kill all the connection information from the object!
+		$db->connect();
+
+		$refObj = new \ReflectionObject($db);
+
+		$refDatabase = $refObj->getProperty('_database');
+		$refDatabase->setAccessible(true);
+		$refDatabase->setValue($db, '');
+
+		$refOptions = $refObj->getProperty('options');
+		$refOptions->setAccessible(true);
+		$options = $refOptions->getValue($db);
+		unset($options['database']);
+		$refOptions->setValue($db, $options);
+
+		$this->assertEquals($_ENV['DB_NAME'], $db->getDatabase());
+		$this->assertEquals($_ENV['DB_NAME'], $this->getObjectAttribute($db, '_database'));
+		$actualOptions = $this->getObjectAttribute($db, 'options');
+		$this->assertEquals($_ENV['DB_NAME'], $actualOptions['database']);
+	}
+
+
 	public function testGetDateFormat()
 	{
 		$this->assertThat(
