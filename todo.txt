@@ -1,12 +1,16 @@
 Tests:
 ================================================================================
-Create a dummy Core\Table so I can complete writing Core\Database
+Core\Database: Have backup and output writers as dependencies, not created objects
 
 Break down all the action in Core\Database in smaller classes which can be tested.
-Do not use abstract classes / static calls (they are moderately untestable). Use concrete classes with public functions.
-The namespace COULD be Helper
-Consider how much data we are flowing to / from these classes. Avoid large data structures.
-Test each helper before the main object.
+Break down all the action in Core\Table in smaller classes which can be tested.
+    Do not use abstract classes / static calls (they are moderately untestable). Use concrete classes with public functions.
+    The namespace COULD be Helper
+    Consider how much data we are flowing to / from these classes. Avoid large data structures.
+Test each helper before the main objects.
+Test Core\Database
+
+Implement and test Core\Table
 
 Code + Tests (Library)
 ================================================================================

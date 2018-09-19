@@ -10,9 +10,9 @@
 namespace Akeeba\Replace\Engine\Core;
 
 use Akeeba\Replace\Database\Driver;
-use Akeeba\Replace\Database\Metadata\Table;
 use Akeeba\Replace\Database\Query;
 use Akeeba\Replace\Engine\AbstractPart;
+use Akeeba\Replace\Engine\Core\Table as TablePart;
 use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\TimerInterface;
@@ -57,25 +57,11 @@ class Database extends AbstractPart
 	private $tableList = [];
 
 	/**
-	 * The current table we are processing
+	 * The Engine Part we tick to process a table
 	 *
-	 * @var  Table
+	 * @var  AbstractPart
 	 */
-	private $currentTable = null;
-
-	/**
-	 * The next table row we have to process
-	 *
-	 * @var  int
-	 */
-	private $tableOffset = 0;
-
-	/**
-	 * The determined batch size of the table
-	 *
-	 * @var  int
-	 */
-	private $tableBatch = 1;
+	private $tablePart = null;
 
 	/**
 	 * Overloaded constructor.
@@ -131,17 +117,22 @@ class Database extends AbstractPart
 	protected function process()
 	{
 		// If no current table is set we need to iterate the next table
-		if (empty($this->currentTable))
+		if (empty($this->tablePart))
 		{
 			try
 			{
 				$this->takeNextTable();
-				$this->runPerTableActions($this->currentTable);
 			}
 			catch (\UnderflowException $e)
 			{
 				// Oh, no more tables on the list. We are done here.
 				return false;
+			}
+
+			// The table was filtered out, e.g. because it's a VIEW, not a table. Get the next table on the next tick.
+			if (empty($this->tablePart))
+			{
+				return true;
 			}
 		}
 
@@ -151,16 +142,26 @@ class Database extends AbstractPart
 			return true;
 		}
 
-		try
+		// Run a single step of the table processing Engine Part
+		$status = $this->tablePart->tick();
+
+		// Inherit warnings and errors
+		$this->inheritWarningsFrom($this->tablePart);
+		$this->inheritErrorFrom($this->tablePart);
+
+		// If we have an error we must stop processing right away
+		if (is_object($status->getError()))
 		{
-			$this->continueProcessingTable();
-		}
-		catch (\OverflowException $e)
-		{
-			// Indicate that we are done with this table.
-			$this->currentTable = null;
+			return false;
 		}
 
+		// If the table processing Engine Part is done we indicate we need a new table
+		if ($status->isDone())
+		{
+			$this->tablePart = null;
+		}
+
+		// We have more work to do
 		return true;
 	}
 
@@ -419,99 +420,34 @@ class Database extends AbstractPart
 		});
 	}
 
-	protected function getOptimumBatchSize(Table $tableMeta)
-	{
-		$defaultBatchSize = $this->config->getMaxBatchSize();
-		$averageRowLength = $tableMeta->getAverageRowLength();
-
-		if (empty($averageRowLength))
-		{
-			// Unknown average row length, use the maximum batch size already configured
-			return $defaultBatchSize;
-		}
-
-		// That's the average row size as reported by MySQL.
-		$avgRow      = str_replace(array(',', '.'), array('', ''), $averageRowLength);
-		// The memory available for manipulating data is less than the free memory
-		$memoryLimit = $this->getMemoryLimit();
-		$memoryLimit = empty($memoryLimit) ? 33554432 : $memoryLimit;
-		$usedMemory  = $this->getMemoryUsage();
-		$memoryLeft  = 0.75 * ($memoryLimit - $usedMemory);
-		// The 3.25 factor is empirical and leans on the safe side.
-		$maxRows     = (int) ($memoryLeft / (3.25 * $avgRow));
-
-		return max(1, min($maxRows, $defaultBatchSize));
-	}
-
 	/**
-	 * Get the PHP memory limit in bytes
-	 *
-	 * @return int|null  Memory limit in bytes or null if we can't figure it out.
+	 * Prepare to operate on the next table on the list.
 	 */
-	protected function getMemoryLimit()
+	protected function takeNextTable()
 	{
-		if (!function_exists('ini_get'))
+		// Make sure there are more tables to process
+		if (empty($this->tableList))
 		{
-			return null;
+			throw new \UnderflowException("The list of tables is empty");
 		}
 
-		$memLimit = ini_get("memory_limit");
+		// Get the table meta of the next table to process
+		$tableName       = array_shift($this->tableList);
+		$tableMeta       = $this->db->getTableMeta($tableName);
+		$this->tablePart = null;
 
-		if ((is_numeric($memLimit) && ($memLimit < 0)) || !is_numeric($memLimit))
+		if (is_null($tableMeta->getEngine()))
 		{
-			// A negative memory limit means no memory limit, see http://php.net/manual/en/ini.core.php#ini.memory-limit
-			$memLimit = 0;
+			// This is a VIEW, not a table. I cannot replace data in a view.
+			$this->getLogger()->debug(sprintf('Skipping table %s (this is a VIEW, not a table)', $tableName));
+
+			$this->tablePart = null;
+
+			return;
 		}
 
-		$memLimit = $this->humanToIntegerBytes($memLimit);
+		// Create a new table Engine Part
+		$this->tablePart = new TablePart($this->timer, $this->db, $this->getLogger(), $this->config, $this->outputWriter, $this->backupWriter, $tableMeta);
 
-		return $memLimit;
-	}
-
-	/**
-	 * Converts a human formatted size to integer representation of bytes,
-	 * e.g. 1M to 1024768
-	 *
-	 * @param   string  $setting  The value in human readable format, e.g. "1M"
-	 *
-	 * @return  integer  The value in bytes
-	 */
-	protected function humanToIntegerBytes($setting)
-	{
-		$val = trim($setting);
-		$last = strtolower($val{strlen($val) - 1});
-
-		if (is_numeric($last))
-		{
-			return $setting;
-		}
-
-		switch ($last)
-		{
-			case 't':
-				$val *= 1024;
-			case 'g':
-				$val *= 1024;
-			case 'm':
-				$val *= 1024;
-			case 'k':
-				$val *= 1024;
-		}
-
-		return (int) $val;
-	}
-
-	/**
-	 * Returns the memory currently in use, in bytes.
-	 *
-	 * The reason we have this trivial method is merely to be able to mock it during testing.
-	 *
-	 * @return  int
-	 *
-	 * @codeCoverageIgnore
-	 */
-	protected function getMemoryUsage()
-	{
-		return memory_get_usage();
 	}
 }
