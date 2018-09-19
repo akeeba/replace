@@ -343,4 +343,52 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 			'truncateTable should not return anything if successful.'
 		);
 	}
+
+	public function testGetDatabaseNameFromConnection()
+	{
+		$db = $this->getRealDatabaseConnection();
+
+		$actual   = $db->getDatabaseNameFromConnection();
+		$expected = $_ENV['DB_NAME'];
+		$this->assertEquals($expected, $actual);
+	}
+
+	/**
+	 * Create a real database driver connected to our test database. This is required for some tests which definitely
+	 * need to run against a real database.
+	 *
+	 * @return  Driver
+	 */
+	private function getRealDatabaseConnection()
+	{
+		// I need a real connection for this test.
+		if (Driver\Mysql::isSupported())
+		{
+			$driverType = 'mysql';
+		}
+		elseif (Driver\Mysqli::isSupported())
+		{
+			$driverType = 'mysqli';
+		}
+		elseif (Driver\Pdomysql::isSupported())
+		{
+			$driverType = 'pdomysql';
+		}
+		else
+		{
+			$this->markTestIncomplete('No supported database driver found');
+		}
+
+		$db = Driver::getInstance([
+			'driver'   => $driverType,
+			'database' => $_ENV['DB_NAME'],
+			'host'     => $_ENV['DB_HOST'],
+			'user'     => $_ENV['DB_USER'],
+			'password' => $_ENV['DB_PASS'],
+			'prefix'   => 'akr_',
+			'select'   => true,
+		]);
+
+		return $db;
+	}
 }

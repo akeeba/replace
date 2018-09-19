@@ -8,6 +8,10 @@
 
 namespace Akeeba\Replace\Database;
 
+use Akeeba\Replace\Engine\Database\Metadata\Column;
+use Akeeba\Replace\Engine\Database\Metadata\Database;
+use Akeeba\Replace\Engine\Database\Metadata\Table;
+use RuntimeException;
 use stdClass;
 
 /**
@@ -196,7 +200,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  Driver  A database object.
 	 *
-	 * @throws  \RuntimeException  When the driver cannot be instantiated
+	 * @throws  RuntimeException  When the driver cannot be instantiated
 	 */
 	public static function getInstance($options = array())
 	{
@@ -218,7 +222,7 @@ abstract class Driver implements DatabaseInterface
 			// If the class still doesn't exist we have nothing left to do but throw an exception.  We did our best.
 			if (!class_exists($class))
 			{
-				throw new \RuntimeException(sprintf('Unable to load Database Driver: %s', $options['driver']));
+				throw new RuntimeException(sprintf('Unable to load Database Driver: %s', $options['driver']));
 			}
 
 			// Create our new Driver connector based on the options given.
@@ -226,9 +230,9 @@ abstract class Driver implements DatabaseInterface
 			{
 				$instance = new $class($options);
 			}
-			catch (\RuntimeException $e)
+			catch (RuntimeException $e)
 			{
-				throw new \RuntimeException(sprintf('Unable to connect to the Database: %s', $e->getMessage()));
+				throw new RuntimeException(sprintf('Unable to connect to the Database: %s', $e->getMessage()));
 			}
 
 			// Set the new connector to the global instances based on signature.
@@ -353,13 +357,13 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  string  The query that alter the database query string
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function alterDbCharacterSet($dbName)
 	{
 		if (is_null($dbName))
 		{
-			throw new \RuntimeException('Database name must not be null.');
+			throw new RuntimeException('Database name must not be null.');
 		}
 
 		$this->setQuery($this->getAlterDbCharacterSet($dbName));
@@ -372,7 +376,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  void  Returns void if the database connected successfully.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function connect();
 
@@ -393,21 +397,21 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  string  The query that creates database
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function createDatabase($options, $utf = true)
 	{
 		if (is_null($options))
 		{
-			throw new \RuntimeException('$options object must not be null.');
+			throw new RuntimeException('$options object must not be null.');
 		}
 		elseif (empty($options->db_name))
 		{
-			throw new \RuntimeException('$options object must have db_name set.');
+			throw new RuntimeException('$options object must have db_name set.');
 		}
 		elseif (empty($options->db_user))
 		{
-			throw new \RuntimeException('$options object must have db_user set.');
+			throw new RuntimeException('$options object must have db_user set.');
 		}
 
 		$this->setQuery($this->getCreateDatabaseQuery($options, $utf));
@@ -430,7 +434,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  Driver     Returns this object to support chaining.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public abstract function dropTable($table, $ifExists = true);
 
@@ -566,11 +570,27 @@ abstract class Driver implements DatabaseInterface
 	/**
 	 * Gets the name of the database used by this connection.
 	 *
+	 * It will first try the internal _database property. If it's empty, it will fall back to the database key of the
+	 * options array. If that is empty or does not exist it will ask the connected DB server.
+	 *
 	 * @return  string
 	 *
+	 * @throws  RuntimeException  If no DB name is provided and we cannot retrieve it from the server.
 	 */
 	public function getDatabase()
 	{
+		if (!empty($this->_database))
+		{
+			return $this->_database;
+		}
+
+		if (!isset($this->options['database']) || empty($this->options['database']))
+		{
+			$this->options['database'] = $this->getDatabaseNameFromConnection();
+		}
+
+		$this->_database = $this->options['database'];
+
 		return $this->_database;
 	}
 
@@ -646,7 +666,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  Query  The current query object or a new object extending the Query class.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function getQuery($new = false)
 	{
@@ -659,7 +679,7 @@ abstract class Driver implements DatabaseInterface
 			if (!class_exists($class))
 			{
 				// If it doesn't exist we are at an impasse so throw an exception.
-				throw new \RuntimeException('Database Query Class not found.');
+				throw new RuntimeException('Database Query Class not found.');
 			}
 
 			return new $class($this);
@@ -678,7 +698,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  array  An array of fields by table.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function getTableColumns($table, $typeOnly = true);
 
@@ -689,7 +709,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  array  A list of the create SQL for the tables.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function getTableCreate($tables);
 
@@ -700,7 +720,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  array  An array of keys for the table(s).
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function getTableKeys($tables);
 
@@ -709,7 +729,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  array  An array of all the tables in the database.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function getTableList();
 
@@ -746,7 +766,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  boolean    True on success.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function insertObject($table, &$object, $key = null)
 	{
@@ -812,7 +832,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function loadAssoc()
 	{
@@ -852,7 +872,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  mixed   The return value or null if the query failed.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function loadAssocList($key = null, $column = null)
 	{
@@ -894,7 +914,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  mixed    The return value or null if the query failed.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function loadColumn($offset = 0)
 	{
@@ -927,7 +947,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  mixed   The return value or null if the query failed.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function loadObject($class = 'stdClass')
 	{
@@ -965,7 +985,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  mixed   The return value or null if the query failed.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function loadObjectList($key = '', $class = 'stdClass')
 	{
@@ -1003,7 +1023,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function loadResult()
 	{
@@ -1035,7 +1055,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  mixed  The return value or null if the query failed.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function loadRow()
 	{
@@ -1072,7 +1092,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  mixed   The return value or null if the query failed.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function loadRowList($key = null)
 	{
@@ -1112,7 +1132,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  Driver     Returns this object to support chaining.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public abstract function lockTable($tableName);
 
@@ -1325,7 +1345,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  Driver    Returns this object to support chaining.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public abstract function renameTable($oldTable, $newTable, $backup = null, $prefix = null);
 
@@ -1336,7 +1356,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  boolean  True if the database was successfully selected.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function select($database);
 
@@ -1388,7 +1408,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  void
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function transactionCommit();
 
@@ -1397,7 +1417,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  void
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function transactionRollback();
 
@@ -1406,7 +1426,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  void
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function transactionStart();
 
@@ -1417,7 +1437,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  void
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function truncateTable($table)
 	{
@@ -1435,7 +1455,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public function updateObject($table, &$object, $key, $nulls = false)
 	{
@@ -1511,7 +1531,7 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  mixed  A database cursor resource on success, boolean false on failure.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	abstract public function execute();
 
@@ -1520,7 +1540,144 @@ abstract class Driver implements DatabaseInterface
 	 *
 	 * @return  Driver  Returns this object to support chaining.
 	 *
-	 * @throws  \RuntimeException
+	 * @throws  RuntimeException
 	 */
 	public abstract function unlockTables();
+
+	/**
+	 * Get the database name by querying the database server. Useful if you only have a database connection handler /
+	 * mysqli object and want to find out the name of the database you are connected to.
+	 *
+	 * @return  string
+	 */
+	public function getDatabaseNameFromConnection()
+	{
+		$name = $this->setQuery('SELECT DATABASE()')->loadResult();
+
+		if (empty($name))
+		{
+			throw new RuntimeException("Cannot determine the name of the currently connected database.");
+		}
+
+		return $name;
+	}
+
+	/**
+	 * Get the metadata for the currently connected database.
+	 *
+	 * @param   string  $database  The database to query. Leave blank to query the current database.
+	 *
+	 * @return  Database
+	 *
+	 * @throws  RuntimeException  If we cannot retrieve the database metadata
+	 */
+	public function getDatabaseMeta($database = '')
+	{
+		// No DB given in input. Get from our internal property.
+		if (empty($database))
+		{
+			$database = $this->getDatabase();
+		}
+
+		$query = $this->getQuery(true)
+			->select('*')
+			->from($this->qn('INFORMATION_SCHEMA.SCHEMATA'))
+			->where($this->qn('SCHEMA_NAME') . ' = ' . $this->q($database));
+
+		$result = $this->setQuery($query)->loadAssoc();
+
+		if (is_null($result) || empty($result))
+		{
+			throw new RuntimeException(sprintf("The current database user does not have access to INFORMATION_SCHEMA or cannot query the metadata for database %s", $database));
+		}
+
+		return Database::fromDatabaseResult($result);
+	}
+
+	/**
+	 * Get the metadata for a table in the currently connected database.
+	 *
+	 * @param   string  $tableName  The table name to retrieve meta for
+	 *
+	 * @return  Table
+	 */
+	public function getTableMeta($tableName)
+	{
+		$database = $this->getDatabase();
+
+		$query = $this->getQuery(true)
+			->select('*')
+			->from($this->qn('INFORMATION_SCHEMA.TABLES'))
+			->where($this->qn('TABLE_SCHEMA') . ' = ' . $this->q($database))
+			->where($this->qn('TABLE_NAME') . ' = ' . $this->q($tableName));
+
+		try
+		{
+			$result = $this->setQuery($query)->loadAssoc();
+		}
+		catch (RuntimeException $e)
+		{
+			$result = null;
+		}
+
+		if (empty($result))
+		{
+			$query = 'SHOW TABLE STATUS WHERE ' . $this->qn('Name') . ' = ' . $this->q($tableName);
+			$result = $this->setQuery($query)->loadAssoc();
+		}
+
+		if (empty($result))
+		{
+			throw new RuntimeException(sprintf("Table %s does not exist in database %s or the current database user does not have permissions to retrieve its metadata", $database, $tableName));
+		}
+
+		return Table::fromDatabaseResult($result);
+	}
+
+	/**
+	 * Returns an array with column metadata. The array key is the column name.
+	 *
+	 * @param   string  $tableName  The table name to retrieve columns for
+	 *
+	 * @return  Column[]
+	 */
+	public function getColumnsMeta($tableName)
+	{
+		$database = $this->getDatabase();
+
+		$query = $this->getQuery(true)
+			->select('*')
+			->from($this->qn('INFORMATION_SCHEMA.COLUMNS'))
+			->where($this->qn('TABLE_SCHEMA') . ' = ' . $this->q($database))
+			->where($this->qn('TABLE_NAME') . ' = ' . $this->q($tableName));
+
+		try
+		{
+			$result = $this->setQuery($query)->loadAssocList('COLUMN_NAME');
+		}
+		catch (RuntimeException $e)
+		{
+			$result = [];
+		}
+
+		if (empty($result))
+		{
+			$query = 'SHOW FULL COLUMNS FROM ' . $this->qn($tableName);
+			$result = $this->setQuery($query)->loadAssocList('Field');
+		}
+
+		if (empty($result))
+		{
+			throw new RuntimeException(sprintf("Table %s does not exist in database %s or the current database user does not have permissions to retrieve its column metadata", $database, $tableName));
+		}
+
+		$ret = [];
+
+		foreach ($result as $fieldName => $columnResult)
+		{
+			$ret[$fieldName] = Column::fromDatabaseResult($columnResult);
+		}
+
+		return $ret;
+	}
 }

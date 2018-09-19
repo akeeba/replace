@@ -12,7 +12,7 @@ namespace Akeeba\Replace\Engine\Database\Metadata;
 /**
  * A database table's metadata
  *
- * @package Akeeba\Replace\Engine\Core\Data
+ * @package Akeeba\Replace\Engine\Database\Metadata
  */
 class Table
 {

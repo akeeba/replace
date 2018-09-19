@@ -1,11 +1,18 @@
 Tests:
 ================================================================================
-DatabaseDefinition
-ColumnDefinition
-TableDefinition
+✔ Driver::getDatabaseNameFromConnection
+Driver::getDatabaseMeta  [check it calls Database::fromDatabaseResult once]
+Driver::getTableMeta  [check it calls Table::fromDatabaseResult once]
+Driver::getColumnsMeta  [check it calls Column::fromDatabaseResult multiple times]
+Driver::getDatabase  (update)
+
+DatabaseDefinition::fromDatabaseResult
+ColumnDefinition::fromDatabaseResult
+TableDefinition::fromDatabaseResult
+
 SQL (response)
 
-Update driver with methods to return database, table and column definitions (+ tests)
+
 
 We are not going to use Observable. Instead, we will accept a list of objects in the constructor's $parameters.
 
