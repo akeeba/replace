@@ -10,7 +10,7 @@
 namespace Akeeba\Replace\Engine\Core;
 
 
-use Akeeba\Replace\Engine\Database\Metadata\Database;
+use Akeeba\Replace\Database\Metadata\Database;
 use Akeeba\Replace\Engine\Core\Response\SQL;
 
 interface DatabaseActionInterface

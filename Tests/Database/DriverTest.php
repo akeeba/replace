@@ -10,6 +10,7 @@
 namespace Akeeba\Replace\Tests\Database;
 
 use Akeeba\Replace\Database\Driver;
+use Akeeba\Replace\Database\Metadata\Database;
 
 class DriverTest extends \PHPUnit_Framework_TestCase
 {
@@ -352,6 +353,28 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 		$expected = $_ENV['DB_NAME'];
 		$this->assertEquals($expected, $actual);
 	}
+
+	public function testGetDatabaseMeta()
+	{
+		$db     = $this->getRealDatabaseConnection();
+		$actual = $db->getDatabaseMeta();
+
+		$this->assertInstanceOf(Database::class, $actual);
+		$this->assertEquals($_ENV['DB_NAME'], $actual->getName());
+		$this->assertContains('utf8', $actual->getCollation());
+		$this->assertContains('utf8', $actual->getCharacterSet());
+	}
+
+	public function testGetDatabaseMetaNotExists()
+	{
+		$db     = $this->getRealDatabaseConnection();
+
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage('The current database user does not have access to INFORMATION_SCHEMA or cannot query the metadata for database FooBarBazBat');
+
+		$actual = $db->getDatabaseMeta('FooBarBazBat');
+	}
+
 
 	/**
 	 * Create a real database driver connected to our test database. This is required for some tests which definitely

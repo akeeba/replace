@@ -8,9 +8,9 @@
 
 namespace Akeeba\Replace\Database;
 
-use Akeeba\Replace\Engine\Database\Metadata\Column;
-use Akeeba\Replace\Engine\Database\Metadata\Database;
-use Akeeba\Replace\Engine\Database\Metadata\Table;
+use Akeeba\Replace\Database\Metadata\Column;
+use Akeeba\Replace\Database\Metadata\Database;
+use Akeeba\Replace\Database\Metadata\Table;
 use RuntimeException;
 use stdClass;
 

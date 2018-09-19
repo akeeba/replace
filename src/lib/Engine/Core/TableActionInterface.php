@@ -9,7 +9,7 @@
 
 namespace Akeeba\Replace\Engine\Core;
 
-use Akeeba\Replace\Engine\Database\Metadata\Table;
+use Akeeba\Replace\Database\Metadata\Table;
 use Akeeba\Replace\Engine\Core\Response\SQL;
 
 interface TableActionInterface
