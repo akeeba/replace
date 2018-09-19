@@ -66,11 +66,11 @@ class Column
 	 */
 	public static function fromDatabaseResult(array $result)
 	{
-		$columnName    = isset($result['Field']) ? $result['Field'] : $result['COLUMN_NAME'];
-		$type          = isset($result['Type']) ? $result['Type'] : $result['COLUMN_TYPE'];
-		$collation     = isset($result['Collation']) ? $result['Collation'] : $result['COLLATION_NAME'];
-		$keyName       = isset($result['Key']) ? $result['Key'] : $result['COLUMN_KEY'];
-		$autoIncrement = (isset($result['Extra']) ? $result['Extra'] : $result['EXTRA']) == 'auto_increment';
+		$columnName    = array_key_exists('Field', $result) ? $result['Field'] : $result['COLUMN_NAME'];
+		$type          = array_key_exists('Type', $result) ? $result['Type'] : $result['COLUMN_TYPE'];
+		$collation     = array_key_exists('Collation', $result) ? $result['Collation'] : $result['COLLATION_NAME'];
+		$keyName       = array_key_exists('Key', $result) ? $result['Key'] : $result['COLUMN_KEY'];
+		$autoIncrement = (array_key_exists('Extra', $result) ? $result['Extra'] : $result['EXTRA']) == 'auto_increment';
 
 		return new static($columnName, $type, $collation, $keyName, $autoIncrement);
 	}

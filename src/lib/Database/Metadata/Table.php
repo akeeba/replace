@@ -59,10 +59,10 @@ class Table
 	 */
 	public static function fromDatabaseResult(array $result)
 	{
-		$name             = isset($result['Name']) ? $result['Name'] : $result['TABLE_NAME'];
-		$engine           = isset($result['Engine']) ? $result['Engine'] : $result['ENGINE'];
-		$averageRowLength = isset($result['Avg_row_length']) ? $result['Avg_row_length'] : $result['AVG_ROW_LENGTH'];
-		$collation        = isset($result['Collation']) ? $result['Collation'] : $result['TABLE_COLLATION'];
+		$name             = array_key_exists('Name', $result) ? $result['Name'] : $result['TABLE_NAME'];
+		$engine           = array_key_exists('Engine', $result) ? $result['Engine'] : $result['ENGINE'];
+		$averageRowLength = array_key_exists('Avg_row_length', $result) ? $result['Avg_row_length'] : $result['AVG_ROW_LENGTH'];
+		$collation        = array_key_exists('Collation', $result) ? $result['Collation'] : $result['TABLE_COLLATION'];
 
 		return new static($name, $engine, $averageRowLength, $collation);
 	}

@@ -1,9 +1,5 @@
 Tests:
 ================================================================================
-DatabaseDefinition::fromDatabaseResult
-ColumnDefinition::fromDatabaseResult
-TableDefinition::fromDatabaseResult
-
 SQL (response)
 
 
