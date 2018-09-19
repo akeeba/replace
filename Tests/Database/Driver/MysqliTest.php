@@ -257,10 +257,19 @@ class MysqliTest extends DriverTestCase
 		$tableList  = $driver->getTableList();
 
 		$this->assertInternalType('array', $tableList, 'The list of tables for the database is returned in an array.');
-		$this->assertArraySubset(array (
-			'akr_dbtest',
-			'akr_dbtest_innodb',
-		), $tableList, 'The list of tables contains at least the tables we have already created.');
+
+		/**
+		 * Why not use assertArraySubset?
+		 *
+		 * Because it's looking for an exact subset. In an array [1,2,3,4] you can find the subset [1,2] but not the
+		 * set [1,3] because 1 and 3 are not consecutive elements. Likewise, the subset [2,1] does not exist because
+		 * the elements 2 and 1 are in the opposite order than the one specified in the subset. This caused this test
+		 * to fail even though both tables in my subset were present in the $tableList result. However, it was not
+		 * guaranteed they'd be in a specific order or without anything else between them. So, I'm back to using the
+		 * good, old assertContains with one element at a time.
+		 */
+		$this->assertContains('akr_dbtest', $tableList);
+		$this->assertContains('akr_dbtest_innodb', $tableList);
 	}
 
 	/**
