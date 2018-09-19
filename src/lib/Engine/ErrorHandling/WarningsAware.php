@@ -9,6 +9,8 @@
 
 namespace Akeeba\Replace\Engine\ErrorHandling;
 
+use Akeeba\Replace\Logger\LoggerAwareInterface;
+
 /**
  * A Trait to implement WarningsAwareInterface functionality
  *
@@ -58,6 +60,11 @@ trait WarningsAware
 		}
 
 		$this->warnings[] = $e;
+
+		if (($this instanceof LoggerAwareInterface) && is_object($this->getLogger()))
+		{
+			$this->getLogger()->warning($e->getMessage());
+		}
 	}
 
 	/**

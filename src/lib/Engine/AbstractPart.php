@@ -48,15 +48,27 @@ abstract class AbstractPart implements PartInterface, TimerAwareInterface, Error
 	/**
 	 * AbstractPart constructor.
 	 *
-	 * @param   TimerInterface  $timer   The timer object used by this part
-	 * @param   array           $params  Configuration parameters as a keyed array
+	 * @param   TimerInterface       $timer   The timer object used by this part
+	 * @param   array|Configuration  $config  Configuration parameters as a keyed array
 	 */
-	public function __construct(TimerInterface $timer, array $params)
+	public function __construct(TimerInterface $timer, $config)
 	{
 		$this->setTimer($timer);
 
 		$this->state  = PartInterface::STATE_INIT;
-		$this->config = new Configuration($params);
+
+		if (is_array($config))
+		{
+			$config = new Configuration($config);
+		}
+
+		if (!is_object($config) || !($config instanceof Configuration))
+		{
+			$config = new Configuration([]);
+		}
+
+		$this->config = $config;
+
 	}
 
 	/**

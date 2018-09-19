@@ -9,6 +9,8 @@
 
 namespace Akeeba\Replace\Engine\ErrorHandling;
 
+use Akeeba\Replace\Logger\LoggerAwareInterface;
+
 /**
  * A Trait to implement ErrorAwareInterface functionality
  *
@@ -43,6 +45,11 @@ trait ErrorAware
 	public function setError(ErrorException $e)
 	{
 		$this->error = $e;
+
+		if (($this instanceof LoggerAwareInterface) && is_object($this->getLogger()))
+		{
+			$this->getLogger()->error($e->getMessage());
+		}
 	}
 
 	/**

@@ -10,11 +10,21 @@
 namespace Akeeba\Replace\Engine\Core;
 
 
+use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Metadata\Database;
 use Akeeba\Replace\Engine\Core\Response\SQL;
+use Akeeba\Replace\Logger\LoggerInterface;
 
 interface DatabaseActionInterface
 {
+	/**
+	 * DatabaseActionInterface constructor.
+	 *
+	 * @param   Driver           $db      The database driver this action will be using
+	 * @param   LoggerInterface  $logger  The logger this action will be using
+	 */
+	public function __construct(Driver $db, LoggerInterface $logger);
+
 	/**
 	 * Take a database connection and figure out if we need to run database-level DDL queries.
 	 *

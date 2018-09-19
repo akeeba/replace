@@ -66,6 +66,13 @@ class Configuration
 	private $allTables = false;
 
 	/**
+	 * Maximum number of database rows to process at once
+	 *
+	 * @var  int
+	 */
+	private $maxBatchSize = 1000;
+
+	/**
 	 * Table names to exclude. Either abstract (#__table) or concrete (wp_table) name accepted
 	 *
 	 * @var  string[]
@@ -624,6 +631,32 @@ class Configuration
 		$this->tableCollation = $tableCollation;
 
 		return $this;
+	}
+
+	/**
+	 * Get the maximum number of rows to process at once
+	 *
+	 * @return  int
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function getMaxBatchSize()
+	{
+		return $this->maxBatchSize;
+	}
+
+	/**
+	 * Set the maximum number of rows to process at once
+	 *
+	 * @param   int  $maxBatchSize
+	 *
+	 * @return  void
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function setMaxBatchSize($maxBatchSize)
+	{
+		$this->maxBatchSize = max((int) $maxBatchSize, 1);
 	}
 
 	/**

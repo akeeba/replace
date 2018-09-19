@@ -1,11 +1,12 @@
 Tests:
 ================================================================================
-We are not going to use Observable. Instead, we will accept a list of objects in the constructor's $parameters.
+Create a dummy Core\Table so I can complete writing Core\Database
 
-Depending on which interface they implement they will be added to a different private array variable. The idea is that I have on array for processing objects which run always and a different one for objects which only run when the table / row definition is modified.
-
-We will be calling a hardcoded method name (based on the interface) as needed.
-
+Break down all the action in Core\Database in smaller classes which can be tested.
+Do not use abstract classes / static calls (they are moderately untestable). Use concrete classes with public functions.
+The namespace COULD be Helper
+Consider how much data we are flowing to / from these classes. Avoid large data structures.
+Test each helper before the main object.
 
 Code + Tests (Library)
 ================================================================================
