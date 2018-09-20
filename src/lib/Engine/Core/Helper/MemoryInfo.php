@@ -89,6 +89,9 @@ class MemoryInfo
 			return $setting;
 		}
 
+		$val = trim(substr($val, 0, -strlen($last)));
+		$val = floatval($val);
+
 		switch ($last)
 		{
 			case 'p':

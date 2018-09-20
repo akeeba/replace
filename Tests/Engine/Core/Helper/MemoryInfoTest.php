@@ -83,7 +83,7 @@ class MemoryInfoTest extends \PHPUnit_Framework_TestCase
 	{
 		$dummy    = new MemoryInfo();
 		$actual   = $dummy->getMemoryLimit();
-		$expected = $dummy->humanToIntegerBytes(ini_get('memory_limit'));
+		$expected = max(0, $dummy->humanToIntegerBytes(ini_get('memory_limit')));
 		$this->assertEquals($expected, $actual);
 	}
 
