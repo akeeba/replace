@@ -129,11 +129,13 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 
 		/** @var StepAware $stepAware */
 		$stepAware = $this->getMockForAbstractClass('\\Akeeba\\Replace\\Tests\\Stubs\\Engine\\StepAwareTraitDummy');
-		$stepAware->setStep('Foo');
-		$stepAware->setSubstep('Bar');
 
-		$dummy->setStep('Baz');
-		$dummy->setSubstep('Bat');
+		$this->setProperty($stepAware, 'step', 'Foo');
+		$this->setProperty($stepAware, 'substep', 'Bar');
+
+		$this->setProperty($dummy, 'step', 'Baz');
+		$this->setProperty($dummy, 'substep', 'Bat');
+
 		$dummy->propagateFromObject($stepAware);
 
 		/**
@@ -149,80 +151,6 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('Bar', $dummy->getSubstep(), 'propagateFromObject must pull the substep from the other object');
 		$this->assertNotEmpty($stepAware->getSubstep(), 'propagateFromObject must NOT reset the substep on the other object');
-	}
-
-	public function testPropagateToObjectInvalid()
-	{
-		$dummy = $this->makeDummyObjectWithExtras();
-
-		$invalid = (object) array(
-			'error'    => null,
-			'warnings' => [],
-			'step'     => '',
-			'substep'  => '',
-		);
-
-		$dummy->propagateToObject($invalid);
-
-		$this->assertNotNull($dummy->getError());
-		$this->assertNotEmpty($dummy->getWarnings());
-	}
-
-	public function testPropagateToObjectErrors()
-	{
-		$dummy = $this->makeDummyObjectWithExtras();
-
-		/** @var ErrorAware $errorAware */
-		$errorAware = $this->getMockForAbstractClass('\\Akeeba\\Replace\\Tests\\Stubs\\Engine\\ErrorHandling\\ErrorAwareTraitDummy');
-
-		$error = $dummy->getError();
-		$dummy->propagateToObject($errorAware);
-
-		$this->assertSame($error, $this->getObjectAttribute($errorAware, 'error'), 'propagateToObject must push the error to the other object');
-		$this->assertNull($dummy->getError(), 'propagateToObject must clear errors on ourselves');
-	}
-
-	public function testPropagateToObjectWarnings()
-	{
-		$dummy = $this->makeDummyObjectWithExtras();
-
-		/** @var WarningsAware $warningsAware */
-		$warningsAware = $this->getMockForAbstractClass('\\Akeeba\\Replace\\Tests\\Stubs\\Engine\\ErrorHandling\\WarningsAwareTraitDummy');
-
-		$warnings = $dummy->getWarnings();
-		$mustNotExist = $warningsAware->addWarningMessage('This warning is removed');
-		$dummy->propagateToObject($warningsAware);
-
-		$actualWarnings = $warningsAware->getWarnings();
-
-		$this->assertNotContains($mustNotExist, $actualWarnings, 'propagateToObject must replace the other object\'s warnings');
-		$this->assertEquals($warnings, $actualWarnings, 'propagateToObject must replace the other object\'s warnings with ours');
-	}
-
-	public function testPropagateToObjectSteps()
-	{
-		$dummy = $this->makeDummyObjectWithExtras();
-
-		/** @var StepAware $stepAware */
-		$stepAware = $this->getMockForAbstractClass('\\Akeeba\\Replace\\Tests\\Stubs\\Engine\\StepAwareTraitDummy');
-
-		$stepAware->setStep('Baz');
-		$stepAware->setSubstep('Bat');
-
-		$dummy->setStep('Foo');
-		$dummy->setSubstep('Bar');
-
-		$dummy->propagateToObject($stepAware);
-
-		/**
-		 * Heads up! Unlike errors and warnings, propagating steps and substeps MUST NOT reset them on the other object.
-		 */
-
-		$this->assertEquals('Foo', $stepAware->getStep(), 'propagateToObject must push the step to the other object');
-		$this->assertNotEmpty($dummy->getStep(), 'propagateToObject must NOT reset the step on ourselves');
-
-		$this->assertEquals('Bar', $stepAware->getSubstep(), 'propagateToObject must psuh the substep to the other object');
-		$this->assertNotEmpty($dummy->getSubstep(), 'propagateToObject must NOT reset the substep on ourselves');
 	}
 
 	public function testTick()
@@ -300,25 +228,11 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 		return $dummy;
 	}
 
-	/**
-	 * Create an AbstractPart object with an error, three warnings, a step and a substep set up. This is used to test
-	 * the propagateToObject method.
-	 *
-	 * @return AbstractPart
-	 */
-	private function makeDummyObjectWithExtras()
+	private function setProperty($object, $property, $value)
 	{
-		$dummy = $this->makeDummyObject();
-
-		$dummy->setErrorMessage('Foo bar baz');
-
-		$dummy->addWarningMessage('Foo');
-		$dummy->addWarningMessage('Bar');
-		$dummy->addWarningMessage('Baz');
-
-		$dummy->setStep('Foo');
-		$dummy->setSubstep('Bar');
-
-		return $dummy;
+		$refObj = new \ReflectionObject($object);
+		$refProp = $refObj->getProperty($property);
+		$refProp->setAccessible(true);
+		$refProp->setValue($object, $value);
 	}
 }

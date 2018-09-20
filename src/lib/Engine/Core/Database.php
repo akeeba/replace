@@ -9,15 +9,16 @@
 
 namespace Akeeba\Replace\Engine\Core;
 
+use Akeeba\Replace\Database\DatabaseAware;
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Query;
 use Akeeba\Replace\Engine\AbstractPart;
+use Akeeba\Replace\Engine\Core\Filter\Table\FilterInterface;
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Engine\Core\Table as TablePart;
 use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\TimerInterface;
-use Akeeba\Replace\Writer\FileWriter;
 use Akeeba\Replace\Writer\WriterInterface;
 
 /**
@@ -28,13 +29,18 @@ use Akeeba\Replace\Writer\WriterInterface;
 class Database extends AbstractPart
 {
 	use LoggerAware;
+	use DatabaseAware;
+	use ConfigurationAware;
 
 	/**
-	 * The driver we are using to connect to our database.
+	 * Hard-coded list of table filter classes. This is for my convenience.
 	 *
-	 * @var  Driver
+	 * @var  array
 	 */
-	protected $db = null;
+	private $filters = [
+		'Akeeba\\Replace\\Engine\\Core\\Filter\\Table\\NonCore',
+		'Akeeba\\Replace\\Engine\\Core\\Filter\\Table\\UserFilters',
+	];
 
 	/**
 	 * The memory information helper, used to take decisions based on the available PHP memory
@@ -74,21 +80,27 @@ class Database extends AbstractPart
 	/**
 	 * Overloaded constructor.
 	 *
-	 * @param TimerInterface  $timer
-	 * @param Driver          $db
-	 * @param LoggerInterface $logger
-	 * @param Configuration   $config
+	 * @param   TimerInterface   $timer         Timer object
+	 * @param   Driver           $db            Database driver object
+	 * @param   LoggerInterface  $logger        Logger object
+	 * @param   WriterInterface  $outputWriter  Output SQL file writer (null to disable the feature)
+	 * @param   WriterInterface  $backupWriter  Backup SQL file writer (null to disable the feature)
+	 * @param   Configuration    $config        Engine configuration
+	 * @param   MemoryInfo       $memoryInfo    Memory information helper object
+	 *
+	 * @codeCoverageIgnore
 	 */
-	public function __construct(TimerInterface $timer, Driver $db, LoggerInterface $logger, Configuration $config, MemoryInfo $memoryInfo)
+	public function __construct(TimerInterface $timer, Driver $db, LoggerInterface $logger, WriterInterface $outputWriter, WriterInterface $backupWriter, Configuration $config, MemoryInfo $memoryInfo)
 	{
-		$this->db         = $db;
-		$this->memoryInfo = $memoryInfo;
-
+		$this->setDriver($db);
 		$this->setLogger($logger);
+		$this->setConfig($config);
+
+		$this->memoryInfo   = $memoryInfo;
+		$this->outputWriter = $outputWriter;
+		$this->backupWriter = $backupWriter;
 
 		parent::__construct($timer, $config);
-
-		$this->getLogger()->setMinimumSeverity($config->getMinLogLevel());
 	}
 
 	/**
@@ -99,14 +111,12 @@ class Database extends AbstractPart
 	 */
 	protected function prepare()
 	{
-		// Set up the writers
-		$this->setupOutputWriter();
-		$this->setupBackupWriter();
+		// Log things the user should know
+		$this->getLogger()->info(sprintf("Starting to process replacements in database “%s”", $this->getDbo()->getDatabase()));
 
-		// Log the Live Mode status
+		$this->logOutputWriter();
+		$this->logBackupWriter();
 		$this->logLiveModeStatus();
-
-		// Log a message about backups (only in Live Mode)
 		$this->logMessageAboutBackups();
 
 		// Run once-per-database callbacks.
@@ -114,9 +124,10 @@ class Database extends AbstractPart
 
 		// Get and filter the list of tables.
 		$this->getLogger()->debug('Getting the list of database tables');
-		$this->tableList = $this->db->getTableList();
-		$this->tableList = $this->filterNonCoreTables($this->tableList);
-		$this->tableList = $this->filterTables($this->tableList);
+		$this->tableList = $this->getDbo()->getTableList();
+
+		$this->getLogger()->debug('Filtering the list of database tables');
+		$this->tableList = $this->applyFilters($this->tableList, $this->filters);
 	}
 
 	/**
@@ -176,56 +187,138 @@ class Database extends AbstractPart
 		return true;
 	}
 
+	/**
+	 * Finalization. Here you are supposed to perform any kind of tear down after your work is done.
+	 *
+	 * @return  void
+	 *
+	 * @codeCoverageIgnore
+	 */
 	protected function finalize()
 	{
-		// Close possibly open files by destroying the writers
-		$this->outputWriter = null;
-		$this->backupWriter = null;
+		$this->getLogger()->info(sprintf("Finished processing replacements in database “%s”", $this->getDbo()->getDatabase()));
 	}
 
 	/**
-	 * Setup a file writer for the output SQL file if necessary.
+	 * Apply the hard-coded list of table filters against the provided table list
+	 *
+	 * @param   array  $tables   The tables to filters
+	 * @param   array  $filters  List of filter classes to instantiate
+	 *
+	 * @return  array  The filtered tables after applying all filters
 	 */
-	protected function setupOutputWriter()
+	private function applyFilters(array $tables, array $filters)
 	{
-		$outputSQLFile = $this->config->getOutputSQLFile();
-
-		if (empty($outputSQLFile))
+		foreach ($filters as $class)
 		{
-			$this->getLogger()->info("Output SQL file: (none)");
+			if (!class_exists($class))
+			{
+				$this->addWarningMessage(sprintf("Filter class “%s” not found. Is your installation broken?", $class));
+
+				continue;
+			}
+
+			if (!in_array('Akeeba\\Replace\\Engine\\Core\\Filter\\Table\\FilterInterface', class_implements($class)))
+			{
+				$this->addWarningMessage(sprintf("Filter class “%s” is not a valid table filter. Is your installation broken?", $class));
+
+				continue;
+			}
+
+			/** @var FilterInterface $o */
+			$o = new $class($this->getLogger(), $this->getDomain(), $this->getConfig());
+			$tables = $o->filter($tables);
+		}
+
+		return $tables;
+	}
+
+	/**
+	 * Log the path (if any) of the output SQL file
+	 *
+	 * @return  void
+	 */
+	protected function logOutputWriter()
+	{
+		$path = $this->outputWriter->getFilePath();
+
+		if (empty($path))
+		{
+			$path = '(none)';
+		}
+
+		$this->getLogger()->info("Output SQL file: $path");
+	}
+
+	/**
+	 * Log the path (if any) of the backup SQL file
+	 *
+	 * @return  void
+	 */
+	protected function logBackupWriter()
+	{
+		$path = $this->backupWriter->getFilePath();
+
+		if (empty($path))
+		{
+			$path = '(none)';
+		}
+
+		$this->getLogger()->info("Backup SQL file: $path");
+	}
+
+	/**
+	 * Log the Live Mode status. This tells the user what will and will not happen as a result of their actions.
+	 *
+	 * @return  void
+	 */
+	protected function logLiveModeStatus()
+	{
+		$message = "Live Mode: Enabled. Your database WILL be modified.";
+
+		if (!$this->getConfig()->isLiveMode())
+		{
+			$message = "Live Mode: Disabled. Your database will NOT be modified.";
+
+			if ($this->outputWriter->getFilePath())
+			{
+				$message .= ' The actions to be taken will be saved in the Output SQL file instead.';
+			}
+		}
+
+		$this->getLogger()->info($message);
+	}
+
+	/**
+	 * Logs a message about backups. Only for Live Mode.
+	 */
+	protected function logMessageAboutBackups()
+	{
+		if (!$this->getConfig()->isLiveMode())
+		{
+			return;
+		}
+
+		if ($this->backupWriter->getFilePath())
+		{
+			$this->getLogger()->info("If your site breaks after running Akeeba Replace please execute the Backup SQL file to restore it back to its previous state. If you're not sure how -- please read the documentation or ask us.");
 
 			return;
 		}
 
-		$this->getLogger()->info("Output SQL file: $outputSQLFile");
-
-		$this->outputWriter = new FileWriter($outputSQLFile, true);
+		$this->addWarningMessage('YOU ARE RUNNING Akeeba Replace WITHOUT TAKING BACKUPS. IF YOUR SITE BREAKS WE WILL NOT BE ABLE TO HELP YOU.');
 	}
 
 	/**
-	 * Setup a file writer for the backup SQL file if necessary.
+	 * Execute the configured per-database actions
+	 *
+	 * @return  void
 	 */
-	protected function setupBackupWriter()
-	{
-		$backupSQLFile = $this->config->getBackupSQLFile();
-
-		if (empty($backupSQLFile))
-		{
-			$this->getLogger()->info("Backup SQL file: (none)");
-
-			return;
-		}
-
-		$this->getLogger()->info("Backup SQL file: $backupSQLFile");
-
-		$this->backupWriter = new FileWriter($backupSQLFile, true);
-	}
-
 	protected function runPerDatabaseActions()
 	{
 		// Get the action classes to run
-		$perDatabaseActionClasses = $this->config->getPerDatabaseClasses();
-		$liveMode                 = $this->config->isLiveMode();
+		$perDatabaseActionClasses = $this->getConfig()->getPerDatabaseClasses();
+		$liveMode                 = $this->getConfig()->isLiveMode();
 
 		if (empty($perDatabaseActionClasses))
 		{
@@ -237,7 +330,7 @@ class Database extends AbstractPart
 		$this->getLogger()->info("Processing actions to be performed on the database itself.");
 
 		$this->getLogger()->debug("Retrieving database metadata");
-		$databaseMeta = $this->db->getDatabaseMeta();
+		$databaseMeta = $this->getDbo()->getDatabaseMeta();
 
 		$numActions   = 0;
 
@@ -253,16 +346,20 @@ class Database extends AbstractPart
 			$this->getLogger()->debug(sprintf("Running “%s” action class against database.", $class));
 
 			/** @var DatabaseActionInterface $o */
-			$o            = new $class($this->db, $this->getLogger());
+			$o            = new $class($this->getDbo(), $this->getLogger());
 			$response     = $o->processDatabase($databaseMeta);
 			$outputWriter = $this->outputWriter;
 			$backupWriter = $this->backupWriter;
-			$db           = $this->db;
+			$db           = $this->getDbo();
 
-			if ($response->hasRestorationQueries() && !is_null($backupWriter))
+			if ($response->hasRestorationQueries())
 			{
 				array_map(function (Query $query) use ($backupWriter) {
-					$this->getLogger()->debug("Backup SQL: " . $query);
+					if ($backupWriter->getFilePath())
+					{
+						$this->getLogger()->debug("Backup SQL: " . $query);
+					}
+
 					$backupWriter->writeLine($query);
 				}, $response->getRestorationQueries());
 			}
@@ -272,11 +369,12 @@ class Database extends AbstractPart
 				array_map(function (Query $query) use ($db, $outputWriter, $liveMode, &$numActions) {
 					$numActions++;
 
-					if (!is_null($outputWriter))
+					if ($outputWriter->getFilePath())
 					{
 						$this->getLogger()->debug("Output SQL: " . $query);
-						$outputWriter->writeLine($query);
 					}
+
+					$outputWriter->writeLine($query);
 
 					if ($liveMode)
 					{
@@ -303,132 +401,13 @@ class Database extends AbstractPart
 			$message = "Actions to be performed on the database itself (saved in SQL file): %d";
 
 			// Dry Run without Save To File -- message indicates we did not execute anything
-			if (!is_object($outputWriter))
+			if ($outputWriter->getFilePath() == '')
 			{
 				$message = "Actions which would have been performed on the database itself: %d";
 			}
 		}
 
 		$this->getLogger()->info(sprintf($message, $numActions));
-	}
-
-	/**
-	 * Log the Live Mode status. This tells the user what will and will not happen as a result of their actions.
-	 *
-	 * @return  void
-	 */
-	protected function logLiveModeStatus()
-	{
-		$message = "Live Mode: Enabled. Your database WILL be modified.";
-
-		if (!$this->config->isLiveMode())
-		{
-			$message = "Live Mode: Disabled. Your database will NOT be modified.";
-
-			if (is_object($this->outputWriter))
-			{
-				$message .= ' The actions to be taken will be saved in the Output SQL file instead.';
-			}
-		}
-
-		$this->getLogger()->info($message);
-	}
-
-	/**
-	 * Logs a message about backups. Only for Live Mode.
-	 */
-	protected function logMessageAboutBackups()
-	{
-		if (!$this->config->isLiveMode())
-		{
-			return;
-		}
-
-		if (is_object($this->backupWriter))
-		{
-			$this->getLogger()->info("If your site breaks after running Akeeba Replace please execute the Backup SQL file to restore it back to its previous state. If you're not sure how -- please read the documentation or ask us.");
-
-			return;
-		}
-
-		$this->addWarningMessage('YOU ARE RUNNING Akeeba Replace WITHOUT TAKING BACKUPS. IF YOUR SITE BREAKS WE WILL NOT BE ABLE TO HELP YOU.');
-	}
-
-	/**
-	 * Filter out the tables which do not start with the configured prefix. If the configuration parameter allTables
-	 * is set this filter does nothing.
-	 *
-	 * @param   array  $tables  A list of tables to filter
-	 *
-	 * @return  array  The filtered tables
-	 */
-	protected function filterNonCoreTables($tables)
-	{
-		if (!$this->config->isAllTables())
-		{
-			$this->getLogger()->debug("Non-core table filters will NOT be taken into account: allTables is true.");
-
-			return $tables;
-		}
-
-		$prefix = $this->db->getPrefix();
-		$pLen   = strlen($prefix);
-
-		$this->getLogger()->debug("Applying table filter: non-core");
-
-		return array_filter($tables, function ($tableName) use ($prefix, $pLen) {
-			if (strlen($tableName) < ($pLen + 1))
-			{
-				return false;
-			}
-
-			if (substr($tableName, 0, $pLen) != $prefix)
-			{
-				$this->getLogger()->debug("Skipping table $tableName");
-
-				return false;
-			}
-
-			return true;
-		});
-	}
-
-	/**
-	 * Filter out the tables based on user-defined criteria
-	 *
-	 * @param   array  $tables  A list of tables to filter
-	 *
-	 * @return  array  The filtered tables
-	 */
-	protected function filterTables($tables)
-	{
-		$tableFilters = $this->config->getExcludeTables();
-
-		if (empty($tableFilters))
-		{
-			$this->getLogger()->debug("Table filters will NOT be taken into account: no table filters have been defined.");
-
-			return $tables;
-		}
-
-		// Convert table filters from abstract to concrete names. Lets you use filters like '#__foo' instead of 'wp_foo'
-		$db           = $this->db;
-		$tableFilters = array_map(function ($v) use ($db) {
-			return $db->replacePrefix($v);
-		}, $tableFilters);
-
-		$this->getLogger()->debug("Applying table filter: excluded tables");
-
-		return array_filter($tables, function ($tableName) use ($tableFilters) {
-			if (in_array($tableName, $tableFilters))
-			{
-				$this->getLogger()->debug("Skipping table $tableName");
-
-				return false;
-			}
-
-			return true;
-		});
 	}
 
 	/**
@@ -444,9 +423,24 @@ class Database extends AbstractPart
 
 		// Get the table meta of the next table to process
 		$tableName       = array_shift($this->tableList);
-		$tableMeta       = $this->db->getTableMeta($tableName);
+		$tableMeta       = $this->getDbo()->getTableMeta($tableName);
 		$this->tablePart = null;
 
+		/**
+		 * Filter out VIEWs -- Since VIEWs are stored SELECT queries they have no data of their own I need to replace.
+		 *
+		 * You might wonder why the heck do I not filter out views when I am applying all of the other table filters.
+		 * It's for performance reasons. Database servers return tables and views names all together, with no indication
+		 * of which one is what. Therefore I need to get the table/view metadata to determine if it's a table or a view.
+		 * If you have a really big database with several hundred tables (think: multisites with dozens or hundreds of
+		 * blogs in the network) this can be such a substantial amount of time that you end up with a timeout error.
+		 *
+		 * Since I am going to retrieve the table metadata upon beginning to process each table I have to do this query
+		 * at this point in time anyway. Since it's one query, not hundreds, it takes very little time. And since this
+		 * runs inside the context of a timer-aware Engine Step even if I run into hundreds of views back-to-back I will
+		 * still NOT timeout: I can break the execution at any point when I determine I am running out of time and
+		 * continue in the next step (page load).
+		 */
 		if (is_null($tableMeta->getEngine()))
 		{
 			// This is a VIEW, not a table. I cannot replace data in a view.
@@ -458,7 +452,6 @@ class Database extends AbstractPart
 		}
 
 		// Create a new table Engine Part
-		$this->tablePart = new TablePart($this->timer, $this->db, $this->getLogger(), $this->config, $this->outputWriter, $this->backupWriter, $tableMeta, $this->memoryInfo);
-
+		$this->tablePart = new TablePart($this->timer, $this->getDbo(), $this->getLogger(), $this->getConfig(), $this->outputWriter, $this->backupWriter, $tableMeta, $this->memoryInfo);
 	}
 }

@@ -12,25 +12,37 @@ namespace Akeeba\Replace\Engine\Core;
 use Akeeba\Replace\Logger\LoggerInterface;
 
 /**
- * Configuration for Akeeba Replace's core
+ * Configuration for Akeeba Replace's core engine.
+ *
+ * The purpose of this dumb class is to provide a single point of collection for the configuration of an Akeeba Replace
+ * job. These configuration parameters will be used by the actual domain objects which do work. This lets us have less
+ * verbose constructors at the expense of introducing an Anemic Domain Model anti-pattern. It's still better than magic
+ * key-value arrays which provide no validation.
  *
  * @package Akeeba\Replace\Engine\Core
  */
 class Configuration
 {
 	/**
-	 * Output SQL file path. Empty = no SQL output
+	 * Output SQL file path. Empty = no SQL output.
 	 *
 	 * @var  string
 	 */
 	private $outputSQLFile = '';
 
 	/**
-	 * Backup SQL file path. Empty = no backup
+	 * Backup SQL file path. Empty = no backup.
 	 *
 	 * @var  string
 	 */
 	private $backupSQLFile = '';
+
+	/**
+	 * Log file path. Empty = no log.
+	 *
+	 * @var  string
+	 */
+	private $logFile = '';
 
 	/**
 	 * Minimum severity level to report to the log
@@ -168,7 +180,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setOutputSQLFile($outputSQLFile)
+	protected function setOutputSQLFile($outputSQLFile)
 	{
 		if (!is_string($outputSQLFile))
 		{
@@ -201,7 +213,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setBackupSQLFile($backupSQLFile)
+	protected function setBackupSQLFile($backupSQLFile)
 	{
 		if (!is_string($backupSQLFile))
 		{
@@ -211,6 +223,30 @@ class Configuration
 		$this->backupSQLFile = $backupSQLFile;
 
 		return $this;
+	}
+
+	/**
+	 * Get the log file pathname
+	 *
+	 * @return  string
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function getLogFile()
+	{
+		return $this->logFile;
+	}
+
+	/**
+	 * Set the log file pathname
+	 *
+	 * @param  string  $logFile
+	 *
+	 * @codeCoverageIgnore
+	 */
+	protected function setLogFile($logFile)
+	{
+		$this->logFile = $logFile;
 	}
 
 	/**
@@ -232,7 +268,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setMinLogLevel($minLogLevel)
+	protected function setMinLogLevel($minLogLevel)
 	{
 		$this->minLogLevel = $minLogLevel;
 	}
@@ -258,7 +294,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setLiveMode($liveMode)
+	protected function setLiveMode($liveMode)
 	{
 		$liveMode = is_bool($liveMode) ? $liveMode : ($liveMode == 1);
 
@@ -287,7 +323,7 @@ class Configuration
 	 *
 	 * @return  Configuration
 	 */
-	public function setPerDatabaseClasses(array $perDatabaseClasses)
+	protected function setPerDatabaseClasses(array $perDatabaseClasses)
 	{
 		$this->perDatabaseClasses = [];
 
@@ -323,7 +359,7 @@ class Configuration
 	 *
 	 * @return  Configuration
 	 */
-	public function setPerTableClasses(array $perTableClasses)
+	protected function setPerTableClasses(array $perTableClasses)
 	{
 		$this->perTableClasses = [];
 
@@ -359,7 +395,7 @@ class Configuration
 	 *
 	 * @return  Configuration
 	 */
-	public function setPerRowClasses(array $perRowClasses)
+	protected function setPerRowClasses(array $perRowClasses)
 	{
 		$this->perRowClasses = [];
 
@@ -397,7 +433,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setAllTables($allTables)
+	protected function setAllTables($allTables)
 	{
 		$allTables = is_bool($allTables) ? $allTables : ($allTables == 1);
 
@@ -425,7 +461,7 @@ class Configuration
 	 *
 	 * @return  Configuration
 	 */
-	public function setExcludeTables(array $excludeTables)
+	protected function setExcludeTables(array $excludeTables)
 	{
 		$this->excludeTables = [];
 
@@ -470,7 +506,7 @@ class Configuration
 	 *
 	 * @return  Configuration
 	 */
-	public function setExcludeRows(array $excludeRows)
+	protected function setExcludeRows(array $excludeRows)
 	{
 		$this->excludeRows = [];
 
@@ -558,7 +594,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setRegularExpressions($regularExpressions)
+	protected function setRegularExpressions($regularExpressions)
 	{
 		$regularExpressions = is_bool($regularExpressions) ? $regularExpressions : ($regularExpressions == 1);
 
@@ -588,7 +624,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setReplacements(array $replacements)
+	protected function setReplacements(array $replacements)
 	{
 		if (!is_array($replacements))
 		{
@@ -621,7 +657,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setDatabaseCollation($databaseCollation)
+	protected function setDatabaseCollation($databaseCollation)
 	{
 		if (!is_string($databaseCollation))
 		{
@@ -654,7 +690,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setTableCollation($tableCollation)
+	protected function setTableCollation($tableCollation)
 	{
 		if (!is_string($tableCollation))
 		{
@@ -687,7 +723,7 @@ class Configuration
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function setMaxBatchSize($maxBatchSize)
+	protected function setMaxBatchSize($maxBatchSize)
 	{
 		$this->maxBatchSize = max((int) $maxBatchSize, 1);
 	}
@@ -699,7 +735,7 @@ class Configuration
 	 *
 	 * @return void
 	 */
-	public function setFromParameters(array $params)
+	protected function setFromParameters(array $params)
 	{
 		if (empty($params))
 		{

@@ -244,30 +244,4 @@ abstract class AbstractPart implements PartInterface, TimerAwareInterface, Error
 			$this->setSubstep($object->getSubstep());
 		}
 	}
-
-	/**
-	 * Symmetrical function to propagateFromObject.
-	 *
-	 * @param   object  $object  The object to propagate to
-	 *
-	 * @return  void
-	 */
-	public final function propagateToObject($object)
-	{
-		if ($object instanceof ErrorAwareInterface)
-		{
-			$object->inheritErrorFrom($this);
-		}
-
-		if ($object instanceof WarningsAwareInterface)
-		{
-			$object->inheritWarningsFrom($this);
-		}
-
-		if ($object instanceof StepAwareInterface)
-		{
-			$object->setStep($this->getStep());
-			$object->setSubstep($this->getSubstep());
-		}
-	}
 }

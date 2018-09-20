@@ -24,6 +24,13 @@ interface WriterInterface
 	public function __construct($filePath, $reset = true);
 
 	/**
+	 * Returns the nominal file path (part #0) being used by this writer.
+	 *
+	 * @return  string
+	 */
+	public function getFilePath();
+
+	/**
 	 * Maximum allowed file size before we start splitting it into parts. This sets the part size in bytes.
 	 *
 	 * The default is zero which means that no archive splitting will take place UNLESS we cannot write to

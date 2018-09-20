@@ -10,6 +10,7 @@
 namespace Akeeba\Replace\Engine\Core;
 
 
+use Akeeba\Replace\Database\DatabaseAware;
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Metadata\Table as TableMeta;
 use Akeeba\Replace\Engine\AbstractPart;
@@ -22,13 +23,8 @@ use Akeeba\Replace\Writer\WriterInterface;
 class Table extends AbstractPart
 {
 	use LoggerAware;
-
-	/**
-	 * The driver we are using to connect to our database.
-	 *
-	 * @var  Driver
-	 */
-	protected $db = null;
+	use DatabaseAware;
+	use ConfigurationAware;
 
 	/**
 	 * The memory information helper, used to take decisions based on the available PHP memory
@@ -83,11 +79,12 @@ class Table extends AbstractPart
 	 * @param   WriterInterface  $backupWriter  The writer for the backup SQL file (can be null)
 	 * @param   TableMeta        $tableMeta     The metadata of the table we will be processing
 	 */
-	public function __construct(TimerInterface $timer, Driver $db, LoggerInterface $logger, Configuration $config, $outputWriter, $backupWriter, TableMeta $tableMeta, MemoryInfo $memInfo)
+	public function __construct(TimerInterface $timer, Driver $db, LoggerInterface $logger, Configuration $config, WriterInterface $outputWriter, WriterInterface $backupWriter, TableMeta $tableMeta, MemoryInfo $memInfo)
 	{
 		$this->setLogger($logger);
+		$this->setDriver($db);
+		$this->setConfig($config);
 
-		$this->db           = $db;
 		$this->outputWriter = $outputWriter;
 		$this->backupWriter = $backupWriter;
 		$this->meta         = $tableMeta;
@@ -109,7 +106,7 @@ class Table extends AbstractPart
 		// TODO Determine optimal batch size
 		$memoryLimit      = $this->memoryInfo->getMemoryLimit();
 		$usedMemory       = $this->memoryInfo->getMemoryUsage();
-		$defaultBatchSize = $this->config->getMaxBatchSize();
+		$defaultBatchSize = $this->getConfig()->getMaxBatchSize();
 		$this->batch      = $this->getOptimumBatchSize($this->meta, $memoryLimit, $usedMemory, $defaultBatchSize);
 		$this->offset     = 0;
 

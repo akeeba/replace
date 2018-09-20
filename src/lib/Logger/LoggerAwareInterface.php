@@ -17,18 +17,6 @@ namespace Akeeba\Replace\Logger;
 interface LoggerAwareInterface
 {
 	/**
-	 * Assigns a Logger to the object.
-	 *
-	 * This should only be used internally by the constructor. The constructor itself should use explicit dependency
-	 * injection.
-	 *
-	 * @param   LoggerInterface  $logger  The logger object to assign
-	 *
-	 * @return  void
-	 */
-	public function setLogger(LoggerInterface $logger);
-
-	/**
 	 * Returns a reference to the logger object. This should only be used internally.
 	 *
 	 * @return  LoggerInterface

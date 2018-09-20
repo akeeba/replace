@@ -81,6 +81,19 @@ class FileWriter implements WriterInterface
 	}
 
 	/**
+	 * Returns the nominal file path (part #0) being used by this writer.
+	 *
+	 * @return  string
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function getFilePath()
+	{
+		return $this->filePath;
+	}
+
+
+	/**
 	 * Maximum allowed file size before we start splitting it into parts. This sets the part size in bytes.
 	 *
 	 * The default is zero which means that no archive splitting will take place UNLESS we cannot write to

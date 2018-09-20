@@ -27,7 +27,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 	public function testSetExcludeRows($input, $expected)
 	{
 		$dummy = new Configuration([]);
-		$dummy->setExcludeRows($input);
+
+		$refObj    = new \ReflectionObject($dummy);
+		$refMethod = $refObj->getMethod('setExcludeRows');
+		$refMethod->setAccessible(true);
+		$refMethod->invoke($dummy, $input);
+
 		$actual = $dummy->getExcludeRows();
 
 		$this->assertEquals($expected, $actual);
@@ -44,7 +49,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 	public function testSetExcludeTables($input, $expected)
 	{
 		$dummy = new Configuration([]);
-		$dummy->setExcludeTables($input);
+
+		$refObj    = new \ReflectionObject($dummy);
+		$refMethod = $refObj->getMethod('setExcludeTables');
+		$refMethod->setAccessible(true);
+		$refMethod->invoke($dummy, $input);
+
 		$actual = $dummy->getExcludeTables();
 
 		$this->assertEquals($expected, $actual);
@@ -61,7 +71,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 		$expected = [
 			self::class
 		];
-		$dummy->setPerTableClasses($input);
+
+		$refObj    = new \ReflectionObject($dummy);
+		$refMethod = $refObj->getMethod('setPerTableClasses');
+		$refMethod->setAccessible(true);
+		$refMethod->invoke($dummy, $input);
+
 		$actual = $dummy->getPerTableClasses();
 
 		$this->assertEquals($expected, $actual);
@@ -77,7 +92,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 		$expected = [
 			self::class
 		];
-		$dummy->setPerDatabaseClasses($input);
+
+		$refObj    = new \ReflectionObject($dummy);
+		$refMethod = $refObj->getMethod('setPerDatabaseClasses');
+		$refMethod->setAccessible(true);
+		$refMethod->invoke($dummy, $input);
+
 		$actual = $dummy->getPerDatabaseClasses();
 
 		$this->assertEquals($expected, $actual);
@@ -94,7 +114,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 		$expected = [
 			self::class
 		];
-		$dummy->setPerRowClasses($input);
+
+		$refObj    = new \ReflectionObject($dummy);
+		$refMethod = $refObj->getMethod('setPerRowClasses');
+		$refMethod->setAccessible(true);
+		$refMethod->invoke($dummy, $input);
+
 		$actual = $dummy->getPerRowClasses();
 
 		$this->assertEquals($expected, $actual);
@@ -106,6 +131,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 		$input = [
 			'outputSQLFile'      => '/does/not/matter/output.sql',
 			'backupSQLFile'      => '/does/not/matter/backup.sql',
+			'logFile'            => '/does/not/matter/foo.log',
 			'minLogLevel'        => LoggerInterface::SEVERITY_INFO,
 			'liveMode'           => false,
 			'perDatabaseClasses' => [
@@ -136,31 +162,30 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 			'tableCollation'     => 'utf8mb4_unicode_520_ci',
 		];
 
-		$config = $this->getMockBuilder(Configuration::class)
-			->setMethodsExcept([
-				'setFromParameters'
-			])
-			->setConstructorArgs([$input])
-			->getMock();
+		$config = new Configuration($input);
 
-		$config->expects($this->once())->method('setOutputSQLFile');
-		$config->expects($this->once())->method('setBackupSQLFile');
-		$config->expects($this->once())->method('setMinLogLevel');
-		$config->expects($this->once())->method('setLiveMode');
-		$config->expects($this->once())->method('setPerDatabaseClasses');
-		$config->expects($this->once())->method('setPerTableClasses');
-		$config->expects($this->once())->method('setPerRowClasses');
-		$config->expects($this->once())->method('setAllTables');
-		$config->expects($this->once())->method('setMaxBatchSize');
-		$config->expects($this->once())->method('setExcludeTables');
-		$config->expects($this->once())->method('setExcludeRows');
-		$config->expects($this->once())->method('setRegularExpressions');
-		$config->expects($this->once())->method('setReplacements');
-		$config->expects($this->once())->method('setDatabaseCollation');
-		$config->expects($this->once())->method('setTableCollation');
+		$this->assertEquals($input['outputSQLFile'], $config->getOutputSQLFile());
+		$this->assertEquals($input['backupSQLFile'], $config->getBackupSQLFile());
+		$this->assertEquals($input['logFile'], $config->getLogFile());
+		$this->assertEquals($input['minLogLevel'], $config->getMinLogLevel());
+		$this->assertEquals($input['liveMode'], $config->isLiveMode());
+		$this->assertEquals($input['perDatabaseClasses'], $config->getPerDatabaseClasses());
+		$this->assertEquals($input['perTableClasses'], $config->getPerTableClasses());
+		$this->assertEquals($input['perRowClasses'], $config->getPerRowClasses());
+		$this->assertEquals($input['allTables'], $config->isAllTables());
+		$this->assertEquals($input['maxBatchSize'], $config->getMaxBatchSize());
+		$this->assertEquals($input['excludeTables'], $config->getExcludeTables());
+		$this->assertEquals($input['excludeRows'], $config->getExcludeRows());
+		$this->assertEquals($input['regularExpressions'], $config->isRegularExpressions());
+		$this->assertEquals($input['replacements'], $config->getReplacements());
+		$this->assertEquals($input['databaseCollation'], $config->getDatabaseCollation());
+		$this->assertEquals($input['tableCollation'], $config->getTableCollation());
 
 		/** @var Configuration $config */
-		$config->setFromParameters($input);
+		$refObj    = new \ReflectionObject($config);
+		$refMethod = $refObj->getMethod('setFromParameters');
+		$refMethod->setAccessible(true);
+		$refMethod->invoke($config, $input);
 	}
 
 	public function testToArray()
@@ -168,6 +193,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 		$input = [
 			'outputSQLFile'      => '/does/not/matter/output.sql',
 			'backupSQLFile'      => '/does/not/matter/backup.sql',
+			'logFile'            => '/does/not/matter/foo.log',
 			'minLogLevel'        => LoggerInterface::SEVERITY_INFO,
 			'liveMode'           => false,
 			'perDatabaseClasses' => [

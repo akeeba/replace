@@ -61,13 +61,4 @@ interface PartInterface
 	 * @return  void
 	 */
 	public function propagateFromObject($object);
-
-	/**
-	 * Symmetrical function to propagateFromObject.
-	 *
-	 * @param   object  $object  The object to propagate to
-	 *
-	 * @return  void
-	 */
-	public function propagateToObject($object);
 }

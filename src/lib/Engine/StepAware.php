@@ -23,14 +23,14 @@ trait StepAware
 	 *
 	 * @var string
 	 */
-	private $step = '';
+	protected $step = '';
 
 	/**
 	 * The current engine part step
 	 *
 	 * @var string
 	 */
-	private $substep = '';
+	protected $substep = '';
 
 	/**
 	 * Return the current engine part step
@@ -49,7 +49,7 @@ trait StepAware
 	 *
 	 * @throws  InvalidArgumentException
 	 */
-	public function setStep($step)
+	protected function setStep($step)
 	{
 		if (!is_string($step))
 		{
@@ -76,7 +76,7 @@ trait StepAware
 	 *
 	 * @throws  InvalidArgumentException
 	 */
-	public function setSubstep($substep)
+	protected function setSubstep($substep)
 	{
 		if (!is_string($substep))
 		{

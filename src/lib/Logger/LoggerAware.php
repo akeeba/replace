@@ -33,7 +33,7 @@ trait LoggerAware
 	 *
 	 * @return  void
 	 */
-	public function setLogger(LoggerInterface $logger)
+	protected function setLogger(LoggerInterface $logger)
 	{
 		$this->logger = $logger;
 	}
