@@ -7,10 +7,11 @@
  *
  */
 
-namespace Akeeba\Replace\Engine\Core\Action\Database;
+namespace Akeeba\Replace\Engine\Core\Action\Table;
 
 use Akeeba\Replace\Database\Driver;
-use Akeeba\Replace\Database\Metadata\Database;
+use Akeeba\Replace\Database\Metadata\Column;
+use Akeeba\Replace\Database\Metadata\Table;
 use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Engine\Core\Response\SQL;
 use Akeeba\Replace\Logger\LoggerInterface;
@@ -27,11 +28,12 @@ interface ActionInterface
 	public function __construct(Driver $db, LoggerInterface $logger, Configuration $config);
 
 	/**
-	 * Take a database connection and figure out if we need to run database-level DDL queries.
+	 * Take a table connection and figure out if we need to run table-level DDL queries.
 	 *
-	 * @param   Database  $db  The metadata of the database we are processing
+	 * @param   Table     $table    The metadata of the table to be processed
+	 * @param   Column[]  $columns  The metadata of the table columns
 	 *
 	 * @return  SQL
 	 */
-	public function processDatabase(Database $db);
+	public function processTable(Table $table, array $columns);
 }

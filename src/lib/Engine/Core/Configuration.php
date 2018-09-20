@@ -353,7 +353,7 @@ class Configuration
 	}
 
 	/**
-	 * Set the list of per-table action class names to instantiate. Classes must implement TableActionInterface.
+	 * Set the list of per-table action class names to instantiate. Classes must implement Table\ActionInterface.
 	 *
 	 * @param   string[]  $perTableClasses
 	 *

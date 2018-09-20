@@ -347,7 +347,7 @@ class Database extends AbstractPart
 			$this->getLogger()->debug(sprintf("Running “%s” action class against database.", $class));
 
 			/** @var ActionInterface $o */
-			$o            = new $class($this->getDbo(), $this->getLogger());
+			$o            = new $class($this->getDbo(), $this->getLogger(), $this->getConfig());
 			$response     = $o->processDatabase($databaseMeta);
 			$outputWriter = $this->outputWriter;
 			$backupWriter = $this->backupWriter;
