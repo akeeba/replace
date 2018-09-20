@@ -67,13 +67,15 @@ class OutFileSetup
 
 		if (!is_object($dateTime))
 		{
+			$dateTime = is_int($dateTime) ? ('@' . $dateTime) : $dateTime;
+
 			try
 			{
-				$dateTime = new DateTime($dateTime, 'UTC');
+				$dateTime = new DateTime($dateTime, $this->timeZone);
 			}
 			catch (Exception $e)
 			{
-				$dateTime = new DateTime('now', 'UTC');
+				$dateTime = new DateTime('now', $this->timeZone);
 			}
 		}
 
@@ -103,8 +105,11 @@ class OutFileSetup
 		}
 		elseif (is_int($dateTime))
 		{
-			$utcTimeZone = new DateTimeZone('UTC');
-			$dateTime    = new DateTime($dateTime, $utcTimeZone);
+			$dateTime    = new DateTime('@' . $dateTime);
+		}
+		elseif (is_string($dateTime))
+		{
+			$dateTime    = new DateTime($dateTime, $this->timeZone);
 		}
 		elseif (!is_object($dateTime) || !($dateTime instanceof DateTime))
 		{
