@@ -7,7 +7,7 @@
  *
  */
 
-namespace Akeeba\Replace\Engine\Core;
+namespace Akeeba\Replace\Engine\Core\Action\Database;
 
 
 use Akeeba\Replace\Database\Driver;
@@ -15,10 +15,10 @@ use Akeeba\Replace\Database\Metadata\Database;
 use Akeeba\Replace\Engine\Core\Response\SQL;
 use Akeeba\Replace\Logger\LoggerInterface;
 
-interface DatabaseActionInterface
+interface ActionInterface
 {
 	/**
-	 * DatabaseActionInterface constructor.
+	 * ActionInterface constructor.
 	 *
 	 * @param   Driver           $db      The database driver this action will be using
 	 * @param   LoggerInterface  $logger  The logger this action will be using

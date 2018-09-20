@@ -59,21 +59,21 @@ class Configuration
 	private $liveMode = true;
 
 	/**
-	 * List of per-database action class names to instantiate. Classes must implement DatabaseActionInterface.
+	 * List of per-database action class names to instantiate. Classes must implement Database\ActionInterface.
 	 *
 	 * @var  string[]
 	 */
 	private $perDatabaseClasses = [];
 
 	/**
-	 * List of per-table action class names to instantiate. Classes must implement TableActionInterface.
+	 * List of per-table action class names to instantiate. Classes must implement Table\ActionInterface.
 	 *
 	 * @var  string[]
 	 */
 	private $perTableClasses = [];
 
 	/**
-	 * List of per-row action class names to instantiate. Classes must implement RowActionInterface.
+	 * List of per-row action class names to instantiate. Classes must implement Row\ActionInterface.
 	 *
 	 * @var  string[]
 	 */

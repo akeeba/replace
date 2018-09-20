@@ -13,6 +13,7 @@ use Akeeba\Replace\Database\DatabaseAware;
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Query;
 use Akeeba\Replace\Engine\AbstractPart;
+use Akeeba\Replace\Engine\Core\Action\Database\ActionInterface;
 use Akeeba\Replace\Engine\Core\Filter\Table\FilterInterface;
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Engine\Core\Table as TablePart;
@@ -336,7 +337,7 @@ class Database extends AbstractPart
 
 		foreach ($perDatabaseActionClasses as $class)
 		{
-			if (!in_array(__NAMESPACE__ . '\\DatabaseActionInterface', class_implements($class)))
+			if (!in_array('Akeeba\Replace\Engine\Core\Action\Database\ActionInterface', class_implements($class)))
 			{
 				$this->addWarningMessage(sprintf("Action class “%s” is not a valid per-database action", $class));
 
@@ -345,7 +346,7 @@ class Database extends AbstractPart
 
 			$this->getLogger()->debug(sprintf("Running “%s” action class against database.", $class));
 
-			/** @var DatabaseActionInterface $o */
+			/** @var ActionInterface $o */
 			$o            = new $class($this->getDbo(), $this->getLogger());
 			$response     = $o->processDatabase($databaseMeta);
 			$outputWriter = $this->outputWriter;
