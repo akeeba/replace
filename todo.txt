@@ -1,113 +1,47 @@
-Tests:
+Immediate actions & pending tests:
 ================================================================================
-NonCore
-UserFilters
+Core\Database: extract runPerDatabaseActions
 
-
-Core\Database
-Core\Table
+Core\Database: test it
+    I need to empty the database completely and populate it with predictable data before the test
+    I cannot use a SQLite in-memory database since I (have to?) rely on MySQL features for table metadata
 
 Code + Tests (Library)
 ================================================================================
-
 Add RegEx support to replacer
     Add RegEx support -- Special worry about UTF data!
     Test RegEx support
 
-Database iterator Interface (extends engine part interface)
-    Input: list of filters
+Core\Table
 
-Database iterator
-    Dependency: DB driver
-    Dependency: table iterator(s)
-    Gets the available table names
-    Runs the iterator(s) against each one
-    !! Tests should run against simulated data
+Engine\Core\Action\Database
+    Collation
+        Change the collation of the database
 
-Table iterator Interface (extends engine part interface)
-    Input: table name (string)
-    Input: table information
-    Input: column information
+Engine\Core\Action\Table
+    TableCollation
+        Change the collation of the table
+    Engine
+        Change the engine of the table (I need to add Configuration support)
+    ColumnCollation
+        Change the collation of the rows
 
-Table modifying iterator
-    Dependency: DB driver
-    Dependency: logger
-    Dependency: table callback(s)
-    Dependency: table DDL backup callback(s)
-    Input: table name (string)
-    Input: table information
-    Input: column information
-    Runs the table callback(s) against the table. Run the backup callbacks if the new table information differs.
+Engine\Core\Action\Row
+    Replace
+        Replace data on each column by calling Engine\Core\Action\Column\Replace.
+        Returns SQL response.
 
-Table Callback Interface
-    Input: table name (string)
-    Input: table information
-    Input: column information
-    Return: new table and column information
+Engine\Core\Action\Column
+    Replace
+        Replace data on a single column. Returns the column (modified or not)
+        The configuration defines if the replacement is RegEx or plain text
 
-Collation Change table callback
-    Dependency: writer interface, used to write to SQL files. No writer = no export.
-    Dependency: logger
-    Configuration: new collation for table, column
-    Configuration: dry run
-    The resulting DDL may be run (if not dry run) and/or output to a SQL file (if writer is provided)
+Interfaces
+================================================================================
+WordPress plugin
 
-Engine Change table callback
-    Dependency: writer interface, used to write to SQL files. No writer = no export.
-    Dependency: logger
-    Configuration: preferred engine, default InnoDB
-    Configuration: dry run
-    The resulting DDL may be run (if not dry run) and/or output to a SQL file (if writer is provided)
+CLI
+    Single PHAR file, maybe use Symfony console package or similar to create the interface
 
-Table DDL backup Interface
-    Dependency: writer interface
-    Input: table name (string)
-    Input: old table information
-    Input: new table information
-    Input: old column information
-    Input: new column information
-
-Collation Change DDL backup callback
-    The resulting DDL is written to the backup SQL file
-
-Engine Change DDL backup callback
-    The resulting DDL is written to the backup SQL file
-
-Data processing table iterator (engine part)
-    Dependency: DB driver
-    Dependency: logger
-    Dependency: row processing callback
-    Dependency: row backup callback
-    Fetches column information and table size, processes the table in chunks
-    Each chunk consists of many rows
-    For each row we call one or more callbacks (DO NOT pass the DB connection to the callbacks!)
-    !! Tests should run against simulated data
-
-Row Callback interface
-    Input: Original Row
-    Input: table name (string)
-    Input: table information
-    Input: column information
-    Return: processed row
-
-Row Backup Callback interface
-    Input: Original Row
-    Input: Modified Row
-    Input: table name (string)
-    Input: table information
-    Input: column information
-    Return: void
-
-Plain text replace row callback
-    Dependency: writer interface, used to write to SQL files. No writer = no export.
-    Dependency: DB driver
-    Dependency: logger
-    Configuration: do it live or dry run (dry run does NOT execute SQL)
-
-RegEx replace row callback
-    extending the plain text callback, only differs in the way it handles the replacement
-
-Row Backup callback
-    Dependency: writer interface, used to write to backup SQL files
-    Dependency: DB driver
-    Dependency: logger
+Standalone
+    Single file build (with stripped comments and extraneous newlines) like we do for Kickstart

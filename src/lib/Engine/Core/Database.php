@@ -255,6 +255,8 @@ class Database extends AbstractPart
 	 * Log the path (if any) of the backup SQL file
 	 *
 	 * @return  void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function logBackupWriter()
 	{
@@ -272,6 +274,8 @@ class Database extends AbstractPart
 	 * Log the Live Mode status. This tells the user what will and will not happen as a result of their actions.
 	 *
 	 * @return  void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function logLiveModeStatus()
 	{
@@ -292,6 +296,8 @@ class Database extends AbstractPart
 
 	/**
 	 * Logs a message about backups. Only for Live Mode.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function logMessageAboutBackups()
 	{

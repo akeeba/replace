@@ -1,6 +1,6 @@
 # Akeeba Replace
 
-A database replace script for WordPress.
+A database mass content replace script, primarily focusing on WordPress.
 
 [Download from our GitHub releases](https://github.com/akeeba/replace/releases).
 
@@ -36,6 +36,12 @@ Yes, you can. It's literally what it does.
 ### Can I use regular expressions to replace data?
 
 Yes. You can use either regular expressions or plain text replacements. Just tell it which one you want.
+
+### Can I use it on non-MySQL databases?
+
+Only if your database implements the MySQL dialect of SQL, e.g. if you are using MariaDB or Percona. This applies to database servers hosted by your host, on the same or a different server, or databases hosted on third party providers such as Amazon RDS (again, only with MySQL or MariaDB databases).
+
+You will not be able to use Akeeba Replace with Microsoft SQL Server, PostgreSQL etc. These speak a different dialect of SQL which is not compatible with Akeeba Replace or even WordPress itself.
 
 ### Will it replace serialized data?
 
