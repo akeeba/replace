@@ -9,6 +9,8 @@
 
 namespace Akeeba\Replace\Engine\Core;
 
+use Akeeba\Replace\Logger\LoggerInterface;
+
 /**
  * Configuration for Akeeba Replace's core
  *
@@ -29,6 +31,13 @@ class Configuration
 	 * @var  string
 	 */
 	private $backupSQLFile = '';
+
+	/**
+	 * Minimum severity level to report to the log
+	 *
+	 * @var  int
+	 */
+	private $minLogLevel = LoggerInterface::SEVERITY_DEBUG;
 
 	/**
 	 * Should I run actions directly to the database?
@@ -202,6 +211,30 @@ class Configuration
 		$this->backupSQLFile = $backupSQLFile;
 
 		return $this;
+	}
+
+	/**
+	 * Get the minimum log level
+	 *
+	 * @return  int
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function getMinLogLevel()
+	{
+		return $this->minLogLevel;
+	}
+
+	/**
+	 * Set the minimum log level
+	 *
+	 * @param  int  $minLogLevel
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function setMinLogLevel($minLogLevel)
+	{
+		$this->minLogLevel = $minLogLevel;
 	}
 
 	/**
@@ -689,5 +722,46 @@ class Configuration
 
 			call_user_func_array([$this, $method], [$v]);
 		}
-}
+	}
+
+	/**
+	 * Convert the configuration to a key-value array. The result can be fed to the setFromParameters() method to create
+	 * the configuration object afresh. Therefore it can be used to save an Akeeba Replace job.
+	 *
+	 * @return  array
+	 */
+	public function toArray()
+	{
+		$ret = [];
+
+		$refObject = new \ReflectionObject($this);
+
+		foreach ($refObject->getProperties(\ReflectionProperty::IS_PRIVATE) as $refProp)
+		{
+			$propName = $refProp->getName();
+			$methods = [
+				'get' . ucfirst($propName),
+				'is' . ucfirst($propName)
+			];
+
+			foreach ($methods as $method)
+			{
+				if (method_exists($this, $method))
+				{
+					break;
+				}
+
+				$method = '';
+			}
+
+			if (empty($method))
+			{
+				continue;
+			}
+
+			$ret[$propName] = $this->{$method}();
+		}
+
+		return $ret;
+	}
 }

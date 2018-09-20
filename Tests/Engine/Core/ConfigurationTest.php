@@ -10,6 +10,7 @@
 namespace Akeeba\Replace\Tests\Engine\Core;
 
 use Akeeba\Replace\Engine\Core\Configuration;
+use Akeeba\Replace\Logger\LoggerInterface;
 use Prophecy\Prophet;
 
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
@@ -105,6 +106,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 		$input = [
 			'outputSQLFile'      => '/does/not/matter/output.sql',
 			'backupSQLFile'      => '/does/not/matter/backup.sql',
+			'minLogLevel'        => LoggerInterface::SEVERITY_INFO,
 			'liveMode'           => false,
 			'perDatabaseClasses' => [
 				self:: class,
@@ -112,10 +114,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 			'perTableClasses'    => [
 				self:: class,
 			],
-			'perRowClasses'    => [
+			'perRowClasses'      => [
 				self:: class,
 			],
 			'allTables'          => false,
+			'maxBatchSize'       => 123,
 			'excludeTables'      => [
 				'#__table_one',
 				'#__table_two',
@@ -142,11 +145,13 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
 		$config->expects($this->once())->method('setOutputSQLFile');
 		$config->expects($this->once())->method('setBackupSQLFile');
+		$config->expects($this->once())->method('setMinLogLevel');
 		$config->expects($this->once())->method('setLiveMode');
 		$config->expects($this->once())->method('setPerDatabaseClasses');
 		$config->expects($this->once())->method('setPerTableClasses');
 		$config->expects($this->once())->method('setPerRowClasses');
 		$config->expects($this->once())->method('setAllTables');
+		$config->expects($this->once())->method('setMaxBatchSize');
 		$config->expects($this->once())->method('setExcludeTables');
 		$config->expects($this->once())->method('setExcludeRows');
 		$config->expects($this->once())->method('setRegularExpressions');
@@ -156,5 +161,46 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
 		/** @var Configuration $config */
 		$config->setFromParameters($input);
+	}
+
+	public function testToArray()
+	{
+		$input = [
+			'outputSQLFile'      => '/does/not/matter/output.sql',
+			'backupSQLFile'      => '/does/not/matter/backup.sql',
+			'minLogLevel'        => LoggerInterface::SEVERITY_INFO,
+			'liveMode'           => false,
+			'perDatabaseClasses' => [
+				self:: class,
+			],
+			'perTableClasses'    => [
+				self:: class,
+			],
+			'perRowClasses'      => [
+				self:: class,
+			],
+			'allTables'          => false,
+			'maxBatchSize'       => 123,
+			'excludeTables'      => [
+				'#__table_one',
+				'#__table_two',
+			],
+			'excludeRows'        => [
+				'#__table1' => ['row1', 'row2',],
+				'#__table2' => ['rowA', 'rowB',],
+			],
+			'regularExpressions' => false,
+			'replacements'       => [
+				'foo' => 'bar',
+				'baz' => 'bat',
+			],
+			'databaseCollation'  => 'utf8mb4_unicode_520_ci',
+			'tableCollation'     => 'utf8mb4_unicode_520_ci',
+		];
+
+		$config = new Configuration($input);
+		$actual = $config->toArray();
+
+		$this->assertEquals($input, $actual);
 	}
 }

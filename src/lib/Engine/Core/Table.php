@@ -13,6 +13,7 @@ namespace Akeeba\Replace\Engine\Core;
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Metadata\Table as TableMeta;
 use Akeeba\Replace\Engine\AbstractPart;
+use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\TimerInterface;
@@ -28,6 +29,13 @@ class Table extends AbstractPart
 	 * @var  Driver
 	 */
 	protected $db = null;
+
+	/**
+	 * The memory information helper, used to take decisions based on the available PHP memory
+	 *
+	 * @var  MemoryInfo
+	 */
+	protected $memoryInfo = null;
 
 	/**
 	 * The writer to use for action SQL file output
@@ -75,7 +83,7 @@ class Table extends AbstractPart
 	 * @param   WriterInterface  $backupWriter  The writer for the backup SQL file (can be null)
 	 * @param   TableMeta        $tableMeta     The metadata of the table we will be processing
 	 */
-	public function __construct(TimerInterface $timer, Driver $db, LoggerInterface $logger, Configuration $config, $outputWriter, $backupWriter, TableMeta $tableMeta)
+	public function __construct(TimerInterface $timer, Driver $db, LoggerInterface $logger, Configuration $config, $outputWriter, $backupWriter, TableMeta $tableMeta, MemoryInfo $memInfo)
 	{
 		$this->setLogger($logger);
 
@@ -83,6 +91,7 @@ class Table extends AbstractPart
 		$this->outputWriter = $outputWriter;
 		$this->backupWriter = $backupWriter;
 		$this->meta         = $tableMeta;
+		$this->memoryInfo   = $memInfo;
 
 		parent::__construct($timer, $config);
 	}
@@ -98,8 +107,11 @@ class Table extends AbstractPart
 		// TODO Filter out columns: excluded columns
 
 		// TODO Determine optimal batch size
-		$this->offset = 0;
-		$this->backupWriter  = $this->getOptimumBatchSize($this->meta, $this->config->getMaxBatchSize());
+		$memoryLimit      = $this->memoryInfo->getMemoryLimit();
+		$usedMemory       = $this->memoryInfo->getMemoryUsage();
+		$defaultBatchSize = $this->config->getMaxBatchSize();
+		$this->batch      = $this->getOptimumBatchSize($this->meta, $memoryLimit, $usedMemory, $defaultBatchSize);
+		$this->offset     = 0;
 
 		// TODO Determine set of rows which constitute a primary key
 
@@ -136,98 +148,60 @@ class Table extends AbstractPart
 		// TODO Log message that we are done
 	}
 
-	protected function getOptimumBatchSize(TableMeta $tableMeta, $defaultBatchSize = 1000)
+	/**
+	 * Returns the optimum batch size for a table. This depends on the average row size of the table and the available
+	 * PHP memory. If we have plenty of memory (or no limit) we are going to use the default batch size. The returned
+	 * batch size can never be larger than the default batch size.
+	 *
+	 * @param   TableMeta  $tableMeta         The metadata of the table. We are going to use the average row size.
+	 * @param   int        $memoryLimit       How much PHP memory is available, 0 for no limit
+	 * @param   int        $usedMemory        How much PHP memory is used, in bytes
+	 * @param   int        $defaultBatchSize  The default (and maximum) batch size
+	 *
+	 * @return  int
+	 */
+	public function getOptimumBatchSize(TableMeta $tableMeta, $memoryLimit, $usedMemory, $defaultBatchSize = 1000)
 	{
+		// No memory limit? Return the default batch size
+		if ($memoryLimit <= 0)
+		{
+			return $defaultBatchSize;
+		}
+
+		// Get the average row length. If it's unknown use the default batch size.
 		$averageRowLength = $tableMeta->getAverageRowLength();
 
 		if (empty($averageRowLength))
 		{
-			// Unknown average row length, use the maximum batch size already configured
 			return $defaultBatchSize;
 		}
 
-		// That's the average row size as reported by MySQL.
-		$avgRow      = str_replace(array(',', '.'), array('', ''), $averageRowLength);
-		// The memory available for manipulating data is less than the free memory
-		$memoryLimit = $this->getMemoryLimit();
-		$memoryLimit = empty($memoryLimit) ? 33554432 : $memoryLimit;
-		$usedMemory  = $this->getMemoryUsage();
+		// Make sure the average row size is an integer
+		$avgRow = str_replace([',', '.'], ['', ''], $averageRowLength);
+		$avgRow = (int) $avgRow;
+
+		// If the average row size is not a positive integer use the default batch size.
+		if ($avgRow <= 0)
+		{
+			return $defaultBatchSize;
+		}
+
+		// The memory available for manipulating data is less than the free memory. The 0.75 factor is empirical.
 		$memoryLeft  = 0.75 * ($memoryLimit - $usedMemory);
+
+		// This should never happen. I will return the default batch size and brace for impact: crash imminent!
+		if ($memoryLeft <= 0)
+		{
+			$this->getLogger()->debug('Cannot determine optimal row size: PHP reports that its used memory is larger than the configured memory limit. This is NOT normal! I expect PHP to crash soon with an out of memory Fatal Error.');
+
+			return $defaultBatchSize;
+		}
+
 		// The 3.25 factor is empirical and leans on the safe side.
-		$maxRows     = (int) ($memoryLeft / (3.25 * $avgRow));
+		$maxRows = (int) ($memoryLeft / (3.25 * $avgRow));
 
 		return max(1, min($maxRows, $defaultBatchSize));
 	}
 
-	/**
-	 * Get the PHP memory limit in bytes
-	 *
-	 * @return int|null  Memory limit in bytes or null if we can't figure it out.
-	 */
-	protected function getMemoryLimit()
-	{
-		if (!function_exists('ini_get'))
-		{
-			return null;
-		}
 
-		$memLimit = ini_get("memory_limit");
-
-		if ((is_numeric($memLimit) && ($memLimit < 0)) || !is_numeric($memLimit))
-		{
-			// A negative memory limit means no memory limit, see http://php.net/manual/en/ini.core.php#ini.memory-limit
-			$memLimit = 0;
-		}
-
-		$memLimit = $this->humanToIntegerBytes($memLimit);
-
-		return $memLimit;
-	}
-
-	/**
-	 * Converts a human formatted size to integer representation of bytes,
-	 * e.g. 1M to 1024768
-	 *
-	 * @param   string  $setting  The value in human readable format, e.g. "1M"
-	 *
-	 * @return  integer  The value in bytes
-	 */
-	protected function humanToIntegerBytes($setting)
-	{
-		$val = trim($setting);
-		$last = strtolower($val{strlen($val) - 1});
-
-		if (is_numeric($last))
-		{
-			return $setting;
-		}
-
-		switch ($last)
-		{
-			case 't':
-				$val *= 1024;
-			case 'g':
-				$val *= 1024;
-			case 'm':
-				$val *= 1024;
-			case 'k':
-				$val *= 1024;
-		}
-
-		return (int) $val;
-	}
-
-	/**
-	 * Returns the memory currently in use, in bytes.
-	 *
-	 * The reason we have this trivial method is merely to be able to mock it during testing.
-	 *
-	 * @return  int
-	 *
-	 * @codeCoverageIgnore
-	 */
-	protected function getMemoryUsage()
-	{
-		return memory_get_usage();
-	}
 }

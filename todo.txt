@@ -1,5 +1,7 @@
 Tests:
 ================================================================================
+MemoryInfo
+
 Core\Database: Have backup and output writers as dependencies, not created objects
 
 Break down all the action in Core\Database in smaller classes which can be tested.

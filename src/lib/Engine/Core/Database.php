@@ -12,6 +12,7 @@ namespace Akeeba\Replace\Engine\Core;
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Query;
 use Akeeba\Replace\Engine\AbstractPart;
+use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Engine\Core\Table as TablePart;
 use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerInterface;
@@ -34,6 +35,13 @@ class Database extends AbstractPart
 	 * @var  Driver
 	 */
 	protected $db = null;
+
+	/**
+	 * The memory information helper, used to take decisions based on the available PHP memory
+	 *
+	 * @var  MemoryInfo
+	 */
+	protected $memoryInfo = null;
 
 	/**
 	 * The writer to use for action SQL file output
@@ -71,13 +79,16 @@ class Database extends AbstractPart
 	 * @param LoggerInterface $logger
 	 * @param Configuration   $config
 	 */
-	public function __construct(TimerInterface $timer, Driver $db, LoggerInterface $logger, Configuration $config)
+	public function __construct(TimerInterface $timer, Driver $db, LoggerInterface $logger, Configuration $config, MemoryInfo $memoryInfo)
 	{
-		$this->db = $db;
+		$this->db         = $db;
+		$this->memoryInfo = $memoryInfo;
 
 		$this->setLogger($logger);
 
 		parent::__construct($timer, $config);
+
+		$this->getLogger()->setMinimumSeverity($config->getMinLogLevel());
 	}
 
 	/**
@@ -447,7 +458,7 @@ class Database extends AbstractPart
 		}
 
 		// Create a new table Engine Part
-		$this->tablePart = new TablePart($this->timer, $this->db, $this->getLogger(), $this->config, $this->outputWriter, $this->backupWriter, $tableMeta);
+		$this->tablePart = new TablePart($this->timer, $this->db, $this->getLogger(), $this->config, $this->outputWriter, $this->backupWriter, $tableMeta, $this->memoryInfo);
 
 	}
 }
