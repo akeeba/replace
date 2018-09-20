@@ -28,7 +28,7 @@ class NonCore extends AbstractFilter
 	 */
 	public function filter(array $tables)
 	{
-		if (!$this->getConfig()->isAllTables())
+		if ($this->getConfig()->isAllTables())
 		{
 			$this->getLogger()->debug("Non-core table filters will NOT be taken into account: allTables is true.");
 
