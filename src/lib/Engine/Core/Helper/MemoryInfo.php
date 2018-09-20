@@ -23,14 +23,17 @@ class MemoryInfo
 	 */
 	public function getMemoryLimit()
 	{
+		// If we can't get the real memory limit we assume a conservative 32MB
+		// @codeCoverageIgnoreStart
 		if (!function_exists('ini_get'))
 		{
-			return null;
+			return 33554432;
 		}
+		// @codeCoverageIgnoreEnd
 
 		$memLimit = ini_get("memory_limit");
 
-		if ((is_numeric($memLimit) && ($memLimit < 0)) || !is_numeric($memLimit))
+		if (is_numeric($memLimit) && ($memLimit < 0))
 		{
 			// A negative memory limit means no memory limit, see http://php.net/manual/en/ini.core.php#ini.memory-limit
 			return 0;
@@ -38,7 +41,7 @@ class MemoryInfo
 
 		$memLimit = $this->humanToIntegerBytes($memLimit);
 
-		return $memLimit;
+		return max($memLimit, 0);
 	}
 
 	/**
@@ -66,7 +69,20 @@ class MemoryInfo
 	public function humanToIntegerBytes($setting)
 	{
 		$val = trim($setting);
-		$last = strtolower($val{strlen($val) - 1});
+		$last = strtolower(substr($val, -1));
+
+		$oneToLast = '0';
+
+		if ($last == 'b')
+		{
+			$oneToLast = substr($val, -2);
+			$newLast   = strtolower(substr($val, -2));
+		}
+
+		if (!is_numeric($oneToLast))
+		{
+			$last = $newLast;
+		}
 
 		if (is_numeric($last))
 		{
@@ -77,19 +93,31 @@ class MemoryInfo
 		{
 			case 'p':
 			case 'pb':
-				$val *= 1024;
+				$val *= 1024 * 1024 * 1024 * 1024 * 1024;
+				break;
+
 			case 't':
 			case 'tb':
-				$val *= 1024;
+				$val *= 1024 * 1024 * 1024 * 1024;
+				break;
+
 			case 'g':
 			case 'gb':
-				$val *= 1024;
+				$val *= 1024 * 1024 * 1024;
+				break;
+
 			case 'm':
 			case 'mb':
-				$val *= 1024;
+				$val *= 1024 * 1024;
+				break;
+
 			case 'k':
 			case 'kb':
 				$val *= 1024;
+				break;
+
+			case 'b':
+				break;
 		}
 
 		return (int) $val;
@@ -98,14 +126,19 @@ class MemoryInfo
 	/**
 	 * Converts an integer to a human formatter representation, e.g. 1024768 to 1M
 	 *
-	 * @param   int  $size  The size to convert
+	 * @param   int  $size       The size to convert
+	 * @param   int  $precision  Decimal points precision
 	 *
 	 * @return  string
 	 */
-	public function integerBytesToHuman($size)
+	public function integerBytesToHuman($size, $precision = 2)
 	{
-		$unit = array('b', 'KB', 'MB', 'GB', 'TB', 'PB');
+		$precision = max(0, $precision);
+		$unit      = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+		$i         = (int) floor(log($size, 1024));
+		$format    = ($precision > 0) ? "%0.{$precision}f" : '%u';
+		$rounded   = @round($size / pow(1024, $i), $precision);
 
-		return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
+		return sprintf($format, $rounded) . ' ' . $unit[$i];
 	}
 }
