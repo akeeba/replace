@@ -9,6 +9,11 @@
 
 namespace Akeeba\Replace\Engine\Core;
 
+/**
+ * Interface to classes implementing an Akeeba Replace engine configuraiton
+ *
+ * @package Akeeba\Replace\Engine\Core
+ */
 interface ConfigurationAwareInterface
 {
 	/**

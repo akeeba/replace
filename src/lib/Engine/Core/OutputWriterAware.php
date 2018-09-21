@@ -13,6 +13,11 @@ namespace Akeeba\Replace\Engine\Core;
 use Akeeba\Replace\Writer\NullWriter;
 use Akeeba\Replace\Writer\WriterInterface;
 
+/**
+ * Trait for classes implementing an output SQL writer
+ *
+ * @package Akeeba\Replace\Engine\Core
+ */
 trait OutputWriterAware
 {
 	/**

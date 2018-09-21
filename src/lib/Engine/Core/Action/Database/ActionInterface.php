@@ -15,6 +15,11 @@ use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Engine\Core\Response\SQL;
 use Akeeba\Replace\Logger\LoggerInterface;
 
+/**
+ * Interface to per-database action classes
+ *
+ * @package Akeeba\Replace\Engine\Core\Action\Database
+ */
 interface ActionInterface
 {
 	/**

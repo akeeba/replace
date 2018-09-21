@@ -1,10 +1,8 @@
 Immediate actions & pending tests:
 ================================================================================
-Database::runPerDatabaseActions
-	Pull all dependencies as arguments
-	Extract this and its friends to a trait
 
-ActionAware
+Core\Action\Database\ActionAware
+Core\ActionAware
 
 Core\Database: test it
     I need to empty the database completely and populate it with predictable data before the test

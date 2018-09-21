@@ -21,6 +21,11 @@ use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\TimerInterface;
 use Akeeba\Replace\Writer\WriterInterface;
 
+/**
+ * An Engine Part to process the contents of database tables
+ *
+ * @package Akeeba\Replace\Engine\Core
+ */
 class Table extends AbstractPart implements
 	ConfigurationAwareInterface,
 	DatabaseAwareInterface,

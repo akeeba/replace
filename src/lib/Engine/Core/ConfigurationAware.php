@@ -9,7 +9,11 @@
 
 namespace Akeeba\Replace\Engine\Core;
 
-
+/**
+ * Trait for classes implementing an Akeeba Replace engine configuration
+ *
+ * @package Akeeba\Replace\Engine\Core
+ */
 trait ConfigurationAware
 {
 	/**

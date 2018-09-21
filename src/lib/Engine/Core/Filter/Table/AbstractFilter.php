@@ -18,6 +18,11 @@ use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerAwareInterface;
 use Akeeba\Replace\Logger\LoggerInterface;
 
+/**
+ * Abstract class for table list filters
+ *
+ * @package Akeeba\Replace\Engine\Core\Filter\Table
+ */
 abstract class AbstractFilter implements FilterInterface, LoggerAwareInterface
 {
 	use LoggerAware;
