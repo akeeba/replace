@@ -61,71 +61,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 	}
 
 
-	public function testSetPerTableClasses()
-	{
-		$dummy = new Configuration([]);
-		$input = [
-			self::class,
-			'GuaranteedToNotExist',
-		];
-		$expected = [
-			self::class
-		];
-
-		$refObj    = new \ReflectionObject($dummy);
-		$refMethod = $refObj->getMethod('setPerTableClasses');
-		$refMethod->setAccessible(true);
-		$refMethod->invoke($dummy, $input);
-
-		$actual = $dummy->getPerTableClasses();
-
-		$this->assertEquals($expected, $actual);
-	}
-
-	public function testSetPerDatabaseClasses()
-	{
-		$dummy = new Configuration([]);
-		$input = [
-			self::class,
-			'GuaranteedToNotExist',
-		];
-		$expected = [
-			self::class
-		];
-
-		$refObj    = new \ReflectionObject($dummy);
-		$refMethod = $refObj->getMethod('setPerDatabaseClasses');
-		$refMethod->setAccessible(true);
-		$refMethod->invoke($dummy, $input);
-
-		$actual = $dummy->getPerDatabaseClasses();
-
-		$this->assertEquals($expected, $actual);
-
-	}
-
-	public function testSetPerRowClasses()
-	{
-		$dummy = new Configuration([]);
-		$input = [
-			self::class,
-			'GuaranteedToNotExist',
-		];
-		$expected = [
-			self::class
-		];
-
-		$refObj    = new \ReflectionObject($dummy);
-		$refMethod = $refObj->getMethod('setPerRowClasses');
-		$refMethod->setAccessible(true);
-		$refMethod->invoke($dummy, $input);
-
-		$actual = $dummy->getPerRowClasses();
-
-		$this->assertEquals($expected, $actual);
-
-	}
-
 	public function testSetFromParameters()
 	{
 		$input = [
@@ -134,15 +69,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 			'logFile'            => '/does/not/matter/foo.log',
 			'minLogLevel'        => LoggerInterface::SEVERITY_INFO,
 			'liveMode'           => false,
-			'perDatabaseClasses' => [
-				self:: class,
-			],
-			'perTableClasses'    => [
-				self:: class,
-			],
-			'perRowClasses'      => [
-				self:: class,
-			],
 			'allTables'          => false,
 			'maxBatchSize'       => 123,
 			'excludeTables'      => [
@@ -169,9 +95,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($input['logFile'], $config->getLogFile());
 		$this->assertEquals($input['minLogLevel'], $config->getMinLogLevel());
 		$this->assertEquals($input['liveMode'], $config->isLiveMode());
-		$this->assertEquals($input['perDatabaseClasses'], $config->getPerDatabaseClasses());
-		$this->assertEquals($input['perTableClasses'], $config->getPerTableClasses());
-		$this->assertEquals($input['perRowClasses'], $config->getPerRowClasses());
 		$this->assertEquals($input['allTables'], $config->isAllTables());
 		$this->assertEquals($input['maxBatchSize'], $config->getMaxBatchSize());
 		$this->assertEquals($input['excludeTables'], $config->getExcludeTables());
@@ -196,15 +119,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 			'logFile'            => '/does/not/matter/foo.log',
 			'minLogLevel'        => LoggerInterface::SEVERITY_INFO,
 			'liveMode'           => false,
-			'perDatabaseClasses' => [
-				self:: class,
-			],
-			'perTableClasses'    => [
-				self:: class,
-			],
-			'perRowClasses'      => [
-				self:: class,
-			],
 			'allTables'          => false,
 			'maxBatchSize'       => 123,
 			'excludeTables'      => [

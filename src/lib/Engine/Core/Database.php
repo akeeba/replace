@@ -10,15 +10,19 @@
 namespace Akeeba\Replace\Engine\Core;
 
 use Akeeba\Replace\Database\DatabaseAware;
+use Akeeba\Replace\Database\DatabaseAwareInterface;
 use Akeeba\Replace\Database\Driver;
-use Akeeba\Replace\Database\Query;
+use Akeeba\Replace\Database\Metadata\Database as DatabaseMeta;
 use Akeeba\Replace\Engine\AbstractPart;
+use Akeeba\Replace\Engine\Core\Action\ActionAware;
 use Akeeba\Replace\Engine\Core\Action\Database\ActionInterface;
 use Akeeba\Replace\Engine\Core\Filter\Table\FilterInterface;
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Engine\Core\Table as TablePart;
 use Akeeba\Replace\Logger\LoggerAware;
+use Akeeba\Replace\Logger\LoggerAwareInterface;
 use Akeeba\Replace\Logger\LoggerInterface;
+use Akeeba\Replace\Logger\NullLogger;
 use Akeeba\Replace\Timer\TimerInterface;
 use Akeeba\Replace\Writer\WriterInterface;
 
@@ -27,11 +31,18 @@ use Akeeba\Replace\Writer\WriterInterface;
  *
  * @package Akeeba\Replace\Engine\Part
  */
-class Database extends AbstractPart
+class Database extends AbstractPart implements
+	ConfigurationAwareInterface,
+	DatabaseAwareInterface,
+	OutputWriterAwareInterface,
+	BackupWriterAwareInterface
 {
 	use LoggerAware;
 	use DatabaseAware;
 	use ConfigurationAware;
+	use ActionAware;
+	use OutputWriterAware;
+	use BackupWriterAware;
 
 	/**
 	 * Hard-coded list of table filter classes. This is for my convenience.
@@ -44,25 +55,20 @@ class Database extends AbstractPart
 	];
 
 	/**
+	 * Hard-coded list of per-database action classes. This is for my convenience.
+	 *
+	 * @var  array
+	 */
+	private $perDatabaseActionClasses = [
+
+	];
+
+	/**
 	 * The memory information helper, used to take decisions based on the available PHP memory
 	 *
 	 * @var  MemoryInfo
 	 */
 	protected $memoryInfo = null;
-
-	/**
-	 * The writer to use for action SQL file output
-	 *
-	 * @var  WriterInterface
-	 */
-	private $outputWriter;
-
-	/**
-	 * The writer to use for backup SQL file output
-	 *
-	 * @var  WriterInterface
-	 */
-	private $backupWriter;
 
 	/**
 	 * The list of tables to process. Initialized in prepare().
@@ -96,10 +102,10 @@ class Database extends AbstractPart
 		$this->setDriver($db);
 		$this->setLogger($logger);
 		$this->setConfig($config);
+		$this->setOutputWriter($outputWriter);
+		$this->setBackupWriter($backupWriter);
 
 		$this->memoryInfo   = $memoryInfo;
-		$this->outputWriter = $outputWriter;
-		$this->backupWriter = $backupWriter;
 
 		parent::__construct($timer, $config);
 	}
@@ -121,7 +127,9 @@ class Database extends AbstractPart
 		$this->logMessageAboutBackups();
 
 		// Run once-per-database callbacks.
-		$this->runPerDatabaseActions();
+		$this->getLogger()->debug("Retrieving database metadata");
+		$databaseMeta = $this->getDbo()->getDatabaseMeta();
+		$this->runPerDatabaseActions($this->perDatabaseActionClasses, $databaseMeta);
 
 		// Get and filter the list of tables.
 		$this->getLogger()->debug('Getting the list of database tables');
@@ -241,7 +249,8 @@ class Database extends AbstractPart
 	 */
 	protected function logOutputWriter()
 	{
-		$path = $this->outputWriter->getFilePath();
+		$outputWriter = $this->getOutputWriter();
+		$path   = $outputWriter->getFilePath();
 
 		if (empty($path))
 		{
@@ -260,7 +269,7 @@ class Database extends AbstractPart
 	 */
 	protected function logBackupWriter()
 	{
-		$path = $this->backupWriter->getFilePath();
+		$path = $this->getBackupWriter()->getFilePath();
 
 		if (empty($path))
 		{
@@ -283,9 +292,10 @@ class Database extends AbstractPart
 
 		if (!$this->getConfig()->isLiveMode())
 		{
-			$message = "Live Mode: Disabled. Your database will NOT be modified.";
+			$message      = "Live Mode: Disabled. Your database will NOT be modified.";
+			$outputWriter = $this->getOutputWriter();
 
-			if ($this->outputWriter->getFilePath())
+			if ($outputWriter->getFilePath())
 			{
 				$message .= ' The actions to be taken will be saved in the Output SQL file instead.';
 			}
@@ -306,7 +316,7 @@ class Database extends AbstractPart
 			return;
 		}
 
-		if ($this->backupWriter->getFilePath())
+		if ($this->getBackupWriter()->getFilePath())
 		{
 			$this->getLogger()->info("If your site breaks after running Akeeba Replace please execute the Backup SQL file to restore it back to its previous state. If you're not sure how -- please read the documentation or ask us.");
 
@@ -317,104 +327,122 @@ class Database extends AbstractPart
 	}
 
 	/**
-	 * Execute the configured per-database actions
+	 * Execute per-database actions
+	 *
+	 * @param   array         $perDatabaseActionClasses  A list of per database action classes to use
+	 * @param   DatabaseMeta  $databaseMeta              The meta of the database to take action against
 	 *
 	 * @return  void
 	 */
-	protected function runPerDatabaseActions()
+	protected function runPerDatabaseActions(array $perDatabaseActionClasses, DatabaseMeta $databaseMeta)
 	{
-		// Get the action classes to run
-		$perDatabaseActionClasses = $this->getConfig()->getPerDatabaseClasses();
-		$liveMode                 = $this->getConfig()->isLiveMode();
+		$logger = new NullLogger();
+
+		if ($this instanceof LoggerAwareInterface)
+		{
+			$logger = $this->getLogger();
+		}
 
 		if (empty($perDatabaseActionClasses))
 		{
-			$this->getLogger()->info("No actions to be performed on the database itself.");
+			$logger->info("No actions to be performed on the database itself.");
 
 			return;
 		}
 
-		$this->getLogger()->info("Processing actions to be performed on the database itself.");
+		$logger->info("Processing actions to be performed on the database itself.");
 
-		$this->getLogger()->debug("Retrieving database metadata");
-		$databaseMeta = $this->getDbo()->getDatabaseMeta();
-
-		$numActions   = 0;
+		$liveMode        = $this->getConfig()->isLiveMode();
+		$outputWriter    = $this->getOutputWriter();
+		$backupWriter    = $this->getBackupWriter();
+		$db              = $this->getDbo();
+		$numActions      = 0;
+		$hasOutputWriter = $outputWriter->getFilePath() != '';
 
 		foreach ($perDatabaseActionClasses as $class)
 		{
-			if (!in_array('Akeeba\Replace\Engine\Core\Action\Database\ActionInterface', class_implements($class)))
-			{
-				$this->addWarningMessage(sprintf("Action class “%s” is not a valid per-database action", $class));
-
-				continue;
-			}
-
-			$this->getLogger()->debug(sprintf("Running “%s” action class against database.", $class));
-
-			/** @var ActionInterface $o */
-			$o            = new $class($this->getDbo(), $this->getLogger(), $this->getConfig());
-			$response     = $o->processDatabase($databaseMeta);
-			$outputWriter = $this->outputWriter;
-			$backupWriter = $this->backupWriter;
-			$db           = $this->getDbo();
-
-			if ($response->hasRestorationQueries())
-			{
-				array_map(function (Query $query) use ($backupWriter) {
-					if ($backupWriter->getFilePath())
-					{
-						$this->getLogger()->debug("Backup SQL: " . $query);
-					}
-
-					$backupWriter->writeLine($query);
-				}, $response->getRestorationQueries());
-			}
-
-			if ($response->hasActionQueries())
-			{
-				array_map(function (Query $query) use ($db, $outputWriter, $liveMode, &$numActions) {
-					$numActions++;
-
-					if ($outputWriter->getFilePath())
-					{
-						$this->getLogger()->debug("Output SQL: " . $query);
-					}
-
-					$outputWriter->writeLine($query);
-
-					if ($liveMode)
-					{
-						try
-						{
-							$this->getLogger()->debug("Execute SQL: " . $query);
-							$db->setQuery($query)->execute();
-						}
-						catch (\RuntimeException $e)
-						{
-							$this->addWarningMessage("Taking per-database action failed. SQL command: " . $query);
-						}
-					}
-				}, $response->getActionQueries());
-			}
+			$numActions += $this->runPerDatabaseAction($class, $databaseMeta, $backupWriter, $outputWriter, $db, $liveMode);
 		}
 
+		$this->logNumberOfActions($logger, $liveMode, $hasOutputWriter, $numActions);
+	}
+
+	/**
+	 * Runs a database action given an action class name and returns the number of action queries generated
+	 *
+	 * @param   string           $class         The action class to create an object from
+	 * @param   DatabaseMeta     $databaseMeta  The metadata of the DB to process
+	 * @param   WriterInterface  $backupWriter  The backup writer to use
+	 * @param   WriterInterface  $outputWriter  The output writer to use
+	 * @param   Driver           $db            The database to execute SQL against
+	 * @param   bool             $liveMode      Is this live mode?
+	 *
+	 * @return int
+	 */
+	protected function runPerDatabaseAction($class, DatabaseMeta $databaseMeta, WriterInterface $backupWriter, WriterInterface $outputWriter, Driver $db, $liveMode)
+	{
+		if (!in_array('Akeeba\Replace\Engine\Core\Action\Database\ActionInterface', class_implements($class)))
+		{
+			$this->addWarningMessage(sprintf("Action class “%s” is not a valid per-database action", $class));
+
+			return 0;
+		}
+
+		$logger = new NullLogger();
+
+		if ($this instanceof LoggerAwareInterface)
+		{
+			$logger = $this->getLogger();
+		}
+
+		$classParts = explode('\\', $class);
+		$baseClass  = array_pop($classParts);
+
+		$logger->debug(sprintf("Running “%s” action class against database.", $baseClass));
+
+
+		/** @var ActionInterface $o */
+		$o        = new $class($this->getDbo(), $logger, $this->getConfig());
+		$response = $o->processDatabase($databaseMeta);
+
+		$this->applyBackupQueries($response, $backupWriter);
+
+		return $this->applyActionQueries($response, $outputWriter, $db, $liveMode, false);
+	}
+
+
+	/**
+	 * @param   LoggerInterface  $logger           The logger to output to
+	 * @param   bool             $liveMode         Was this Live Mode (ran against the real database)?
+	 * @param   bool             $hasOutputWriter  Did we have an output writer to begin with?
+	 * @param   int              $numActions       How many actions did we take?
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore
+	 */
+	protected function logNumberOfActions(LoggerInterface $logger, $liveMode, $hasOutputWriter, $numActions)
+	{
 		// Live Mode -- message indicates we did something
 		$message = "Actions performed on the database itself: %d";
 
 		if (!$liveMode)
 		{
-			// Dry Run with Save To File -- message indicates we wrote something to a file
-			$message = "Actions to be performed on the database itself (saved in SQL file): %d";
+			$logger->info(sprintf($message, $numActions));
 
-			// Dry Run without Save To File -- message indicates we did not execute anything
-			if ($outputWriter->getFilePath() == '')
-			{
-				$message = "Actions which would have been performed on the database itself: %d";
-			}
+			return;
 		}
 
-		$this->getLogger()->info(sprintf($message, $numActions));
+		// Dry Run with Save To File -- message indicates we wrote something to a file
+		$message = "Actions to be performed on the database itself (saved in SQL file): %d";
+
+		// Dry Run without Save To File -- message indicates we did not execute anything
+		if (!$hasOutputWriter)
+		{
+			$message = "Actions which would have been performed on the database itself: %d";
+		}
+
+		$logger->info(sprintf($message, $numActions));
 	}
 
 	/**
@@ -459,6 +487,6 @@ class Database extends AbstractPart
 		}
 
 		// Create a new table Engine Part
-		$this->tablePart = new TablePart($this->timer, $this->getDbo(), $this->getLogger(), $this->getConfig(), $this->outputWriter, $this->backupWriter, $tableMeta, $this->memoryInfo);
+		$this->tablePart = new TablePart($this->timer, $this->getDbo(), $this->getLogger(), $this->getConfig(), $this->getOutputWriter(), $this->getBackupWriter(), $tableMeta, $this->memoryInfo);
 	}
 }

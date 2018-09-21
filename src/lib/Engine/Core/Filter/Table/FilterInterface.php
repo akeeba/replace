@@ -14,7 +14,9 @@ use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Logger\LoggerInterface;
 
 /**
- * Interface to a table list filter
+ * Interface to a table list filter.
+ *
+ * Remember to add the filters to Akeeba\Replace\Engine\Core\Database::$filters
  *
  * @package Akeeba\Replace\Engine\Core\Filter\Table
  */

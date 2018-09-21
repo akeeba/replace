@@ -11,6 +11,7 @@ namespace Akeeba\Replace\Engine\Core;
 
 
 use Akeeba\Replace\Database\DatabaseAware;
+use Akeeba\Replace\Database\DatabaseAwareInterface;
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Metadata\Table as TableMeta;
 use Akeeba\Replace\Engine\AbstractPart;
@@ -20,11 +21,17 @@ use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\TimerInterface;
 use Akeeba\Replace\Writer\WriterInterface;
 
-class Table extends AbstractPart
+class Table extends AbstractPart implements
+	ConfigurationAwareInterface,
+	DatabaseAwareInterface,
+	OutputWriterAwareInterface,
+	BackupWriterAwareInterface
 {
 	use LoggerAware;
 	use DatabaseAware;
 	use ConfigurationAware;
+	use OutputWriterAware;
+	use BackupWriterAware;
 
 	/**
 	 * The memory information helper, used to take decisions based on the available PHP memory
@@ -32,20 +39,6 @@ class Table extends AbstractPart
 	 * @var  MemoryInfo
 	 */
 	protected $memoryInfo = null;
-
-	/**
-	 * The writer to use for action SQL file output
-	 *
-	 * @var  WriterInterface
-	 */
-	private $outputWriter;
-
-	/**
-	 * The writer to use for backup SQL file output
-	 *
-	 * @var  WriterInterface
-	 */
-	private $backupWriter;
 
 	/**
 	 * The next table row we have to process
@@ -78,15 +71,16 @@ class Table extends AbstractPart
 	 * @param   WriterInterface  $outputWriter  The writer for the output SQL file (can be null)
 	 * @param   WriterInterface  $backupWriter  The writer for the backup SQL file (can be null)
 	 * @param   TableMeta        $tableMeta     The metadata of the table we will be processing
+	 * @param   MemoryInfo       $memInfo       Memory info object, used for determining optimum batch size
 	 */
 	public function __construct(TimerInterface $timer, Driver $db, LoggerInterface $logger, Configuration $config, WriterInterface $outputWriter, WriterInterface $backupWriter, TableMeta $tableMeta, MemoryInfo $memInfo)
 	{
 		$this->setLogger($logger);
 		$this->setDriver($db);
 		$this->setConfig($config);
+		$this->setOutputWriter($outputWriter);
+		$this->setBackupWriter($backupWriter);
 
-		$this->outputWriter = $outputWriter;
-		$this->backupWriter = $backupWriter;
 		$this->meta         = $tableMeta;
 		$this->memoryInfo   = $memInfo;
 
