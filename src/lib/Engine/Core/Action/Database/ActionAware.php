@@ -11,7 +11,9 @@ namespace Akeeba\Replace\Engine\Core\Action\Database;
 
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Metadata\Database as DatabaseMeta;
+use Akeeba\Replace\Engine\Core\Action\ActionAwareInterface;
 use Akeeba\Replace\Engine\Core\Configuration;
+use Akeeba\Replace\Engine\ErrorHandling\WarningsAwareInterface;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Writer\WriterInterface;
 
@@ -25,13 +27,13 @@ trait ActionAware
 	/**
 	 * Execute per-database actions
 	 *
-	 * @param   array        $perDatabaseActionClasses A list of per database action classes to use
-	 * @param   DatabaseMeta     $databaseMeta  The metadata of the DB to process
-	 * @param   LoggerInterface  $logger        The logger to use
-	 * @param   WriterInterface  $backupWriter  The backup writer to use
-	 * @param   WriterInterface  $outputWriter  The output writer to use
-	 * @param   Driver           $db            The database to execute SQL against
-	 * @param   Configuration    $config        The Configuration object to use
+	 * @param   array            $perDatabaseActionClasses  A list of per database action classes to use
+	 * @param   DatabaseMeta     $databaseMeta              The metadata of the DB to process
+	 * @param   LoggerInterface  $logger                    The logger to use
+	 * @param   WriterInterface  $backupWriter              The backup writer to use
+	 * @param   WriterInterface  $outputWriter              The output writer to use
+	 * @param   Driver           $db                        The database to execute SQL against
+	 * @param   Configuration    $config                    The Configuration object to use
 	 *
 	 * @return  void
 	 */
@@ -81,7 +83,10 @@ trait ActionAware
 	{
 		if (!in_array('Akeeba\Replace\Engine\Core\Action\Database\ActionInterface', class_implements($class)))
 		{
-			$this->addWarningMessage(sprintf("Action class “%s” is not a valid per-database action", $class));
+			if ($this instanceof WarningsAwareInterface)
+			{
+				$this->addWarningMessage(sprintf("Action class “%s” is not a valid per-database action", $class));
+			}
 
 			return 0;
 		}
@@ -96,9 +101,14 @@ trait ActionAware
 		$o        = new $class($db, $logger, $config);
 		$response = $o->processDatabase($databaseMeta);
 
-		$this->applyBackupQueries($response, $backupWriter);
+		if ($this instanceof ActionAwareInterface)
+		{
+			$this->applyBackupQueries($response, $backupWriter);
 
-		return $this->applyActionQueries($response, $outputWriter, $db, $config->isLiveMode(), false);
+			return $this->applyActionQueries($response, $outputWriter, $db, $config->isLiveMode(), false);
+		}
+
+		return 0;
 	}
 
 	/**

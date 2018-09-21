@@ -33,7 +33,7 @@ trait ActionAware
 	 *
 	 * @return  void
 	 */
-	protected function applyBackupQueries(SQL $response, WriterInterface $backupWriter)
+	public function applyBackupQueries(SQL $response, WriterInterface $backupWriter)
 	{
 		if (!$response->hasRestorationQueries())
 		{
@@ -69,7 +69,7 @@ trait ActionAware
 	 *
 	 * @return  int  Number of action queries processed
 	 */
-	protected function applyActionQueries(SQL $response, WriterInterface $outputWriter, Driver $db, $liveMode, $failOnError)
+	public function applyActionQueries(SQL $response, WriterInterface $outputWriter, Driver $db, $liveMode, $failOnError)
 	{
 		$numActions = 0;
 

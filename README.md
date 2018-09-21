@@ -25,9 +25,13 @@ This script and plugin is currently under development. It's not ready to be used
 * Do it live on your database, make a dry run or export to SQL for applying it with external tools.
 * Automatic backups of the data being replaced with restore option.
 * Change the collation and storage engine of the database tables and / or columns.
-
+* WordPress multisite support.
 
 ## Frequently Asked Questions (FAQ) and basic troubleshooting
+
+### Can I use this on multisite installations?
+
+Not yet. This is a feature scheduled for Milestone 2.0. 
 
 ### Can I use this to do mass replacement of content on my database?
 
@@ -43,9 +47,18 @@ Only if your database implements the MySQL dialect of SQL, e.g. if you are using
 
 You will not be able to use Akeeba Replace with Microsoft SQL Server, PostgreSQL etc. These speak a different dialect of SQL which is not compatible with Akeeba Replace or even WordPress itself.
 
+### Why use Akeeba Replace instead of another search and replace software?
+
+We have experience building backup and recovery software for web sites since 2006. Based on that experience we can deal with several issues not tackled by other software such as WP-CLI or Search and Replace for WordPress:
+
+* __No database is too big__. We know how to deal with very big databases without timing out, without requiring you to raise the execution time limit of PHP and without using too much memory. The only problems which cannot be overcome are those objectively outside our control: limits on the number of queries which can be executed in a limited amount of time (only controlled by your host) and having database tables with rows too big to fit in memory (well, you can't even work with this data in WordPress or its plugin which created them anyway!).
+* __Partial classes are not a show-stopper__. All other solutions choke on serialized data which references PHP classes not already loaded. We don't have that problem.
+* __Works with tables which lack a primary key__. Some tables lack a primary key. We figure out how to make replacement work even on these tables, without overwriting data we shouldn't be touching.
+* __Works inside and outside of WordPress__. It doesn't matter if you can or cannot access your administrator dashboard (wp-admin). You can still use Akeeba Replace.
+
 ### Will it replace serialized data?
 
-Yes. Akeeba Replace is designed to replace serialized data _safely_, without going through `unserialize()`. As a result it prevents any unwanted actions from taking place if a developer has serialized PHP objects with a magic `__wakeup` or `unserialize()` method which would run as soon as `unserialize()` is called.
+Yes. Akeeba Replace is designed to replace serialized data _safely_, without going through `unserialize()`. As a result it prevents any unwanted actions from taking place if a developer has serialized PHP objects with a magic `__wakeup` or `unserialize()` method which would run as soon as `unserialize()` is called. It also sidesteps the problem of some plugins' data being impossible to replace because they serialize objects of a PHP class which is normally not loaded outside the plugin.
 
 Akeeba Replace also supports serialized-data-in-serialized-data, an infinite number of levels deep. Beware, though! Just like the movie Inception, the deeper a level you go the slower things become.
 

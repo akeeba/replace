@@ -2,9 +2,9 @@ Immediate actions & pending tests:
 ================================================================================
 Core\Filter\Column\NonText
 Core\Filter\Column\UserFilters
-Core\Action\Database\AbstractAction [IGNORE]
 Core\Action\Database\Collation
 Core\Action\Database\ActionAware
+Core\Action\Table\ActionAware
 Core\ActionAware
 
 Core\Part\Database: test it

@@ -16,6 +16,7 @@ use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Metadata\Column;
 use Akeeba\Replace\Database\Metadata\Table as TableMeta;
 use Akeeba\Replace\Engine\AbstractPart;
+use Akeeba\Replace\Engine\Core\Action\Table\ActionAware;
 use Akeeba\Replace\Engine\Core\BackupWriterAware;
 use Akeeba\Replace\Engine\Core\BackupWriterAwareInterface;
 use Akeeba\Replace\Engine\Core\Configuration;
@@ -47,15 +48,25 @@ class Table extends AbstractPart implements
 	use ConfigurationAware;
 	use OutputWriterAware;
 	use BackupWriterAware;
+	use ActionAware;
 
 	/**
 	 * Hard-coded list of table filter classes. This is for my convenience.
 	 *
 	 * @var  array
 	 */
-	private $filters = [
+	protected $filters = [
 		'Akeeba\\Replace\\Engine\\Core\\Filter\\Column\\NonText',
 		'Akeeba\\Replace\\Engine\\Core\\Filter\\Column\\UserFilters',
+	];
+
+	/**
+	 * Hard-coded list of per-table action classes. This is for my convenience.
+	 *
+	 * @var  array
+	 */
+	protected $perTableActions = [
+		'Akeeba\\Replace\\Engine\\Core\\Action\\Table\\Collation'
 	];
 
 	/**
@@ -108,6 +119,13 @@ class Table extends AbstractPart implements
 	protected $replaceableColumns = [];
 
 	/**
+	 * The names of the columns which are my primary key
+	 *
+	 * @var  string[]
+	 */
+	protected $pkColumns = [];
+
+	/**
 	 * Table constructor.
 	 *
 	 * @param   TimerInterface   $timer         The timer object that controls us
@@ -135,10 +153,15 @@ class Table extends AbstractPart implements
 
 	protected function prepare()
 	{
+		$this->getLogger()->info(sprintf("Starting to process replacements in table “%s”", $this->tableMeta->getName()));
+
 		// Get meta for columns
+		$this->getLogger()->debug('Retrieving table column metadata');
 		$this->columnsMeta = $this->getDbo()->getColumnsMeta($this->tableMeta->getName());
 
-		// TODO Run once-per-table callbacks.
+		// Run once-per-table callbacks.
+		$this->runPerTableActions($this->perTableActions, $this->tableMeta, $this->columnsMeta, $this->getLogger(),
+			$this->getOutputWriter(), $this->getBackupWriter(), $this->getDbo(), $this->getConfig());
 
 		$this->getLogger()->debug('Filtering the columns list');
 		$this->replaceableColumns = $this->applyFilters($this->tableMeta, $this->columnsMeta, $this->filters);
@@ -169,9 +192,8 @@ class Table extends AbstractPart implements
 		$this->batch      = $this->getOptimumBatchSize($this->tableMeta, $memoryLimit, $usedMemory, $defaultBatchSize);
 		$this->offset     = 0;
 
-		// TODO Determine set of rows which constitute a primary key
-
-		// TODO If no primary key was determined than ALL columns are my primary key
+		// Determine the rows which constitute a primary key
+		$this->pkColumns = $this->findPrimaryKey($this->columnsMeta);
 	}
 
 	protected function process()
@@ -201,7 +223,7 @@ class Table extends AbstractPart implements
 
 	protected function finalize()
 	{
-		// TODO Log message that we are done
+		$this->getLogger()->info(sprintf("Finished processing replacements in table “%s”", $this->tableMeta->getName()));
 	}
 
 	/**
@@ -309,5 +331,66 @@ class Table extends AbstractPart implements
 		$maxRows = (int) ($memoryLeft / (3.25 * $avgRow));
 
 		return max(1, min($maxRows, $defaultBatchSize));
+	}
+
+	/**
+	 * Find the set of columns which constitute a primary key.
+	 *
+	 * We are returning whatever we find first: a primary key, a unique key, all columns listed
+	 *
+	 * @param   Column[] $columns
+	 *
+	 * @return  string[]
+	 */
+	protected function findPrimaryKey($columns)
+	{
+		// First try to find a Primary Key
+		$ret = $this->findColumnsByIndex('PRI', $columns);
+
+		if (!empty($ret))
+		{
+			return $ret;
+		}
+
+		// Next, try to find a Unique Key
+		$ret = $this->findColumnsByIndex('UNI', $columns);
+
+		if (!empty($ret))
+		{
+			return $ret;
+		}
+
+		// If all else fails use all of the columns
+		$ret = [];
+
+		foreach ($columns as $column)
+		{
+			$ret[] = $column->getColumnName();
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Return a list of column names which belong to the named key
+	 *
+	 * @param   string    $keyName  The key name to search for
+	 * @param   Column[]  $columns  The list of columns to search in
+	 *
+	 * @return  string[]
+	 */
+	protected function findColumnsByIndex($keyName, $columns)
+	{
+		$ret = [];
+
+		foreach ($columns as $column)
+		{
+			if ($column->getKeyName() == $keyName)
+			{
+				$ret[] = $column->getColumnName();
+			}
+		}
+
+		return $ret;
 	}
 }
