@@ -7,7 +7,7 @@
  *
  */
 
-namespace Akeeba\Replace\Engine\Core\Filter\Table;
+namespace Akeeba\Replace\Engine\Core\Action\Database;
 
 
 use Akeeba\Replace\Database\DatabaseAware;
@@ -20,31 +20,17 @@ use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerAwareInterface;
 use Akeeba\Replace\Logger\LoggerInterface;
 
-/**
- * Abstract class for table list filters
- *
- * @package Akeeba\Replace\Engine\Core\Filter\Table
- */
-abstract class AbstractFilter implements FilterInterface, LoggerAwareInterface, DatabaseAwareInterface,
+abstract class AbstractAction implements ActionInterface, DatabaseAwareInterface, LoggerAwareInterface,
 	ConfigurationAwareInterface
 {
-	use LoggerAware;
 	use DatabaseAware;
+	use LoggerAware;
 	use ConfigurationAware;
 
-	/**
-	 * AbstractFilter constructor.
-	 *
-	 * @param   LoggerInterface  $logger  The logger object
-	 * @param   Driver           $db      The database connection object
-	 * @param   Configuration    $config  The engine configuration object
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function __construct(LoggerInterface $logger, Driver $db, Configuration $config)
+	public function __construct(Driver $db, LoggerInterface $logger, Configuration $config)
 	{
-		$this->setLogger($logger);
 		$this->setDriver($db);
+		$this->setLogger($logger);
 		$this->setConfig($config);
 	}
 }

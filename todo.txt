@@ -1,10 +1,13 @@
 Immediate actions & pending tests:
 ================================================================================
-
+Core\Filter\Column\NonText
+Core\Filter\Column\UserFilters
+Core\Action\Database\AbstractAction [IGNORE]
+Core\Action\Database\Collation
 Core\Action\Database\ActionAware
 Core\ActionAware
 
-Core\Database: test it
+Core\Part\Database: test it
     I need to empty the database completely and populate it with predictable data before the test
     I cannot use a SQLite in-memory database since I (have to?) rely on MySQL features for table metadata
 
@@ -14,7 +17,7 @@ Add RegEx support to replacer
     Add RegEx support -- Special worry about UTF data!
     Test RegEx support
 
-Core\Table
+Core\Part\Table
 
 Engine\Core\Action\Database
     Collation

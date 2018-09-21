@@ -47,7 +47,7 @@ trait ActionAware
 			$logger = $this->getLogger();
 		}
 
-		array_map(function (Query $query) use ($backupWriter, $logger) {
+		array_map(function ($query) use ($backupWriter, $logger) {
 			if ($backupWriter->getFilePath())
 			{
 				$logger->debug("Backup SQL: " . $query);
@@ -85,7 +85,7 @@ trait ActionAware
 			$logger = $this->getLogger();
 		}
 
-		array_map(function (Query $query) use ($db, $outputWriter, $liveMode, $failOnError, &$numActions, $logger) {
+		array_map(function ($query) use ($db, $outputWriter, $liveMode, $failOnError, &$numActions, $logger) {
 			$numActions++;
 
 			if ($outputWriter->getFilePath())

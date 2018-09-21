@@ -7,7 +7,7 @@
  *
  */
 
-namespace Akeeba\Replace\Engine\Core;
+namespace Akeeba\Replace\Engine\Core\Part;
 
 use Akeeba\Replace\Database\DatabaseAware;
 use Akeeba\Replace\Database\DatabaseAwareInterface;
@@ -15,9 +15,16 @@ use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Engine\AbstractPart;
 use Akeeba\Replace\Engine\Core\Action\ActionAware;
 use Akeeba\Replace\Engine\Core\Action\Database\ActionAware as DatabaseActionAware;
+use Akeeba\Replace\Engine\Core\BackupWriterAware;
+use Akeeba\Replace\Engine\Core\BackupWriterAwareInterface;
+use Akeeba\Replace\Engine\Core\Configuration;
+use Akeeba\Replace\Engine\Core\ConfigurationAware;
+use Akeeba\Replace\Engine\Core\ConfigurationAwareInterface;
 use Akeeba\Replace\Engine\Core\Filter\Table\FilterInterface;
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
-use Akeeba\Replace\Engine\Core\Table as TablePart;
+use Akeeba\Replace\Engine\Core\OutputWriterAware;
+use Akeeba\Replace\Engine\Core\OutputWriterAwareInterface;
+use Akeeba\Replace\Engine\Core\Part\Table as TablePart;
 use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\TimerInterface;
@@ -26,7 +33,7 @@ use Akeeba\Replace\Writer\WriterInterface;
 /**
  * An Engine Part which iterates a database for tables
  *
- * @package Akeeba\Replace\Engine\Part
+ * @package Akeeba\Replace\Engine\Core\Part
  */
 class Database extends AbstractPart implements
 	ConfigurationAwareInterface,
@@ -58,7 +65,7 @@ class Database extends AbstractPart implements
 	 * @var  array
 	 */
 	private $perDatabaseActionClasses = [
-
+		'Akeeba\\Replace\\Engine\\Core\\Action\\Database\\Collation'
 	];
 
 	/**

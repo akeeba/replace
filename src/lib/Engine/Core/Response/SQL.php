@@ -21,22 +21,22 @@ class SQL
 	/**
 	 * The query to perform an action.
 	 *
-	 * @var  Query[]
+	 * @var  string[]
 	 */
 	private $actionQueries = [];
 
 	/**
 	 * The query to undo the action taken by the actionQuery (used for backups)
 	 *
-	 * @var  Query[]
+	 * @var  string[]
 	 */
 	private $restorationQueries = [];
 
 	/**
 	 * SQLResponse constructor.
 	 *
-	 * @param   Query[] $actionQueries
-	 * @param   Query[] $restorationQueries
+	 * @param   string[] $actionQueries
+	 * @param   string[] $restorationQueries
 	 */
 	public function __construct($actionQueries, $restorationQueries)
 	{
@@ -67,7 +67,7 @@ class SQL
 	/**
 	 * Get the action queries.
 	 *
-	 * @return  Query[]
+	 * @return  string[]
 	 */
 	public function getActionQueries()
 	{
@@ -77,7 +77,7 @@ class SQL
 	/**
 	 * Get the restoration query.
 	 *
-	 * @return  Query[]
+	 * @return  string[]
 	 */
 	public function getRestorationQueries()
 	{
