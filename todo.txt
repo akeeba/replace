@@ -2,10 +2,11 @@ Immediate actions & pending tests:
 ================================================================================
 Core\Filter\Column\NonText
 Core\Filter\Column\UserFilters
+Core\ActionAware
 Core\Action\Database\Collation
 Core\Action\Database\ActionAware
+Core\Action\Table\Collation
 Core\Action\Table\ActionAware
-Core\ActionAware
 
 Core\Part\Database: test it
     I need to empty the database completely and populate it with predictable data before the test
