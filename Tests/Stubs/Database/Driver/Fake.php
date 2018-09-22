@@ -71,17 +71,17 @@ class Fake extends Driver
 		return array();
 	}
 
-	protected function fetchAssoc($cursor = null)
+	public function fetchAssoc($cursor = null)
 	{
 		return array();
 	}
 
-	protected function fetchObject($cursor = null, $class = 'stdClass')
+	public function fetchObject($cursor = null, $class = 'stdClass')
 	{
 		return new $class;
 	}
 
-	protected function freeResult($cursor = null)
+	public function freeResult($cursor = null)
 	{
 		return null;
 	}
