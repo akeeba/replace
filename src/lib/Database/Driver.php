@@ -466,7 +466,7 @@ abstract class Driver implements DatabaseInterface
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
 	 */
-	abstract protected function fetchAssoc($cursor = null);
+	abstract public function fetchAssoc($cursor = null);
 
 	/**
 	 * Method to fetch a row from the result set cursor as an object.
@@ -477,7 +477,7 @@ abstract class Driver implements DatabaseInterface
 	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
 	 *
 	 */
-	abstract protected function fetchObject($cursor = null, $class = 'stdClass');
+	abstract public function fetchObject($cursor = null, $class = 'stdClass');
 
 	/**
 	 * Method to free up the memory used for the result set.
@@ -487,7 +487,7 @@ abstract class Driver implements DatabaseInterface
 	 * @return  void
 	 *
 	 */
-	abstract protected function freeResult($cursor = null);
+	abstract public function freeResult($cursor = null);
 
 	/**
 	 * Get the number of affected rows for the previous executed SQL statement.

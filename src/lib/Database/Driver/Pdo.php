@@ -821,7 +821,7 @@ abstract class Pdo extends Driver
 	 *
 	 * @since   1.0
 	 */
-	protected function fetchAssoc($cursor = null)
+	public function fetchAssoc($cursor = null)
 	{
 		if (!empty($cursor) && $cursor instanceof \PDOStatement)
 		{
@@ -844,7 +844,7 @@ abstract class Pdo extends Driver
 	 *
 	 * @since   1.0
 	 */
-	protected function fetchObject($cursor = null, $class = '\\stdClass')
+	public function fetchObject($cursor = null, $class = '\\stdClass')
 	{
 		if (!empty($cursor) && $cursor instanceof \PDOStatement)
 		{
@@ -866,7 +866,7 @@ abstract class Pdo extends Driver
 	 *
 	 * @since   1.0
 	 */
-	protected function freeResult($cursor = null)
+	public function freeResult($cursor = null)
 	{
 		$this->executed = false;
 

@@ -7,40 +7,14 @@ Core\Action\Database\Collation
 Core\Action\Database\ActionAware
 Core\Action\Table\Collation
 Core\Action\Table\ActionAware
-
-Core\Part\Database: test it
-    I need to empty the database completely and populate it with predictable data before the test
-    I cannot use a SQLite in-memory database since I (have to?) rely on MySQL features for table metadata
+Core\Part\Database
+Core\Part\Table
 
 Code + Tests (Library)
 ================================================================================
 Add RegEx support to replacer
     Add RegEx support -- Special worry about UTF data!
     Test RegEx support
-
-Core\Part\Table
-
-Engine\Core\Action\Database
-    Collation
-        Change the collation of the database
-
-Engine\Core\Action\Table
-    TableCollation
-        Change the collation of the table
-    Engine
-        Change the engine of the table (I need to add Configuration support)
-    ColumnCollation
-        Change the collation of the rows
-
-Engine\Core\Action\Row
-    Replace
-        Replace data on each column by calling Engine\Core\Action\Column\Replace.
-        Returns SQL response.
-
-Engine\Core\Action\Column
-    Replace
-        Replace data on a single column. Returns the column (modified or not)
-        The configuration defines if the replacement is RegEx or plain text
 
 Interfaces
 ================================================================================

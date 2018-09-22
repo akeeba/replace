@@ -15,8 +15,10 @@ use Akeeba\Replace\Database\DatabaseAwareInterface;
 use Akeeba\Replace\Database\Driver;
 use Akeeba\Replace\Database\Metadata\Column;
 use Akeeba\Replace\Database\Metadata\Table as TableMeta;
+use Akeeba\Replace\Database\Query;
 use Akeeba\Replace\Engine\AbstractPart;
-use Akeeba\Replace\Engine\Core\Action\Table\ActionAware;
+use Akeeba\Replace\Engine\Core\Action\ActionAware;
+use Akeeba\Replace\Engine\Core\Action\Table\ActionAware as TableActionAware;
 use Akeeba\Replace\Engine\Core\BackupWriterAware;
 use Akeeba\Replace\Engine\Core\BackupWriterAwareInterface;
 use Akeeba\Replace\Engine\Core\Configuration;
@@ -26,9 +28,11 @@ use Akeeba\Replace\Engine\Core\Filter\Column\FilterInterface;
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Engine\Core\OutputWriterAware;
 use Akeeba\Replace\Engine\Core\OutputWriterAwareInterface;
+use Akeeba\Replace\Engine\Core\Response\SQL;
 use Akeeba\Replace\Engine\PartInterface;
 use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerInterface;
+use Akeeba\Replace\Replacement\Replacement;
 use Akeeba\Replace\Timer\TimerInterface;
 use Akeeba\Replace\Writer\WriterInterface;
 
@@ -48,6 +52,7 @@ class Table extends AbstractPart implements
 	use ConfigurationAware;
 	use OutputWriterAware;
 	use BackupWriterAware;
+	use TableActionAware;
 	use ActionAware;
 
 	/**
@@ -126,6 +131,14 @@ class Table extends AbstractPart implements
 	protected $pkColumns = [];
 
 	/**
+	 * Which table column is the auto-increment one? If there is one we'll use it in the SELECT query to ensure
+	 * consistency of results.
+	 *
+	 * @var  string
+	 */
+	protected $autoIncrementColumn = '';
+
+	/**
 	 * Table constructor.
 	 *
 	 * @param   TimerInterface   $timer         The timer object that controls us
@@ -192,33 +205,73 @@ class Table extends AbstractPart implements
 		$this->batch      = $this->getOptimumBatchSize($this->tableMeta, $memoryLimit, $usedMemory, $defaultBatchSize);
 		$this->offset     = 0;
 
-		// Determine the rows which constitute a primary key
+		// Determine the columns which constitute a primary key
 		$this->pkColumns = $this->findPrimaryKey($this->columnsMeta);
+
+		// Determine the auto-increment column
+		$this->autoIncrementColumn = $this->findAutoIncrementColumn($this->columnsMeta);
 	}
 
 	protected function process()
 	{
-		// TODO Get the next batch of rows
+		// Log the next step
+		$tableName = $this->tableMeta->getName();
 
-		// TODO Iterate every row as long as we have enough time. NOTE: You cannot use a cursor because you need to execute SQL.
+		$this->logger->info(sprintf("Processing up to %d rows of table %s starting with row %d",
+			$this->batch, $tableName, $this->offset + 1));
 
-			// TODO Iterate columns, run the replacement against them
+		// Get the next batch of rows
+		$db    = $this->getDbo();
+		$timer = $this->getTimer();
+		$sql   = $this->getSelectQuery();
+		$this->enforceSQLCompatibility();
+		$db->setQuery($sql, $this->offset, $this->batch);
 
-			// TODO If the row has not been modified continue
+		// An error here *is* fatal, so we must NOT use a try/catch
+		$cursor = $db->execute();
 
-			// TODO Get the WHERE clause based on the already determined PK columns
+		// Check how many rows we got. If zero, we are done processing the table.
+		if ($db->getNumRows($cursor) == 0)
+		{
+			$this->logger->info("No more data found in this table.");
+			$db->freeResult($cursor);
 
-			// TODO Generate backup SQL
+			return false;
+		}
 
-			// TODO Write backup SQL
+		/**
+		 * If the cursor is an object clone it. That's because execute() returns the Driver's $cursor property which
+		 * gets overwritten when we run the next query, i.e. when we replace data in the database.
+		 */
+		if (is_object($cursor))
+		{
+			$cursor = clone $cursor;
+		}
 
-			// TODO Generate action SQL
+		// Set up replacement
+		$replacements         = $this->getConfig()->getReplacements();
+		$isRegularExpressions = $this->getConfig()->isRegularExpressions();
+		$liveMode             = $this->getConfig()->isLiveMode();
 
-			// TODO Write action SQL
+		// Iterate every row as long as we have enough time.
+		while ($timer->getTimeLeft() && ($row = $db->fetchAssoc($cursor)))
+		{
+			$this->offset++;
 
-			// TODO Execute action SQL
+			$response = $this->processRow($tableName, $row, $this->replaceableColumns, $this->pkColumns, $replacements, $isRegularExpressions, $db);
 
-			// TODO Update current row number ($this->offset)
+			// Apply the action result
+			$this->applyBackupQueries($response, $this->getBackupWriter());
+			$this->applyActionQueries($response, $this->getOutputWriter(), $this->getDbo(), $liveMode, true);
+
+			// Be kind to the memory
+			unset($response);
+		}
+
+		// Close cursor and indicate we have more work to do
+		$db->freeResult($cursor);
+
+		return true;
 	}
 
 	protected function finalize()
@@ -392,5 +445,198 @@ class Table extends AbstractPart implements
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Find the auto-increment column of the table
+	 *
+	 * @param   Column[]  $columns
+	 *
+	 * @return  string
+	 */
+	protected function findAutoIncrementColumn(array $columns)
+	{
+		foreach ($columns as $column)
+		{
+			if ($column->isAutoIncrement())
+			{
+				return $column->getColumnName();
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * Apply MySQL compatibility options to the database connection. We need them to prevent query failure unrelated to
+	 * our code.
+	 *
+	 * @return  void
+	 *
+	 * @codeCoverageIgnore
+	 */
+	protected function enforceSQLCompatibility()
+	{
+		$db = $this->getDbo();
+
+		/**
+		 * Enable the Big Selects option. Sometimes the MySQL optimizer believes that the number of rows which will be
+		 * examined is too big and rejects the query. We know that our queries are big since we are inspecting large
+		 * chunks of rows at one time and yes, we really do need to runt hat query, thank you very much. I am using two
+		 * distinct syntax options to set this option since we try to support a large number of MySQL server versions.
+		 */
+		try
+		{
+			$db->setQuery('SET SQL_BIG_SELECTS=1')->execute();
+			$db->setQuery('SET SESSION SQL_BIG_SELECTS=1')->execute();
+			$db->execute();
+		}
+		catch (\Exception $e)
+		{
+		}
+	}
+
+	/**
+	 * Get the SELECT query for this table
+	 *
+	 * @return  Query
+	 */
+	protected function getSelectQuery()
+	{
+		$db = $this->getDbo();
+
+		/**
+		 * We do not need to get all columns, just the PK and the columns to replace.
+		 *
+		 * Note that there might be an overlap between PK and replaceable columns, hence the array_unique.
+		 */
+		$columns = array_merge($this->pkColumns, $this->replaceableColumns);
+		$columns = array_unique($columns);
+		$columns = array_map([$db, 'quoteName'], $columns);
+
+		// If we are selecting all columns it's best to use '*' (makes the query faster)
+		if (count($columns) == count($this->columnsMeta))
+		{
+			$columns = '*';
+		}
+
+		// Get the base query
+		$query = $db->getQuery(true)
+			->select($columns)
+			->from($db->qn($this->tableMeta->getName()));
+
+		// If we have an auto-increment column sort by it ascending (maintains consistency)
+		if (!empty($this->autoIncrementColumn))
+		{
+			$query->order($db->qn($this->autoIncrementColumn) . ' ASC');
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Process the replacements for a single row.
+	 *
+	 * @param   string  $tableName             The name of the table the row belongs to
+	 * @param   array   $row                   The row data (PK and replaceable columns)
+	 * @param   array   $replaceableColumns    Names of columns where data will be replaced to
+	 * @param   array   $pkColumns             Names of columns which make up the table's primary key
+	 * @param   array   $replacements          Replacements to do as [$from => $to, ...]
+	 * @param   bool    $isRegularExpressions  Is the FROM side of replacements a regular expression?
+	 * @param   Driver  $db                    The DB driver used to prepare the SQL queries
+	 *
+	 * @return  SQL
+	 */
+	protected function processRow($tableName, array $row, array $replaceableColumns, array $pkColumns,
+	                              array $replacements, $isRegularExpressions, Driver $db)
+	{
+		$newRow  = array_merge($row);
+		$changed = false;
+
+		// Iterate columns, run the replacement against them
+		foreach ($replaceableColumns as $column)
+		{
+			foreach ($replacements as $from => $to)
+			{
+				// TODO Take into account $isRegularExpressions
+				$newRow[$column] = Replacement::replace($newRow[$column], $from, $to);
+
+				$changed = $changed || ($newRow[$column] != $row[$column]);
+			}
+		}
+
+		// If the row has not been modified continue
+		if (!$changed)
+		{
+			return new SQL([], []);
+		}
+
+		// TODO Add an option to convert UPDATE to UPDATE IGNORE for backup (recommended) and/or output SQL commands.
+		$tableNameQuoted = $db->qn($tableName);
+		$backupSQLProto  = "UPDATE {$tableNameQuoted} SET %s WHERE %s";
+		$outputSQLProto  = "UPDATE {$tableNameQuoted} SET %s WHERE %s";
+		$backupSet       = [];
+		$outputSet       = [];
+		$backupWhere     = [];
+		$outputWhere     = [];
+
+		// Get the SET part of the SQL commands based on the replaceable columns with different data
+		foreach ($replaceableColumns as $column)
+		{
+			// Skip over unchanged columns
+			if ($row[$column] == $newRow[$column])
+			{
+				continue;
+			}
+
+			// Backup sets the column to the CURRENT value since it needs to undo the replacement (new to old)
+			$backupSet[] = $db->qn($column) . ' = ' . $db->q($row[$column]);
+			// Output sets the column to the NEW value since it needs to perform the replacement (old to new)
+			$outputSet[] = $db->qn($column) . ' = ' . $db->q($newRow[$column]);
+		}
+
+		// Get the WHERE clause based on the already determined PK columns
+		foreach ($pkColumns as $column)
+		{
+			// Backup finds the column using its NEW value since it runs AFTER replacement
+			$backupWhere[] = $db->qn($column) . ' = ' . $db->q($newRow[$column]);
+			// Output finds the column using its CURRENT value since it runs BEFORE replacement
+			$outputWhere[] = $db->qn($column) . ' = ' . $db->q($row[$column]);
+		}
+
+		// Be kind to the memory
+		unset($row);
+		unset($newRow);
+
+		// Generate backup SQL
+		$backupSQL = sprintf($backupSQLProto,
+			implode(', ', $backupSet),
+			'(' . implode(') AND (', $backupWhere) . ')'
+		);
+
+		// Be kind to the memory
+		unset($backupSQLProto);
+		unset($backupSet);
+		unset($backupWhere);
+
+		// Generate output SQL
+		$outputSQL = sprintf($outputSQLProto,
+			implode(', ', $outputSet),
+			'(' . implode(') AND (', $outputWhere) . ')'
+		);
+
+		// Be kind to the memory
+		unset($backupSQLProto);
+		unset($backupSet);
+		unset($backupWhere);
+
+		// Create a response
+		$response = new SQL([$outputSQL], [$backupSQL]);
+
+		// Be kind to the memory
+		unset($outputSQL);
+		unset($backupSQL);
+
+		return $response;
 	}
 }

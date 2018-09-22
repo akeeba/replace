@@ -682,7 +682,7 @@ SQL;
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
 	 */
-	protected function fetchAssoc($cursor = null)
+	public function fetchAssoc($cursor = null)
 	{
 		return mysqli_fetch_assoc($cursor ? $cursor : $this->cursor);
 	}
@@ -696,7 +696,7 @@ SQL;
 	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
 	 *
 	 */
-	protected function fetchObject($cursor = null, $class = 'stdClass')
+	public function fetchObject($cursor = null, $class = 'stdClass')
 	{
 		return mysqli_fetch_object($cursor ? $cursor : $this->cursor, $class);
 	}
@@ -709,7 +709,7 @@ SQL;
 	 * @return  void
 	 *
 	 */
-	protected function freeResult($cursor = null)
+	public function freeResult($cursor = null)
 	{
 		mysqli_free_result($cursor ? $cursor : $this->cursor);
 	}

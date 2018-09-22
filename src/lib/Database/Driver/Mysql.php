@@ -366,7 +366,7 @@ class Mysql extends Mysqli
 	 * @return  mixed  Either the next row from the result set or false if there are no more rows.
 	 *
 	 */
-	protected function fetchAssoc($cursor = null)
+	public function fetchAssoc($cursor = null)
 	{
 		return mysql_fetch_assoc($cursor ? $cursor : $this->cursor);
 	}
@@ -380,7 +380,7 @@ class Mysql extends Mysqli
 	 * @return  mixed   Either the next row from the result set or false if there are no more rows.
 	 *
 	 */
-	protected function fetchObject($cursor = null, $class = 'stdClass')
+	public function fetchObject($cursor = null, $class = 'stdClass')
 	{
 		return mysql_fetch_object($cursor ? $cursor : $this->cursor, $class);
 	}
@@ -393,7 +393,7 @@ class Mysql extends Mysqli
 	 * @return  void
 	 *
 	 */
-	protected function freeResult($cursor = null)
+	public function freeResult($cursor = null)
 	{
 		mysql_free_result($cursor ? $cursor : $this->cursor);
 	}
