@@ -305,7 +305,7 @@ class FileWriter implements WriterInterface
 			$extension = substr($extension, 0, -2) . sprintf('%02u', $partNumber);
 		}
 
-		return $dirName . DIRECTORY_SEPARATOR . $baseName . $extension;
+		return $dirName . '/' . $baseName . $extension;
 	}
 
 	/**
