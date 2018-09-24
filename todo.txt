@@ -1,7 +1,5 @@
 Immediate actions & pending tests:
 ================================================================================
-Core\Filter\Column\NonText
-Core\Filter\Column\UserFilters
 Core\ActionAware
 Core\Action\Database\Collation
 Core\Action\Database\ActionAware

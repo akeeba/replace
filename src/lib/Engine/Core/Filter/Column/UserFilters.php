@@ -49,7 +49,7 @@ class UserFilters extends AbstractFilter
 
 		if (($abstractTableName != $tableName) && array_key_exists($abstractTableName, $allUserFilters))
 		{
-			$myFilters = array_merge($myFilters, $allUserFilters[$tableName]);
+			$myFilters = array_merge($myFilters, $allUserFilters[$abstractTableName]);
 		}
 
 		// No filters? Return the original.
