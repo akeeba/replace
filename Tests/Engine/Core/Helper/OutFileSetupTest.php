@@ -14,26 +14,20 @@ use Akeeba\Replace\Engine\Core\Helper\OutFileSetup;
 use Akeeba\Replace\Logger\FileLogger;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Logger\NullLogger;
+use Akeeba\Replace\Tests\vfsAware;
 use Akeeba\Replace\Writer\FileWriter;
 use Akeeba\Replace\Writer\NullWriter;
 use Akeeba\Replace\Writer\WriterInterface;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 
 class OutFileSetupTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * Virtual filesystem, used for testing
-	 *
-	 * @var vfsStreamDirectory
-	 */
-	private $root;
+	use vfsAware;
 
 	protected function setUp()
 	{
 		parent::setUp();
 
-		$this->root = vfsStream::setup('testing');
+		$this->setUp_vfsAware();
 	}
 
 	/**
