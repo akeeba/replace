@@ -198,7 +198,7 @@ class Column
 		$type = strtolower($type);
 
 		$textTypes = [
-			'varchar', 'text', 'char', 'character varying', 'nvarchar', 'nchar', 'smalltext', 'longtext', 'mediumtext'
+			'varchar', 'text', 'char', 'character varying', 'nvarchar', 'nchar', 'tinytext', 'smalltext', 'longtext', 'mediumtext'
 		];
 
 		return in_array($type, $textTypes);

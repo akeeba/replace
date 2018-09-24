@@ -1,7 +1,37 @@
 Immediate actions & pending tests:
 ================================================================================
+Create test data, engine_parts_test.xml
+    We have different possibilities for replacing data
+        BORG, uppercase, will be REPLACED (plain text)
+        borg, lowercase, will NOT be replaced (plain text)
+        bar, whole word, will be be REPLACED (regex)
+        bar, partial word (e.g. barber, barman, rebar) will NOT be replaced (regex)
+    tst_partial
+        Add rows with title (the ignored column) set to BORG, bar and others -- with and without replaceable data in the something column
+    tst_userfiltered
+        Add some bits to be replaced, it will be ignored
+    nontst_table1
+        Add some bits to be replaced, it will be ignored
+    tst_table3
+        Make serialized data with stdClass, array and a random class name
+        Include both replaceable and non-replaceable data
+
 Core\Part\Database
+    Database test
+    Make sure the tick() loop is not called too many times!
+    Use a special prefix not used by other tests
+    Use a mock Table object
+    The mock creates a list of the tables it's called against and does NOT write to files
+    Check that our mock object is NOT called with excluded tables' names
+    Check that our mock object is NOT called with a VIEW's name
+    Check that our mock object IS called X times where X is the number of the other tables
+
 Core\Part\Table
+    Database + vfs test
+    Make sure the tick() loop is not called too many times!
+    Prime with specific content
+    Check the resulting SQL
+
 
 Code + Tests (Library)
 ================================================================================
