@@ -21,7 +21,7 @@ class Collation extends AbstractAction
 		$currentCollation = $db->getCollation();
 
 		// Nothing to do?
-		if ($currentCollation == $newCollation)
+		if (empty($newCollation) || ($currentCollation == $newCollation))
 		{
 			return new SQL([], []);
 		}
