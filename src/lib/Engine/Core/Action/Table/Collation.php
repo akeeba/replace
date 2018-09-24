@@ -26,10 +26,10 @@ class Collation extends AbstractAction
 	 */
 	public function processTable(Table $table, array $columns)
 	{
-		$newCollation = $this->getConfig()->getDatabaseCollation();
+		$newCollation     = $this->getConfig()->getTableCollation();
 		$currentCollation = $table->getCollation();
 
-		if ($currentCollation == $newCollation)
+		if (empty($newCollation) || ($currentCollation == $newCollation))
 		{
 			return new SQL([], []);
 		}

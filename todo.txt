@@ -1,6 +1,5 @@
 Immediate actions & pending tests:
 ================================================================================
-Core\Action\Table\Collation
 Core\Part\Database
 Core\Part\Table
 

@@ -12,7 +12,6 @@ namespace Akeeba\Replace\Tests\Engine\Core\Action\Table;
 use Akeeba\Replace\Database\Driver\Fake;
 use Akeeba\Replace\Database\Metadata\Column;
 use Akeeba\Replace\Database\Metadata\Table;
-use Akeeba\Replace\Engine\Core\Action\Table\ActionAware;
 use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Logger\NullLogger;
 use Akeeba\Replace\Tests\Stubs\Core\Action\Table\ActionAwareDummy;
