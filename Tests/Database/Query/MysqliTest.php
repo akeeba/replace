@@ -7,13 +7,6 @@
  *
  */
 
-/**
- * Created by PhpStorm.
- * User: nicholas
- * Date: 13/9/2018
- * Time: 1:13 μμ
- */
-
 namespace Akeeba\Replace\Tests\Database\Query;
 
 use Akeeba\Replace\Database\Query\Mysqli;

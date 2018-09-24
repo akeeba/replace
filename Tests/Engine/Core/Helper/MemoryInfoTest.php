@@ -7,13 +7,6 @@
  *
  */
 
-/**
- * Created by PhpStorm.
- * User: nicholas
- * Date: 20/9/2018
- * Time: 1:17 μμ
- */
-
 namespace Akeeba\Replace\Tests\Engine\Core\Helper;
 
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;

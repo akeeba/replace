@@ -7,13 +7,6 @@
  *
  */
 
-/**
- * Created by PhpStorm.
- * User: nicholas
- * Date: 14/9/2018
- * Time: 6:33 μμ
- */
-
 namespace Akeeba\Replace\Tests\Engine;
 
 use Akeeba\Replace\Engine\AbstractPart;

@@ -7,13 +7,6 @@
  *
  */
 
-/**
- * Created by PhpStorm.
- * User: nicholas
- * Date: 18/09/18
- * Time: 03:20
- */
-
 namespace Akeeba\Replace\Tests\Logger;
 
 use Akeeba\Replace\Logger\FileLogger;

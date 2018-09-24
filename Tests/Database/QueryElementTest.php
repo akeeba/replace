@@ -7,13 +7,6 @@
  *
  */
 
-/**
- * Created by PhpStorm.
- * User: nicholas
- * Date: 11/9/2018
- * Time: 3:57 μμ
- */
-
 namespace Akeeba\Replace\Tests\Database;
 
 use Akeeba\Replace\Database\QueryElement;

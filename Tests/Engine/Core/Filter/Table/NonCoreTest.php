@@ -7,13 +7,6 @@
  *
  */
 
-/**
- * Created by PhpStorm.
- * User: nicholas
- * Date: 20/9/2018
- * Time: 3:51 μμ
- */
-
 namespace Akeeba\Replace\Tests\Engine\Core\Filter\Table;
 
 use Akeeba\Replace\Database\Driver\Fake;

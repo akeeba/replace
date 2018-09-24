@@ -36,6 +36,8 @@ trait ActionAware
 	 * @param   Configuration    $config                    The Configuration object to use
 	 *
 	 * @return  void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function runPerDatabaseActions(array $perDatabaseActionClasses, DatabaseMeta $databaseMeta,
 	                                         LoggerInterface $logger, WriterInterface $outputWriter,
