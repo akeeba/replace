@@ -83,6 +83,16 @@ trait ActionAware
 	                                        WriterInterface $backupWriter, WriterInterface $outputWriter, Driver $db,
 	                                        Configuration $config)
 	{
+		if (!class_exists($class))
+		{
+			if ($this instanceof WarningsAwareInterface)
+			{
+				$this->addWarningMessage(sprintf("Action class “%s” does not exist", $class));
+			}
+
+			return 0;
+		}
+
 		if (!in_array('Akeeba\Replace\Engine\Core\Action\Database\ActionInterface', class_implements($class)))
 		{
 			if ($this instanceof WarningsAwareInterface)
