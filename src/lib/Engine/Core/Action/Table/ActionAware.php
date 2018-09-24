@@ -31,6 +31,8 @@ trait ActionAware
 	 * @param   Configuration    $config                 The Configuration object to use
 	 *
 	 * @return  void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function runPerTableActions(array $perTableActionClasses,
 	                                      TableMeta $tableMeta, array $columns,
@@ -77,6 +79,16 @@ trait ActionAware
 	                                     WriterInterface $backupWriter, WriterInterface $outputWriter, Driver $db,
 	                                     Configuration $config)
 	{
+		if (!class_exists($class))
+		{
+			if ($this instanceof WarningsAwareInterface)
+			{
+				$this->addWarningMessage(sprintf("Action class “%s” does not exist", $class));
+			}
+
+			return 0;
+		}
+
 		if (!in_array('Akeeba\Replace\Engine\Core\Action\Table\ActionInterface', class_implements($class)))
 		{
 			if ($this instanceof WarningsAwareInterface)
