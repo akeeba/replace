@@ -52,7 +52,94 @@
     </table>
 
     <!-- tst_table3 has serialized data -->
-    <!-- TODO -->
+    <table name="tst_nontext">
+    <column>key</column>
+    <column>serialized</column>
+        <row>
+            <value>stdClass with “Just BORGing”</value>
+            <value>O:8:"stdClass":4:{s:3:"foo";s:0:"";s:3:"bar";s:12:"Just BORGing";s:3:"bat";s:4:"dorg";s:12:"Just BORGing";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>SomeRandomClass with “Just BORGing”</value>
+            <value>O:15:"SomeRandomClass":1:{s:20:" SomeRandomClass foo";s:12:"Just BORGing";}</value>
+        </row>
+        <row>
+            <value>array with “Just BORGing”</value>
+            <value>a:4:{s:3:"foo";s:0:"";s:3:"bar";s:12:"Just BORGing";s:3:"bat";s:4:"dorg";s:12:"Just BORGing";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>stdClass with “Not borged”</value>
+            <value>O:8:"stdClass":4:{s:3:"foo";s:0:"";s:3:"bar";s:10:"Not borged";s:3:"bat";s:4:"dorg";s:10:"Not borged";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>SomeRandomClass with “Not borged”</value>
+            <value>O:15:"SomeRandomClass":1:{s:20:" SomeRandomClass foo";s:10:"Not borged";}</value>
+        </row>
+        <row>
+            <value>array with “Not borged”</value>
+            <value>a:4:{s:3:"foo";s:0:"";s:3:"bar";s:10:"Not borged";s:3:"bat";s:4:"dorg";s:10:"Not borged";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>stdClass with “The borg”</value>
+            <value>O:8:"stdClass":4:{s:3:"foo";s:0:"";s:3:"bar";s:8:"The borg";s:3:"bat";s:4:"dorg";s:8:"The borg";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>SomeRandomClass with “The borg”</value>
+            <value>O:15:"SomeRandomClass":1:{s:20:" SomeRandomClass foo";s:8:"The borg";}</value>
+        </row>
+        <row>
+            <value>array with “The borg”</value>
+            <value>a:4:{s:3:"foo";s:0:"";s:3:"bar";s:8:"The borg";s:3:"bat";s:4:"dorg";s:8:"The borg";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>stdClass with “The bar is open”</value>
+            <value>O:8:"stdClass":4:{s:3:"foo";s:0:"";s:3:"bar";s:15:"The bar is open";s:3:"bat";s:4:"dorg";s:15:"The bar is open";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>SomeRandomClass with “The bar is open”</value>
+            <value>O:15:"SomeRandomClass":1:{s:20:" SomeRandomClass foo";s:15:"The bar is open";}</value>
+        </row>
+        <row>
+            <value>array with “The bar is open”</value>
+            <value>a:4:{s:3:"foo";s:0:"";s:3:"bar";s:15:"The bar is open";s:3:"bat";s:4:"dorg";s:15:"The bar is open";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>stdClass with “Hello barman”</value>
+            <value>O:8:"stdClass":4:{s:3:"foo";s:0:"";s:3:"bar";s:12:"Hello barman";s:3:"bat";s:4:"dorg";s:12:"Hello barman";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>SomeRandomClass with “Hello barman”</value>
+            <value>O:15:"SomeRandomClass":1:{s:20:" SomeRandomClass foo";s:12:"Hello barman";}</value>
+        </row>
+        <row>
+            <value>array with “Hello barman”</value>
+            <value>a:4:{s:3:"foo";s:0:"";s:3:"bar";s:12:"Hello barman";s:3:"bat";s:4:"dorg";s:12:"Hello barman";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>stdClass with “Forg”</value>
+            <value>O:8:"stdClass":4:{s:3:"foo";s:0:"";s:3:"bar";s:4:"Forg";s:3:"bat";s:4:"dorg";s:4:"Forg";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>SomeRandomClass with “Forg”</value>
+            <value>O:15:"SomeRandomClass":1:{s:20:" SomeRandomClass foo";s:4:"Forg";}</value>
+        </row>
+        <row>
+            <value>array with “Forg”</value>
+            <value>a:4:{s:3:"foo";s:0:"";s:3:"bar";s:4:"Forg";s:3:"bat";s:4:"dorg";s:4:"Forg";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>stdClass with “Zorg”</value>
+            <value>O:8:"stdClass":4:{s:3:"foo";s:0:"";s:3:"bar";s:4:"Zorg";s:3:"bat";s:4:"dorg";s:4:"Zorg";s:4:"morg";}</value>
+        </row>
+        <row>
+            <value>SomeRandomClass with “Zorg”</value>
+            <value>O:15:"SomeRandomClass":1:{s:20:" SomeRandomClass foo";s:4:"Zorg";}</value>
+        </row>
+        <row>
+            <value>array with “Zorg”</value>
+            <value>a:4:{s:3:"foo";s:0:"";s:3:"bar";s:4:"Zorg";s:3:"bat";s:4:"dorg";s:4:"Zorg";s:4:"morg";}</value>
+        </row>
+    </table>
 
     <!-- Nontext has random integer values -->
     <table name="tst_nontext">
@@ -73,13 +160,146 @@
     </table>
 
     <!-- tst_partial has one column (title) excluded -->
-    <!-- TODO -->
+    <table name="tst_partial">
+        <column>id</column>
+        <column>title</column>
+        <column>something</column>
+        <row>
+            <value>1</value>
+            <value>Just BORGing</value>
+            <value>This row is never replaced</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>Not borged</value>
+            <value>This row is never replaced</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>The borg</value>
+            <value>This row is never replaced</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value>The bar is open</value>
+            <value>This row is never replaced</value>
+        </row>
+        <row>
+            <value>5</value>
+            <value>Hello barman</value>
+            <value>This row is never replaced</value>
+        </row>
+        <row>
+            <value>6</value>
+            <value>Forg</value>
+            <value>This row is never replaced</value>
+        </row>
+        <row>
+            <value>7</value>
+            <value>Just BORGing</value>
+            <value>Just BORGing</value>
+        </row>
+        <row>
+            <value>8</value>
+            <value>Not borged</value>
+            <value>Not borged</value>
+        </row>
+        <row>
+            <value>9</value>
+            <value>The borg</value>
+            <value>The borg</value>
+        </row>
+        <row>
+            <value>10</value>
+            <value>The bar is open</value>
+            <value>The bar is open</value>
+        </row>
+        <row>
+            <value>11</value>
+            <value>Hello barman</value>
+            <value>Hello barman</value>
+        </row>
+        <row>
+            <value>12</value>
+            <value>Forg</value>
+            <value>Forg</value>
+        </row>
+        <row>
+            <value>13</value>
+            <value>Aarb</value>
+            <value>Just BORGing</value>
+        </row>
+        <row>
+            <value>14</value>
+            <value>Barb</value>
+            <value>Not borged</value>
+        </row>
+        <row>
+            <value>15</value>
+            <value>Carb</value>
+            <value>The borg</value>
+        </row>
+        <row>
+            <value>16</value>
+            <value>Darb</value>
+            <value>The bar is open</value>
+        </row>
+        <row>
+            <value>17</value>
+            <value>Farb</value>
+            <value>Hello barman</value>
+        </row>
+        <row>
+            <value>18</value>
+            <value>Garb</value>
+            <value>Forg</value>
+        </row>
+    </table>
 
     <!-- tst_userfiltered is completely excluded from replacements -->
-    <!-- TODO -->
+    <table name="tst_userfiltered">
+        <column>id</column>
+        <column>title</column>
+        <row>
+            <value>1</value>
+            <value>Foobar</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>More borging</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>My BORG</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value>Foo bar baz</value>
+        </row>
+    </table>
+
 
     <!-- nontst_table1 does not belong to the test data at all -->
-    <!-- TODO -->
+    <table name="nontst_table1">
+        <column>id</column>
+        <column>title</column>
+        <row>
+            <value>1</value>
+            <value>Foobar</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>More borging</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>My BORG</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value>Foo bar baz</value>
+        </row>
+    </table>
 
     <!-- tst_large - 1234 rows of random data -->
     <!-- BORG : 2 rows (look for name McLaughlin) -->
