@@ -24,7 +24,6 @@ use Akeeba\Replace\Engine\Core\Filter\Table\FilterInterface;
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Engine\Core\OutputWriterAware;
 use Akeeba\Replace\Engine\Core\OutputWriterAwareInterface;
-use Akeeba\Replace\Engine\Core\Part\Table as TablePart;
 use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\TimerInterface;
@@ -69,6 +68,13 @@ class Database extends AbstractPart implements
 	];
 
 	/**
+	 * Hard-coded name of the Table engine part class. This is for my convenience in testing.
+	 *
+	 * @var  string
+	 */
+	private $tablePartClass = 'Akeeba\\Replace\\Engine\\Core\\Part\\Table';
+
+	/**
 	 * The memory information helper, used to take decisions based on the available PHP memory
 	 *
 	 * @var  MemoryInfo
@@ -110,7 +116,10 @@ class Database extends AbstractPart implements
 		$this->setOutputWriter($outputWriter);
 		$this->setBackupWriter($backupWriter);
 
-		$this->memoryInfo   = $memoryInfo;
+		$this->memoryInfo = $memoryInfo;
+
+		$databaseMeta = $this->getDbo()->getDatabaseMeta();
+		$this->setDomain($databaseMeta->getName());
 
 		parent::__construct($timer, $config);
 	}
@@ -123,6 +132,9 @@ class Database extends AbstractPart implements
 	 */
 	protected function prepare()
 	{
+		$this->setStep('Initialization...');
+		$this->setSubstep('');
+
 		// Log things the user should know
 		$this->getLogger()->info(sprintf("Starting to process replacements in database “%s”", $this->getDbo()->getDatabase()));
 
@@ -186,6 +198,8 @@ class Database extends AbstractPart implements
 		$this->inheritWarningsFrom($this->tablePart);
 		$this->inheritErrorFrom($this->tablePart);
 
+		$this->setSubstep($this->tablePart->getSubstep());
+
 		// If we have an error we must stop processing right away
 		if (is_object($status->getError()))
 		{
@@ -211,6 +225,9 @@ class Database extends AbstractPart implements
 	 */
 	protected function finalize()
 	{
+		$this->setStep('Finalization...');
+		$this->setSubstep('');
+
 		$this->getLogger()->info(sprintf("Finished processing replacements in database “%s”", $this->getDbo()->getDatabase()));
 	}
 
@@ -241,7 +258,7 @@ class Database extends AbstractPart implements
 			}
 
 			/** @var FilterInterface $o */
-			$o = new $class($this->getLogger(), $this->getDomain(), $this->getConfig());
+			$o = new $class($this->getLogger(), $this->getDbo(), $this->getConfig());
 			$tables = $o->filter($tables);
 		}
 
@@ -373,7 +390,10 @@ class Database extends AbstractPart implements
 			return;
 		}
 
+		$this->setStep($tableMeta->getName());
+
 		// Create a new table Engine Part
-		$this->tablePart = new TablePart($this->timer, $this->getDbo(), $this->getLogger(), $this->getConfig(), $this->getOutputWriter(), $this->getBackupWriter(), $tableMeta, $this->memoryInfo);
+		$class           = $this->tablePartClass;
+		$this->tablePart = new $class($this->timer, $this->getDbo(), $this->getLogger(), $this->getConfig(), $this->getOutputWriter(), $this->getBackupWriter(), $tableMeta, $this->memoryInfo);
 	}
 }

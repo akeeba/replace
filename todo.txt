@@ -1,15 +1,5 @@
 Immediate actions & pending tests:
 ================================================================================
-Core\Part\Database
-    Database test
-    Make sure the tick() loop is not called too many times!
-    Use a special prefix not used by other tests
-    Use a mock Table object
-    The mock creates a list of the tables it's called against and does NOT write to files
-    Check that our mock object is NOT called with excluded tables' names
-    Check that our mock object is NOT called with a VIEW's name
-    Check that our mock object IS called X times where X is the number of the other tables
-
 Core\Part\Table
     Database + vfs test
     Make sure the tick() loop is not called too many times!
