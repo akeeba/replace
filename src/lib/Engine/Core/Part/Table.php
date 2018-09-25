@@ -220,32 +220,35 @@ class Table extends AbstractPart implements
 		$this->logger->info(sprintf("Processing up to %d rows of table %s starting with row %d",
 			$this->batch, $tableName, $this->offset + 1));
 
-		// Get the next batch of rows
-		$db    = $this->getDbo();
-		$timer = $this->getTimer();
-		$sql   = $this->getSelectQuery();
+		/**
+		 * Get the next batch of rows
+		 *
+		 * Why clone the database driver? Every time we run execute() the cursor inside the driver is overwritten. If
+		 * we use the same driver for the SELECT query and for running data modification queries we will end up
+		 * overwriting our cursor the first time we run a data modification query. This will kill our loop prematurely
+		 * and cause us to use too many iterations to process the data.
+		 *
+		 * By using a cloned driver we have multiple cursors open at the same time on the same connection. This lets us
+		 * step through the records using one cursor (in $queryDb) and perform data modification queries, overwriting
+		 * another cursor (in $db).
+		 */
+		$db      = $this->getDbo();
+		$queryDb = clone $db;
+		$timer   = $this->getTimer();
+		$sql     = $this->getSelectQuery();
 		$this->enforceSQLCompatibility();
-		$db->setQuery($sql, $this->offset, $this->batch);
+		$queryDb->setQuery($sql, $this->offset, $this->batch);
 
 		// An error here *is* fatal, so we must NOT use a try/catch
-		$cursor = $db->execute();
+		$cursor = $queryDb->execute();
 
 		// Check how many rows we got. If zero, we are done processing the table.
-		if ($db->getNumRows($cursor) == 0)
+		if ($queryDb->getNumRows($cursor) == 0)
 		{
 			$this->logger->info("No more data found in this table.");
 			$db->freeResult($cursor);
 
 			return false;
-		}
-
-		/**
-		 * If the cursor is an object clone it. That's because execute() returns the Driver's $cursor property which
-		 * gets overwritten when we run the next query, i.e. when we replace data in the database.
-		 */
-		if (is_object($cursor))
-		{
-			$cursor = clone $cursor;
 		}
 
 		// Set up replacement
@@ -254,7 +257,7 @@ class Table extends AbstractPart implements
 		$liveMode             = $this->getConfig()->isLiveMode();
 
 		// Iterate every row as long as we have enough time.
-		while ($timer->getTimeLeft() && ($row = $db->fetchAssoc($cursor)))
+		while ($timer->getTimeLeft() && ($row = $queryDb->fetchAssoc($cursor)))
 		{
 			$this->offset++;
 
@@ -268,9 +271,9 @@ class Table extends AbstractPart implements
 			unset($response);
 		}
 
-		// Close cursor and indicate we have more work to do
-		$db->freeResult($cursor);
+		unset($queryDb);
 
+		// Indicate we have more work to do
 		return true;
 	}
 
@@ -310,7 +313,7 @@ class Table extends AbstractPart implements
 			}
 
 			/** @var FilterInterface $o */
-			$o = new $class($this->getLogger(), $this->getDomain(), $this->getConfig());
+			$o = new $class($this->getLogger(), $this->getDbo(), $this->getConfig());
 			$allColumns = $o->filter($tableMeta, $allColumns);
 		}
 
