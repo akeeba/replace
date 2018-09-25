@@ -455,7 +455,7 @@ abstract class Pdo extends Driver
 				return $result;
 			}
 			else
-				// The server was not disconnected.
+			// The server was not disconnected.
 			{
 				// Get the error number and message from before we tried to reconnect.
 				$this->errorNum = $errorNum;
@@ -466,7 +466,7 @@ abstract class Pdo extends Driver
 			}
 		}
 
-		return true;
+		return $this->prepared;
 	}
 
 	/**

@@ -36,13 +36,16 @@
 
                 <!-- Trivial classes (only there for inheritance or they just have empty implementations (no code) -->
                 <file>src/lib/Database/Query/Mysql.php</file>
-                <file>src/lib/Database/Query/Pdo.php</file>
+                <file>src/lib/Database/Query/Pdomysql.php</file>
                 <file>src/lib/Engine/Core/Action/Database/AbstractAction.php</file>
                 <file>src/lib/Engine/Core/Action/Table/AbstractAction.php</file>
                 <file>src/lib/Engine/Core/Filter/Table/AbstractFilter.php</file>
                 <file>src/lib/Engine/Core/Response/SQL.php</file>
                 <file>src/lib/Logger/NullLogger.php</file>
                 <file>src/lib/Writer/NullWriter.php</file>
+
+                <!-- This is tested through the MySQLi query object -->
+                <file>src/lib/Database/Query/LimitAware.php</file>
 
                 <!-- Trivial traits (they are just collections of property getters and setters) -->
                 <file>src/lib/Database/DatabaseAware</file>
