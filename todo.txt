@@ -7,6 +7,26 @@ Add RegEx support to replacer
 Interfaces
 ================================================================================
 WordPress plugin
+    The replacement entry point should be a separate .php page, directly accessible, which is locked by a password.
+    The password will be based off the site's secret.
+
+    A main page to enter replacements and choose what to exclude from the process (whole tables or just some columns)
+    A quick interface to populate that based on old and new site's URL and path on the server
+
+    A page to show past jobs and their output SQL file, backup SQL file, log
+    Can export to JSON and import from JSON
+
+    Restore from backup page
+        I need to implement the db restoration code first!
+
+    Options page
+        Auto-output to SQL
+        Take automatic backups
+        Log level
+        Maximum number of jobs to keep
+
+    A page and a script to show the URL and path to the current site
+    Option to save the URL and path to the site in the database. We can use that to populate the quick changes UI.
 
 CLI
     Single PHAR file, maybe use Symfony console package or similar to create the interface
