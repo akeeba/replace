@@ -12,6 +12,11 @@ namespace Akeeba\Replace\Database\Query;
 
 use Akeeba\Replace\Database\QueryLimitable;
 
+/**
+ * Query builder class for databases using the PDO connector
+ *
+ * @codeCoverageIgnore
+ */
 class Pdomysql extends Pdo implements QueryLimitable
 {
 	use LimitAware;

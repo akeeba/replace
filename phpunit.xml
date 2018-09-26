@@ -14,7 +14,10 @@
 
     <filter>
         <!-- ### Code Coverage Exclusions ### -->
-        <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="false">
+        <whitelist
+                addUncoveredFilesFromWhitelist="true"
+                processUncoveredFilesFromWhitelist="true"
+        >
             <directory suffix=".php">src</directory>
             <exclude>
                 <!-- Folders with non-code files -->

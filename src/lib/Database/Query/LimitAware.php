@@ -9,7 +9,12 @@
 
 namespace Akeeba\Replace\Database\Query;
 
+use Akeeba\Replace\Database\Query;
 
+/**
+ * A trait for MySQL queries which are aware of query limits
+ * @package Akeeba\Replace\Database\Query
+ */
 trait LimitAware
 {
 	/**
@@ -82,7 +87,7 @@ trait LimitAware
 	 * @param   integer  $limit   The limit for the result set
 	 * @param   integer  $offset  The offset for the result set
 	 *
-	 * @return  Database\Query  Returns this object to allow chaining.
+	 * @return  Query  Returns this object to allow chaining.
 	 *
 	 */
 	public function setLimit($limit = 0, $offset = 0)

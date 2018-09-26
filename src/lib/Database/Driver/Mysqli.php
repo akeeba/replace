@@ -75,13 +75,14 @@ class Mysqli extends Driver
 
 	/**
 	 * Destructor.
-	 *
 	 */
 	public function __destruct()
 	{
-		if (is_callable($this->connection, 'close'))
+		if (is_object($this->connection) && ($this->connection instanceof \mysqli))
 		{
-			mysqli_close($this->connection);
+			/** @var \mysqli $connection */
+			@mysqli_close($this->connection);
+			unset($this->connection);
 		}
 	}
 
@@ -129,7 +130,9 @@ class Mysqli extends Driver
 		// Make sure the MySQLi extension for PHP is installed and enabled.
 		if (!function_exists('mysqli_connect'))
 		{
+			// @codeCoverageIgnoreStart
 			throw new \RuntimeException('The MySQL adapter mysqli is not available');
+			// @codeCoverageIgnoreEnd
 		}
 
 		$this->connection = @mysqli_connect(
@@ -164,9 +167,9 @@ class Mysqli extends Driver
 	public function disconnect()
 	{
 		// Close the connection.
-		if (is_callable($this->connection, 'close'))
+		if (is_object($this->connection) && ($this->connection instanceof \mysqli))
 		{
-			mysqli_close($this->connection);
+			@mysqli_close($this->connection);
 		}
 
 		$this->connection = null;
@@ -185,7 +188,7 @@ class Mysqli extends Driver
 	{
 		$this->connect();
 
-		$result = mysqli_real_escape_string($this->getConnection(), $text);
+		$result = mysqli_real_escape_string($this->connection, $text);
 
 		if ($extra)
 		{
@@ -283,6 +286,7 @@ SQL;
 		{
 			$collation = $this->loadResult();
 		}
+		// @codeCoverageIgnoreStart
 		catch (\RuntimeException $e)
 		{
 			$collation = null;
@@ -305,6 +309,7 @@ SQL;
 		}
 
 		return null;
+		// @codeCoverageIgnoreEnd
 	}
 
 	/**
@@ -501,8 +506,10 @@ SQL;
 		// If debugging is enabled then let's log the query.
 		if ($this->debug)
 		{
+			// @codeCoverageIgnoreStart
 			// Add the query to the object queue.
 			$this->log[] = $sql;
+			// @codeCoverageIgnoreEnd
 		}
 
 		// Reset the error values.

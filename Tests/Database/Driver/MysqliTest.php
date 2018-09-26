@@ -840,5 +840,4 @@ class MysqliTest extends DriverTestCase
 		$this->setExpectedException('\RuntimeException');
 		$result = $db->updateObject($table, $newObject, 'id', false);
 	}
-
 }

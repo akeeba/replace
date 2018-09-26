@@ -11,7 +11,9 @@ namespace Akeeba\Replace\Database\Query;
 use Akeeba\Replace\Database;
 
 /**
- * Query Building Class.
+ * Query Building Class for databases using the MySQLi connector.
+ *
+ * @codeCoverageIgnore
  */
 class Mysqli extends Database\Query implements Database\QueryLimitable
 {

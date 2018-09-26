@@ -9,7 +9,9 @@
 namespace Akeeba\Replace\Database\Query;
 
 /**
- * Query Building Class.
+ * Query Building Class for databases using the classic (PHP 5.x) MySQL connector.
+ *
+ * @codeCoverageIgnore
  */
 class Mysql extends Mysqli
 {
