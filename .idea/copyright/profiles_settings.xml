@@ -1,5 +1,5 @@
 <component name="CopyrightManager">
-  <settings>
+  <settings default="Akeeba PHP">
     <module2copyright>
       <element module="Own library PHP files" copyright="Akeeba PHP" />
       <element module="Tests PHP" copyright="Tests" />
