@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhingConfiguration">
+    <buildFilePaths>
+      <buildFile options="" path="file://$PROJECT_DIR$/build/build.xml">
+        <targetsToHide>
+          <target value="doc-main-pdf" />
+          <target value="docsdeploy-replace" />
+          <target value="git" />
+          <target value="setup-properties" />
+          <target value="new-release" />
+          <target value="composer-install" />
+          <target value="docbook-pdf" />
+          <target value="docbook-epub" />
+          <target value="docbook-deploy" />
+          <target value="release" />
+          <target value="onBeforeRelease" />
+          <target value="onAfterRelease" />
+          <target value="relink" />
+          <target value="component-packages" />
+          <target value="package-com" />
+          <target value="package-com-builder" />
+          <target value="package-files" />
+          <target value="package-files-builder" />
+          <target value="package-modules" />
+          <target value="package-module-folder" />
+          <target value="package-module-item" />
+          <target value="package-plugins" />
+          <target value="package-plugin-folder" />
+          <target value="package-plugin-item" />
+          <target value="package-fof" />
+          <target value="package-fof4" />
+          <target value="package-strapper" />
+          <target value="package-fef" />
+          <target value="package-pkg" />
+          <target value="package-pkg-builder" />
+          <target value="lang" />
+          <target value="bladejoomla" />
+        </targetsToHide>
+      </buildFile>
+    </buildFilePaths>
+    <phingPath>$USER_HOME$/.composer/vendor/bin/phing</phingPath>
+  </component>
+</project>
