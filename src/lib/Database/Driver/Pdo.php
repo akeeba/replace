@@ -402,6 +402,7 @@ abstract class Pdo extends Driver
 
 		// Execute the query.
 		$this->executed = false;
+		$executedSQL = '';
 
 		if ($this->prepared instanceof \PDOStatement)
 		{
@@ -416,6 +417,7 @@ abstract class Pdo extends Driver
 				}
 			}
 
+			$executedSQL = $this->prepared->queryString;
 			$this->executed = $this->prepared->execute();
 		}
 
@@ -466,7 +468,12 @@ abstract class Pdo extends Driver
 			}
 		}
 
-		return $this->prepared;
+		if (substr(trim($executedSQL), 0, 123) == 'SELECT')
+		{
+			return $this->prepared;
+		}
+
+		return true;
 	}
 
 	/**
