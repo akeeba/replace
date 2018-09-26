@@ -1,12 +1,3 @@
-Immediate actions & pending tests:
-================================================================================
-Core\Part\Table
-    Database + vfs test
-    Make sure the tick() loop is not called too many times!
-    Prime with specific content
-    Check the resulting SQL
-
-
 Code + Tests (Library)
 ================================================================================
 Add RegEx support to replacer
