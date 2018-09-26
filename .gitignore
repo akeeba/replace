@@ -68,8 +68,8 @@ fabric.properties
 
 release/**
 
-src/wp/lib
-src/wp/readme.txt
+src/akeebareplace/includes/lib
+src/akeebareplace/readme.txt
 
 Tests/.env
 Tests/report.txt
