@@ -301,10 +301,10 @@
         </row>
     </table>
 
-    <!-- tst_large - 791 rows of random data -->
-    <!-- BORG : 2 rows (look for name McLaughlin) -->
+    <!-- tst_large - 780 rows of random data -->
+    <!-- BORG : 3 rows (look for name McLaughlin) -->
     <!-- bar as a unique word: 3 rows (look for name Rice) -->
-    <!-- bar as part of another word : 5 rows (look for name Mayert) -->
+    <!-- bar as part of another word : 4 rows (look for name Mayert) -->
     <table name="tst_large">
         <column>id</column>
         <column>name</column>
@@ -2028,7 +2028,7 @@
             <value>250</value>
             <value>Kenton McLaughlin</value>
             <value>Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo
-                voluptas occaecati. A consequatur est sed eum. Expedita quidem atque natus non.
+                voluptas occaecati. A BORG consequatur est sed eum. Expedita quidem atque natus non.
             </value>
         </row>
         <row>
@@ -5673,81 +5673,6 @@
             <value>Miss Gladys Goodwin</value>
             <value>Blanditiis dolor nulla facere sint. Velit consectetur et libero qui aut provident. Vero magnam
                 repudiandae quia temporibus culpa. Vel consequatur ipsam laborum repudiandae ea minus.
-            </value>
-        </row>
-        <row>
-            <value>781</value>
-            <value>Earnestine Langosh</value>
-            <value>Rem dolore consequatur impedit. Earum ipsam itaque at dolor. Aut sequi qui voluptatem eligendi esse
-                sint ratione.
-            </value>
-        </row>
-        <row>
-            <value>782</value>
-            <value>Amina Wintheiser</value>
-            <value>Eaque quasi commodi cupiditate dicta sunt. Sed natus voluptates delectus deserunt excepturi vero.
-            </value>
-        </row>
-        <row>
-            <value>783</value>
-            <value>Kurtis Lind</value>
-            <value>Velit repellat non sint recusandae voluptatibus aspernatur. Et fuga minima sed iure laudantium rem.
-            </value>
-        </row>
-        <row>
-            <value>784</value>
-            <value>Anna Mayert</value>
-            <value>Veritatis ut ut dolore nemo. Fugit eos cumque rerum. Provident nisi iusto facere ad odit laboriosam.
-                Possimus et baret est quas voluptas.
-            </value>
-        </row>
-        <row>
-            <value>785</value>
-            <value>Josue Murazik</value>
-            <value>Provident quos rerum ducimus totam qui. Perferendis sint inventore quibusdam expedita. Qui officia
-                neque quasi eum et ab neque. Et veritatis iusto eius non quod voluptas.
-            </value>
-        </row>
-        <row>
-            <value>786</value>
-            <value>Dr. Jeramy Quitzon</value>
-            <value>Omnis voluptatem quasi dolor maxime. Et in aperiam nesciunt qui. Odio illo numquam rerum non
-                doloribus ad.
-            </value>
-        </row>
-        <row>
-            <value>787</value>
-            <value>Presley Jakubowski</value>
-            <value>Vitae repellendus suscipit culpa aliquam quidem minima consequatur. Cumque aspernatur mollitia labore
-                consequatur aliquam earum cum. Natus nobis magnam voluptatum consectetur ut sit.
-            </value>
-        </row>
-        <row>
-            <value>788</value>
-            <value>Gianni Volkman</value>
-            <value>Iste exercitationem quia eum molestiae reiciendis. Quia dolor quod doloribus consectetur et. Et magni
-                iste aut consequatur provident saepe.
-            </value>
-        </row>
-        <row>
-            <value>789</value>
-            <value>Saul White</value>
-            <value>Voluptates ut voluptatum dolores et. Amet autem eos recusandae velit. Dolorem tempora beatae nihil et
-                nesciunt pariatur delectus.
-            </value>
-        </row>
-        <row>
-            <value>790</value>
-            <value>Miss Melba Gutmann</value>
-            <value>Quis aut nesciunt quae esse quam excepturi. Aliquid cupiditate aliquid et omnis optio ex quod. Et
-                cupiditate nostrum ut.
-            </value>
-        </row>
-        <row>
-            <value>791</value>
-            <value>Dr. Micah Thiel</value>
-            <value>A minima pariatur et maiores. Culpa consectetur voluptas sequi deleniti quos et laudantium. Quisquam
-                quam qui fugiat doloremque sunt. Atque esse ipsum autem dolor nihil quod dolor culpa.
             </value>
         </row>
     </table>
