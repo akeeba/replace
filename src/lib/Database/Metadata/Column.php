@@ -52,6 +52,13 @@ class Column
 	private $autoIncrement = false;
 
 	/**
+	 * The default value for this column
+	 *
+	 * @var  mixed
+	 */
+	private $default = null;
+
+	/**
 	 * Creates a column definition from a MySQL result describing the column, either from SHOW FULL COLUMNS or from a
 	 * query to information_schema.COLUMNS.
 	 *
@@ -71,6 +78,7 @@ class Column
 		$collation     = array_key_exists('Collation', $result) ? $result['Collation'] : $result['COLLATION_NAME'];
 		$keyName       = array_key_exists('Key', $result) ? $result['Key'] : $result['COLUMN_KEY'];
 		$autoIncrement = (array_key_exists('Extra', $result) ? $result['Extra'] : $result['EXTRA']) == 'auto_increment';
+		$default       = array_key_exists('Default', $result) ? $result['Default'] : $result['COLUMN_DEFAULT'];
 
 		return new static($columnName, $type, $collation, $keyName, $autoIncrement);
 	}
@@ -78,21 +86,23 @@ class Column
 	/**
 	 * ColumnDefinition constructor.
 	 *
-	 * @param   string  $columnName     Name of the column
-	 * @param   string  $type           Full type, e.g. "varchar(255)" or "int(10) unsigned"
-	 * @param   string  $collation      The collation for this column
-	 * @param   string  $keyName        The key name it belongs to. Key "PRI" means "part of primary key"
-	 * @param   bool    $autoIncrement  Is it an auto-increment column? If it is it's also considered a primary key
+	 * @param   string $columnName    Name of the column
+	 * @param   string $type          Full type, e.g. "varchar(255)" or "int(10) unsigned"
+	 * @param   string $collation     The collation for this column
+	 * @param   string $keyName       The key name it belongs to. Key "PRI" means "part of primary key"
+	 * @param   bool   $autoIncrement Is it an auto-increment column? If it is it's also considered a primary key
+	 * @param   mixed  $default       The default value for this column
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function __construct($columnName, $type, $collation, $keyName, $autoIncrement)
+	public function __construct($columnName, $type, $collation, $keyName, $autoIncrement, $default = null)
 	{
 		$this->columnName    = $columnName;
 		$this->type          = $type;
 		$this->collation     = $collation;
 		$this->keyName       = $keyName;
 		$this->autoIncrement = $autoIncrement;
+		$this->default       = $default;
 	}
 
 	/**
@@ -202,5 +212,15 @@ class Column
 		];
 
 		return in_array($type, $textTypes);
+	}
+
+	/**
+	 * The default value for this column
+	 *
+	 * @return  mixed
+	 */
+	public function getDefault()
+	{
+		return $this->default;
 	}
 }

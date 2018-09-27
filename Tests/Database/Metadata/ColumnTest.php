@@ -25,7 +25,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider fromDatabaseResultProvider()
 	 */
-	public function testFromDatabaseResult(array $input, $name, $collation, $keyName, $type, $isPK, $isText, $isAutoIncrement)
+	public function testFromDatabaseResult(array $input, $name, $collation, $keyName, $type, $isPK, $isText, $isAutoIncrement, $default)
 	{
 		$actual = Column::fromDatabaseResult($input);
 
@@ -37,6 +37,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($isPK, $actual->isPK());
 		$this->assertEquals($isText, $actual->isText());
 		$this->assertEquals($isAutoIncrement, $actual->isAutoIncrement());
+		$this->assertEquals($default, $actual->getDefault());
 	}
 
 	public static function fromDatabaseResultProvider()
@@ -68,8 +69,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 				  }', true),
 				// name, collation, keyname, type
 				'tag', 'utf8mb4_unicode_ci', 'PRI', 'varchar(191)',
-				// isPK, isText, isAutoIncrement
-				true, true, false
+				// isPK, isText, isAutoIncrement, default
+				true, true, false, null
 			],
 			'text PK, show full columns' => [
 				json_decode('{
@@ -85,8 +86,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 				  }', true),
 				// name, collation, keyname, type
 				'tag', 'utf8mb4_unicode_ci', 'PRI', 'varchar(191)',
-				// isPK, isText, isAutoIncrement
-				true, true, false
+				// isPK, isText, isAutoIncrement, default
+				true, true, false, null
 			],
 			'text, non-PK, information_schema' => [
 				json_decode('{
@@ -114,8 +115,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 				  }', true),
 				// name, collation, keyname, type
 				'data', 'utf8mb4_unicode_ci', '', 'longtext',
-				// isPK, isText, isAutoIncrement
-				false, true, false
+				// isPK, isText, isAutoIncrement, default
+				false, true, false, null
 			],
 			'text, non-PK, show full columns' => [
 				json_decode('{
@@ -131,8 +132,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 				  }', true),
 				// name, collation, keyname, type
 				'data', 'utf8mb4_unicode_ci', '', 'longtext',
-				// isPK, isText, isAutoIncrement
-				false, true, false
+				// isPK, isText, isAutoIncrement, default
+				false, true, false, null
 			],
 
 			'auto-increment, PK, information_schema' => [
@@ -161,8 +162,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 				  }', true),
 				// name, collation, keyname, type
 				'option_id', '', 'PRI', 'bigint(20) unsigned',
-				// isPK, isText, isAutoIncrement
-				true, false, true
+				// isPK, isText, isAutoIncrement, null
+				true, false, true, null
 			],
 			'auto-increment, PK, show full columns' => [
 				json_decode('{
@@ -178,8 +179,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 				  }', true),
 				// name, collation, keyname, type
 				'option_id', '', 'PRI', 'bigint(20) unsigned',
-				// isPK, isText, isAutoIncrement
-				true, false, true
+				// isPK, isText, isAutoIncrement, default
+				true, false, true, null
 			],
 
 		];
