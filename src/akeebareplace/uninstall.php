@@ -31,7 +31,7 @@ if (!defined('AKEEBA_REPLACE_SELF'))
 }
 
 require_once __DIR__ . '/includes/lib/Autoloader/Autoloader.php';
-Akeeba\Replace\Autoloader\Autoloader::getInstance()->addMap('Akeeba\\Replace\\WordPress', __DIR__ . '/includes');
+Akeeba\Replace\Autoloader\Autoloader::getInstance()->addMap('Akeeba\\Replace\\WordPress\\', __DIR__ . '/includes');
 
 // Load translations
 load_plugin_textdomain('akeebareplace', false, 'language');
