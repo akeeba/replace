@@ -1,3 +1,13 @@
+Tests
+================================================================================
+MVC\Model\AbstractDataModel
+
+Exclude
+================================================================================
+src/akeebareplace/includes/MVC/Model/AbstractModel.php
+src/akeebareplace/includes/MVC/Model/DataModelInterface.php
+src/akeebareplace/includes/MVC/Model/ModelInterface.php
+
 Code + Tests (Library)
 ================================================================================
 A database driver which uses $wpdb (can't test it, though?)

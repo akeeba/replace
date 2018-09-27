@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
+        backupGlobals="false"
         bootstrap="Tests/bootstrap.php"
         beStrictAboutTestsThatDoNotTestAnything="true"
         beStrictAboutOutputDuringTests="true"
         beStrictAboutTestSize="true"
         colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
 >
     <testsuites>
-        <testsuite name="Akeeba Replace Unit Tests">
+        <testsuite name="Akeeba Replace Library Unit Tests">
             <directory>Tests</directory>
+            <exclude>Tests/WordPress</exclude>
         </testsuite>
     </testsuites>
 
