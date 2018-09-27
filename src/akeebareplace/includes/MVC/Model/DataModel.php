@@ -20,7 +20,7 @@ use wpdb;
  *
  * @package Akeeba\Replace\WordPress\MVC\Model
  */
-class AbstractDataModel extends AbstractModel implements DataModelInterface
+abstract class DataModel extends Model implements DataModelInterface
 {
 	/**
 	 * Reference to the WordPress database object
@@ -49,6 +49,26 @@ class AbstractDataModel extends AbstractModel implements DataModelInterface
 	 * @var  array
 	 */
 	private static $columnMeta = [];
+
+	/**
+	 * Return an instance of a Model by name.
+	 *
+	 * @param   string  $name      The name of the Model to return
+	 *
+	 * @return  DataModelInterface
+	 */
+	public static function getInstance($name)
+	{
+		$model = Model::getInstance($name);
+
+		if ($model instanceof DataModelInterface)
+		{
+			/** @var DataModelInterface $model */
+			return $model;
+		}
+
+		throw new \InvalidArgumentException(sprintf("The Model $name does not implement the DataModelInterface", $name));
+	}
 
 	/**
 	 * Data-aware model constructor.
