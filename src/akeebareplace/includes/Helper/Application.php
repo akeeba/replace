@@ -55,7 +55,7 @@ class Application
 		// Catch out of date PHP versions
 		if (version_compare(PHP_VERSION, self::MINIMUM_PHP_VERSION, 'lt'))
 		{
-			include_once plugin_basename(AKEEBA_REPLACE_SELF) . '/includes/ViewTemplates/Common/wrongphp.php';
+			include_once dirname(AKEEBA_REPLACE_SELF) . '/includes/ViewTemplates/Common/wrongphp.php';
 
 			return;
 		}
@@ -70,10 +70,8 @@ class Application
 	 */
 	public static function entryPoint()
 	{
-		$network = is_multisite() ? 'network/' : '';
-
-		// TODO Fix me? Use the page name?
-		$bootstrapUrl = admin_url() . $network . 'admin.php?page=akeebareplace/akeebareplace';
+		$network      = is_multisite() ? 'network/' : '';
+		$bootstrapUrl = admin_url() . $network . 'admin.php?page=akeebareplace';
 
 		// TODO Instantiate Dispatcher and call route()
 	}
@@ -119,7 +117,7 @@ class Application
 			'Akeeba Replace',
 			'Akeeba Replace',
 			'manage_options',
-			plugin_basename(AKEEBA_REPLACE_SELF),
+			'akeebareplace',
 			[__CLASS__, 'entryPoint'],
 			plugins_url('images/logo/replace-24.png', AKEEBA_REPLACE_SELF)
 		);
