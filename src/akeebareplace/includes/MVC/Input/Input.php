@@ -242,6 +242,24 @@ class Input implements InputInterface, Serializable, Countable
 	{
 		return array_key_exists($name, $this->data);
 	}
+
+	/**
+	 * Remove a value from the input
+	 *
+	 * @param   string  $name  The key name to remove
+	 *
+	 * @return  void
+	 */
+	public function remove($name)
+	{
+		if (!$this->has($name))
+		{
+			return;
+		}
+
+		unset($this->data[$name]);
+	}
+
 	/**
 	 * Define a value. The value will only be set if there's no value for the name or if it is null.
 	 *

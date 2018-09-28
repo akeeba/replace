@@ -58,8 +58,8 @@ class Controller implements ControllerInterface
 	 * Controller constructor.
 	 *
 	 * @param   InputInterface  $input  The input object.
-	 * @param   ModelInterface  $model
-	 * @param   ViewInterface   $view
+	 * @param   ModelInterface  $model  The Model object for this view
+	 * @param   ViewInterface   $view   The View object for this view
 	 */
 	public function __construct($input = null, $model = null, $view = null)
 	{
@@ -93,6 +93,29 @@ class Controller implements ControllerInterface
 
 		$this->view = $view;
 	}
+
+	/**
+	 * Return an instance of a Controller by name.
+	 *
+	 * @param   string          $name   The name of the Controller to return
+	 * @param   InputInterface  $input  The input object.
+	 * @param   ModelInterface  $model  The Model object for this view
+	 * @param   ViewInterface   $view   The View object for this view
+	 *
+	 * @return  ControllerInterface
+	 */
+	public static function getInstance($name, $input = null, $model = null, $view = null)
+	{
+		$className = "Akeeba\\Replace\\WordPress\\Controller\\" . ucfirst($name);
+
+		if (!class_exists($className))
+		{
+			throw new \InvalidArgumentException(sprintf("I cannot find the Controller %s (class %s does not exist or cannot be loaded)", $name, $className));
+		}
+
+		return new $className();
+	}
+
 
 
 	public function execute($task = 'default')

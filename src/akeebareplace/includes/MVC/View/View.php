@@ -51,9 +51,9 @@ abstract class View implements ViewInterface
 	protected $modelInstances = [];
 
 	/**
-	 * Return an instance of a Model by name.
+	 * Return an instance of a View by name.
 	 *
-	 * @param   string  $name      The name of the Model to return
+	 * @param   string  $name  The name of the View to return
 	 *
 	 * @return  ViewInterface
 	 */

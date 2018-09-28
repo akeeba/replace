@@ -68,6 +68,15 @@ interface InputInterface
 	public function set($name, $value);
 
 	/**
+	 * Remove a value from the input
+	 *
+	 * @param   string  $name  The key name to remove
+	 *
+	 * @return  void
+	 */
+	public function remove($name);
+
+	/**
 	 * Does a parameter by this name exist in our input data?
 	 *
 	 * @param   string  $name  The key to check if it exists

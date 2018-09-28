@@ -127,6 +127,16 @@ class Application
 	}
 
 	/**
+	 * Returns the page slug for the plugin's main page
+	 *
+	 * @return  string
+	 */
+	public static function getPluginMenuSlug()
+	{
+		return self::$menuPage;
+	}
+
+	/**
 	 * Store the raw (unquoted) request variables to prevent WordPress from interfering with our code. We are grown-ups,
 	 * we can filter out own data, thank you very much.
 	 *

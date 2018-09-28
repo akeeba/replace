@@ -10,6 +10,8 @@
 namespace Akeeba\Replace\WordPress\MVC\Dispatcher;
 
 use Akeeba\Replace\WordPress\Helper\Application;
+use Akeeba\Replace\WordPress\Helper\WordPress;
+use Akeeba\Replace\WordPress\MVC\Controller\Controller;
 use Akeeba\Replace\WordPress\MVC\Input\Input;
 use Akeeba\Replace\WordPress\MVC\Input\InputInterface;
 
@@ -23,10 +25,59 @@ abstract class Dispatcher
 	protected $input;
 
 	/**
+	 * Dispatcher constructor.
+	 *
+	 * @param   InputInterface  $input  The Input data object. Null to get a new one from the request & server data.
+	 *
+	 * @return  void
+	 */
+	public function __construct($input = null)
+	{
+		$this->input = $input;
+	}
+
+	/**
+	 * Routes the application.
+	 *
+	 * Finds the view and task to use. Loads and instantiates the Controller. Executes the task in the Controller.
+	 *
+	 * @return  void
+	 */
+	public function route()
+	{
+		$input = $this->getInput();
+
+		// Sanity check: is this an administrator page belonging to our plugin?
+		if (!$this->isExpectedPageSlug())
+		{
+			throw new \RuntimeException("Invalid page slug");
+		}
+
+		$this->convertLimitStart($input);
+
+		$view = $input->get('view', 'ControlPanel');
+		$task = $input->get('task', 'display');
+
+		if (method_exists($this, 'onBeforeRoute'))
+		{
+			$this->onBeforeRoute($view, $task);
+		}
+
+		$controller = Controller::getInstance($view, $input);
+
+		$controller->execute($task);
+
+		if (method_exists($this, 'onAfterRoute'))
+		{
+			$this->onAfterRoute($view, $task);
+		}
+	}
+
+	/**
 	 * Return the Input object. If none exists we create a new one using pristine data, not the one tainted
 	 * (addslash'ed) by WordPress.
 	 *
-	 * @return  InputInterface
+	 * @return  InputInterface|Input
 	 *
 	 * @codeCoverageIgnore
 	 */
@@ -53,6 +104,8 @@ abstract class Dispatcher
 	 * @param   string  $key
 	 *
 	 * @return  array|null
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function getPristineData($key)
 	{
@@ -67,4 +120,63 @@ abstract class Dispatcher
 
 		return array_map('stripslashes_deep', $GLOBALS[$globalKey]);
 	}
+
+	/**
+	 * Is the current page slug something that belongs to our plugin? This prevents any weird invocation of our
+	 * Dispatcher from a menu item which does not belong to our plugin.
+	 *
+	 * @return  bool
+	 */
+	private function isExpectedPageSlug()
+	{
+		$expectedPage = Application::getPluginMenuSlug();
+		$currentPage  = $this->getInput()->getPath('page', '');
+
+		if ($currentPage == $expectedPage)
+		{
+			return true;
+		}
+
+		if (strpos($currentPage, $expectedPage . '/') !== 0)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * In Wordpress you can navigate using the links or directly type the page, this function
+	 * takes care of converting the "page" value into a "limitstart" one.
+	 *
+	 * @param   InputInterface   $input
+	 *
+	 * @codeCoverageIgnore
+	 */
+	private function convertLimitStart($input)
+	{
+		/**
+		 * WordPress uses the "paged" variable to tell us which page we are using. Like BASIC, it uses indexes starting
+		 * at 1. So we get to decrement the page number to show the correct results. Ahem.
+		 */
+		$paged = $input->get('paged', 0, 'int');
+		$paged -= 1;
+
+		$input->remove('paged');
+
+		/**
+		 * This is the first page or an invalid value was used. In this case we fall back to 'limitstart' (if it is set)
+		 * or display the first page, if limitstart is NOT set.
+		 */
+		if ($paged <= 0)
+		{
+			return;
+		}
+
+		$limit     = WordPress::get_page_limit();
+		$new_start = $paged * $limit;
+
+		$input->set('limitstart', $new_start);
+	}
+
 }
