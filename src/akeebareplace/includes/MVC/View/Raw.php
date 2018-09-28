@@ -9,8 +9,7 @@
 
 namespace Akeeba\Replace\WordPress\MVC\View;
 
-
-use Akeeba\Replace\WordPress\Helper\Filter;
+use Akeeba\Replace\WordPress\MVC\Input\Filter;
 use Akeeba\Replace\WordPress\MVC\Model\Model;
 use Akeeba\Replace\WordPress\MVC\Model\ModelInterface;
 
@@ -19,7 +18,7 @@ use Akeeba\Replace\WordPress\MVC\Model\ModelInterface;
  *
  * @package Akeeba\Replace\WordPress\MVC\View
  */
-abstract class Raw implements ViewInterface
+abstract class Raw extends View
 {
 	/**
 	 * The name of the view. Set up in the constructor or auto-fetched from the namespace.
