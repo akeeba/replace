@@ -130,21 +130,52 @@ class Application
 	 * Store the raw (unquoted) request variables to prevent WordPress from interfering with our code. We are grown-ups,
 	 * we can filter out own data, thank you very much.
 	 *
+	 * @param   string  $key  Which superglobal to store (useful ones: request, get, post, cookies, env, files, server)
+	 *
 	 * @see  http://stackoverflow.com/questions/8949768/with-magic-quotes-disabled-why-does-php-wordpress-continue-to-auto-escape-my
 	 */
-	public static function storeRealRequest()
+	public static function storeRealRequest($key = 'request')
 	{
-		self::$realRequest = array_merge($_REQUEST);
+		$key = '_' . strtoupper($key);
+
+		if (!array_key_exists($key, $GLOBALS))
+		{
+			return;
+		}
+
+		self::$realRequest[$key] = $GLOBALS[$key];
 	}
 
 	/**
-	 * Return our raw (unquoted) copy of $_REQUEST. You can NOT modify it, it is returned by value.
-	 *
-	 * @return  array
+	 * Apply storeRealRequest() to all interesting / useful superglobals.
 	 */
-	public static function getRealRequest()
+	public static function storeRealRequestAll()
 	{
-		return self::$realRequest;
+		$keys = ['request', 'get', 'post', 'cookies', 'env', 'files', 'server'];
+
+		foreach ($keys as $key)
+		{
+			self::storeRealRequest($key);
+		}
+	}
+
+	/**
+	 * Return our raw (unquoted) copy of a superglobal. You can NOT modify it, it is returned by value.
+	 *
+	 * @param   string  $key  Which superglobal to retrieve (useful ones: request, get, post, cookies, env, files, server)
+	 *
+	 * @return  array|null  The data, or null if there is no such data.
+	 */
+	public static function getRealRequest($key = 'request')
+	{
+		$key = '_' . strtoupper($key);
+
+		if (!array_key_exists($key, self::$realRequest))
+		{
+			return null;
+		}
+
+		return self::$realRequest[$key];
 	}
 
 	/**
