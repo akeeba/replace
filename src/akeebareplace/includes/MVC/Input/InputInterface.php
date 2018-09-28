@@ -18,7 +18,7 @@ interface InputInterface
 {
 	/**
 	 * Create an input object from the provided array source. Leave the source null to use $_REQUEST by reference. Pass
-	 * a superglobal (like $_GET, $_POST, $_COOKIES, $_REQUEST) to get an input object based on that data by value.
+	 * a superglobal (like $_GET, $_POST, $_COOKIE, $_REQUEST) to get an input object based on that data by value.
 	 *
 	 * @param   array  $source   Source data (Optional, default is using $_REQUEST by reference)
 	 * @param   array  $options  Options for the Input object

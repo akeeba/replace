@@ -89,7 +89,7 @@ abstract class Dispatcher implements DispatcherInterface
 			$this->input = new Input($this->getPristineData('request'));
 			$this->input->get->setData($this->getPristineData('get'));
 			$this->input->post->setData($this->getPristineData('post'));
-			$this->input->cookies->setData($this->getPristineData('cookies'));
+			$this->input->cookie->setData($this->getPristineData('cookie'));
 			$this->input->files->setData($this->getPristineData('files'));
 			$this->input->env->setData($this->getPristineData('env'));
 			$this->input->server->setData($this->getPristineData('server'));

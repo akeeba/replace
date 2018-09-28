@@ -146,7 +146,7 @@ class Application
 	 * Store the raw (unquoted) request variables to prevent WordPress from interfering with our code. We are grown-ups,
 	 * we can filter out own data, thank you very much.
 	 *
-	 * @param   string  $key  Which superglobal to store (useful ones: request, get, post, cookies, env, files, server)
+	 * @param   string  $key  Which superglobal to store (useful ones: request, get, post, cookie, env, files, server)
 	 *
 	 * @see  http://stackoverflow.com/questions/8949768/with-magic-quotes-disabled-why-does-php-wordpress-continue-to-auto-escape-my
 	 */
@@ -167,7 +167,7 @@ class Application
 	 */
 	public static function storeRealRequestAll()
 	{
-		$keys = ['request', 'get', 'post', 'cookies', 'env', 'files', 'server'];
+		$keys = ['request', 'get', 'post', 'cookie', 'env', 'files', 'server'];
 
 		foreach ($keys as $key)
 		{
@@ -178,7 +178,7 @@ class Application
 	/**
 	 * Return our raw (unquoted) copy of a superglobal. You can NOT modify it, it is returned by value.
 	 *
-	 * @param   string  $key  Which superglobal to retrieve (useful ones: request, get, post, cookies, env, files, server)
+	 * @param   string  $key  Which superglobal to retrieve (useful ones: request, get, post, cookie, env, files, server)
 	 *
 	 * @return  array|null  The data, or null if there is no such data.
 	 */
