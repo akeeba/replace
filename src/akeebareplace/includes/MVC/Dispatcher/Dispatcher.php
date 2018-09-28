@@ -129,7 +129,8 @@ abstract class Dispatcher implements DispatcherInterface
 	 */
 	private function isExpectedPageSlug()
 	{
-		$expectedPage = Application::getPluginMenuSlug();
+		// The slug is hardcoded in Application::onAdminMenu
+		$expectedPage = 'akeebareplace';
 		$currentPage  = $this->getInput()->getPath('page', '');
 
 		if ($currentPage == $expectedPage)
