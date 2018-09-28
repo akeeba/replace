@@ -74,6 +74,7 @@ class Application
 		$bootstrapUrl = admin_url() . $network . 'admin.php?page=akeebareplace';
 
 		// TODO Instantiate Dispatcher and call route()
+		// TODO Wrap in a try-catch and display an error page (with debug info if WPDEBUG is enabled) on unhandled exception
 	}
 
 	/**

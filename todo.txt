@@ -1,15 +1,6 @@
 Tests
 ================================================================================
-MVC\Model\AbstractDataModel
-MVC\View\Html
-MVC\View\Json
-
-Exclude
-================================================================================
-src/akeebareplace/includes/MVC/Model/AbstractModel.php
-src/akeebareplace/includes/MVC/Model/DataModelInterface.php
-src/akeebareplace/includes/MVC/Model/ModelInterface.php
-src/akeebareplace/includes/MVC/View/ViewInterface.php
+MVC
 
 Code + Tests (Library)
 ================================================================================

@@ -7,7 +7,7 @@
  *
  */
 
-namespace Akeeba\Replace\WordPress\Helper;
+namespace Akeeba\Replace\WordPress\MVC\Input;
 
 /**
  * Class Filter
