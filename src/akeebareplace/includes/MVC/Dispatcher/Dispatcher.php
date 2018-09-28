@@ -15,7 +15,7 @@ use Akeeba\Replace\WordPress\MVC\Controller\Controller;
 use Akeeba\Replace\WordPress\MVC\Input\Input;
 use Akeeba\Replace\WordPress\MVC\Input\InputInterface;
 
-abstract class Dispatcher
+abstract class Dispatcher implements DispatcherInterface
 {
 	/**
 	 * The Input object we use for routing the request

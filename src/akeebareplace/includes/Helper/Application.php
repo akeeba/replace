@@ -9,6 +9,8 @@
 
 namespace Akeeba\Replace\WordPress\Helper;
 
+use Akeeba\Replace\WordPress\Dispatcher\Dispatcher;
+
 /**
  * An abstraction to all the code required to set up a custom backend application in WordPress
  *
@@ -70,11 +72,15 @@ class Application
 	 */
 	public static function entryPoint()
 	{
-		$network      = is_multisite() ? 'network/' : '';
-		$bootstrapUrl = admin_url() . $network . 'admin.php?page=akeebareplace';
-
-		// TODO Instantiate Dispatcher and call route()
-		// TODO Wrap in a try-catch and display an error page (with debug info if WPDEBUG is enabled) on unhandled exception
+		try
+		{
+			$dispatcher = new Dispatcher();
+			$dispatcher->route();
+		}
+		catch (\Exception $e)
+		{
+			require_once dirname(AKEEBA_REPLACE_SELF) . '/includes/ViewTemplates/Common/error.php';
+		}
 	}
 
 	/**
