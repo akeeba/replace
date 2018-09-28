@@ -9,8 +9,15 @@
 
 namespace Akeeba\Replace\WordPress\MVC\View;
 
+use Akeeba\Replace\WordPress\MVC\Input\Filter;
+use Akeeba\Replace\WordPress\MVC\Model\Model;
 use Akeeba\Replace\WordPress\MVC\Model\ModelInterface;
 
+/**
+ * Abstract MVC View
+ *
+ * @package Akeeba\Replace\WordPress\MVC\View
+ */
 abstract class View implements ViewInterface
 {
 	/**
@@ -34,7 +41,7 @@ abstract class View implements ViewInterface
 	 *
 	 * @var  string
 	 */
-	protected $task = 'default';
+	protected $task = '';
 
 	/**
 	 * The models which have been pushed to the View
@@ -228,13 +235,15 @@ abstract class View implements ViewInterface
 	/**
 	 * Render the page output for the given task.
 	 *
+	 * @param   string  $subTemplate
+	 *
 	 * @return  string
 	 */
 	public function display($subTemplate = '')
 	{
 		$html = $this->preRender();
 
-		$eventName = 'onBefore'.ucfirst($this->task);
+		$eventName = 'onBefore' . ucfirst($this->task);
 
 		if (method_exists($this, $eventName))
 		{
@@ -243,7 +252,7 @@ abstract class View implements ViewInterface
 
 		$html .= $this->getRenderedTemplate($subTemplate);
 
-		$eventName = 'onAfter'.ucfirst($this->task);
+		$eventName = 'onAfter' . ucfirst($this->task);
 
 		if (method_exists($this, $eventName))
 		{
@@ -254,4 +263,33 @@ abstract class View implements ViewInterface
 
 		return $html;
 	}
+
+	/**
+	 * Return a WordPress nonce for the specific task of this view.
+	 *
+	 * @param   string  $task  The task this nonce will be valid for
+	 * @param   bool    $post  True for a nonce valid in POST requests only. False for a nonce valid in GET requests only.
+	 *
+	 * @return  string
+	 */
+	public function getNonce($task = '', $post = false)
+	{
+		$action = "get_{$this->name}" . (empty($task) ? '' : "_$task");
+
+		if ($post)
+		{
+			$action = "post" . substr($action, 3);
+		}
+
+		return wp_create_nonce($action);
+	}
+
+	/**
+	 * Load a template and return its rendered result
+	 *
+	 * @param   string  $subTemplate
+	 *
+	 * @return  bool
+	 */
+	abstract protected function getRenderedTemplate($subTemplate);
 }

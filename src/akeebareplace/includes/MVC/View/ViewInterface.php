@@ -122,4 +122,14 @@ interface ViewInterface
 	 * @return  string
 	 */
 	public function getViewTemplatePath($layout, $subTemplate = '');
+
+	/**
+	 * Return a WordPress nonce for the specific task of this view.
+	 *
+	 * @param   string  $task  The task this nonce will be valid for
+	 * @param   bool    $post  True for a nonce valid in POST requests only. False for a nonce valid in GET requests only.
+	 *
+	 * @return  string
+	 */
+	public function getNonce($task = '', $post = false);
 }

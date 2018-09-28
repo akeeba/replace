@@ -9,10 +9,6 @@
 
 namespace Akeeba\Replace\WordPress\MVC\View;
 
-use Akeeba\Replace\WordPress\MVC\Input\Filter;
-use Akeeba\Replace\WordPress\MVC\Model\Model;
-use Akeeba\Replace\WordPress\MVC\Model\ModelInterface;
-
 /**
  * A View class for raw output
  *
