@@ -83,7 +83,8 @@ HTML;
 
 		@ob_start();
 		require_once $includeFile;
-		$foo = @ob_end_clean();
+		$foo = @ob_get_contents();
+		@ob_end_clean();
 
 		return $foo;
 	}

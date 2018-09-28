@@ -17,7 +17,7 @@ use Akeeba\Replace\WordPress\MVC\Model\ModelInterface;
 use Akeeba\Replace\WordPress\MVC\View\View;
 use Akeeba\Replace\WordPress\MVC\View\ViewInterface;
 
-class Controller implements ControllerInterface
+abstract class Controller implements ControllerInterface
 {
 	/**
 	 * The name of this controller
@@ -88,7 +88,7 @@ class Controller implements ControllerInterface
 		// Make sure we have a View object
 		if (!is_object($view) || !($view instanceof ViewInterface))
 		{
-			$view = empty($this->view) ? View::getInstance($this->name) : $this->view;
+			$view = empty($this->view) ? View::getInstance($this->name, 'html') : $this->view;
 		}
 
 		$this->view = $view;
@@ -206,6 +206,6 @@ class Controller implements ControllerInterface
 		$className = get_class($this);
 		$parts     = explode('\\', $className);
 
-		return $parts[count($parts) - 2];
+		return $parts[count($parts) - 1];
 	}
 }

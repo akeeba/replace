@@ -57,9 +57,9 @@ abstract class View implements ViewInterface
 	 *
 	 * @return  ViewInterface
 	 */
-	public static function getInstance($name)
+	public static function getInstance($name, $format = 'html')
 	{
-		$className = "Akeeba\\Replace\\WordPress\\View\\" . ucfirst($name);
+		$className = "Akeeba\\Replace\\WordPress\\View\\" . ucfirst($name) . '\\' . ucfirst($format);
 
 		if (!class_exists($className))
 		{
