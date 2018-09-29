@@ -9,6 +9,8 @@
 
 namespace Akeeba\Replace\WordPress\MVC\View;
 
+use Akeeba\Replace\WordPress\Helper\Application;
+
 /**
  * A View class for raw output
  *
@@ -16,6 +18,13 @@ namespace Akeeba\Replace\WordPress\MVC\View;
  */
 abstract class Raw extends View
 {
+	/**
+	 * Should I wrap the output in a div.akeeba-renderer-fef and load FEF?
+	 *
+	 * @var  bool
+	 */
+	protected $useFEF = true;
+
 	/**
 	 * Runs before rendering the body of the application output.
 	 *
@@ -25,12 +34,15 @@ abstract class Raw extends View
 	 */
 	public function preRender()
 	{
+		$class = $this->useFEF ? 'akeeba-renderer-fef' : 'wrap';
+
 		return <<< HTML
 <html>
 <head>
 <title></title>
 </head>
 <body>
+<div class="$class">
 HTML;
 	}
 
@@ -41,11 +53,38 @@ HTML;
 	 */
 	public function afterRender()
 	{
+		$this->loadFEFStylesheet();
+
 		return <<< HTML
+</div>
 </body>
 </html>
 HTML;
+	}
 
+	/**
+	 * Loads the FEF stylesheet
+	 */
+	protected function loadFEFStylesheet()
+	{
+		wp_enqueue_style('fef', plugins_url('/fef/css/style.css', AKEEBA_REPLACE_SELF), [], Application::getMediaVersion());
+	}
+
+	protected function loadFEFJS($script = '')
+	{
+		if (is_array($script))
+		{
+			array_walk($script, [$this, 'loadFEFJS']);
+
+			return;
+		}
+
+		if (!in_array($script, ['dropdown', 'menu', 'tabs']))
+		{
+			return;
+		}
+
+		wp_enqueue_script('fef-' . $script, plugins_url('/fef/js/' . $script . '.js', AKEEBA_REPLACE_SELF), [], Application::getMediaVersion());
 	}
 
 	/**
@@ -100,8 +139,10 @@ HTML;
 			}
 
 			return <<< HTML
-<div class="notice notice-error">
-	<h3>Cannot load View Template “$view/{$layout}”</h3>
+<div class="notice notice-error akeeba-panel--danger">
+	<header class="akeeba-block-header">
+		<h3>Cannot load View Template “$view/{$layout}”</h3>
+	</header>
 	<p>
 		The view template “{$layout}” was not found in view “{$view}”
 	</p>

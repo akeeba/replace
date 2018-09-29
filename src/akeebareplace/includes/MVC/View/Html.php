@@ -44,6 +44,11 @@ abstract class Html extends Raw
 			$html .= '<div class="'.$class.'"><p>'.$message['msg'].'</p></div>';
 		}
 
+		if ($this->useFEF)
+		{
+			$html .= '</div>' . "\n" . '<div class="akeeba-renderer-fef">';
+		}
+
 		return $html;
 	}
 
@@ -55,6 +60,8 @@ abstract class Html extends Raw
 	public function afterRender()
 	{
 		$html = '</div>';
+
+		$this->loadFEFStylesheet();
 
 		return $html;
 	}

@@ -257,4 +257,8 @@ class Application
 		return $contents;
 	}
 
+	public static function getMediaVersion()
+	{
+		return false;
+	}
 }
