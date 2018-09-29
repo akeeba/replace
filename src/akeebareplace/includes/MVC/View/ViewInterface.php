@@ -118,10 +118,11 @@ interface ViewInterface
 	 *
 	 * @param   string  $layout       The layout to render, @see getLayout
 	 * @param   string  $subTemplate  The subtemplate to render, appended to $layout with an underscore.
+	 * @param   string  $viewName     The name of the view to get the template for. Null means the current view.
 	 *
 	 * @return  string
 	 */
-	public function getViewTemplatePath($layout, $subTemplate = '');
+	public function getViewTemplatePath($viewName = null, $layout = null, $subTemplate = '');
 
 	/**
 	 * Return a WordPress nonce for the specific task of this view.

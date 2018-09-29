@@ -7,5 +7,15 @@
  *
  */
 
+/** @var \Akeeba\Replace\WordPress\View\ControlPanel\Html $this */
 ?>
-<h1>Hello, world.</h1>
+
+<?php echo $this->getRenderedTemplate('Common', 'header'); ?>
+
+<?php echo $this->getRenderedTemplate(null, 'welcome'); ?>
+
+<?php if (!defined('DISABLE_NAG_NOTICES') || !DISABLE_NAG_NOTICES) {
+	echo $this->getRenderedTemplate(null, 'nag');
+} ?>
+
+<?php echo $this->getRenderedTemplate(null, 'form'); ?>

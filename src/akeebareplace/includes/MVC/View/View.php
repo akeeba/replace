@@ -194,13 +194,15 @@ abstract class View implements ViewInterface
 	 *
 	 * @param   string  $layout       The layout to render, @see getLayout
 	 * @param   string  $subTemplate  The subtemplate to render, appended to $layout with an underscore.
+	 * @param   string  $viewName     The name of the view to get the template for. Null means the current view.
 	 *
 	 * @return  string
 	 */
-	public function getViewTemplatePath($layout, $subTemplate = '')
+	public function getViewTemplatePath($viewName = null, $layout = null, $subTemplate = '')
 	{
 		$pathTemplate = dirname(AKEEBA_REPLACE_SELF) . '/includes/ViewTemplates/%s/%s';
-		$viewName     = $this->name;
+		$viewName     = empty($viewName) ? $this->name : $viewName;
+		$layout       = empty($layout) ? $this->layout : $layout;
 		$fileName     = $layout . (empty($subTemplate) ? '' : '_' . $subTemplate) . '.php';
 
 		return sprintf($pathTemplate, $viewName, $fileName);
@@ -250,7 +252,7 @@ abstract class View implements ViewInterface
 			$html .= $this->$eventName();
 		}
 
-		$html .= $this->getRenderedTemplate($subTemplate);
+		$html .= $this->getRenderedTemplate($this->name, $this->layout, $subTemplate);
 
 		$eventName = 'onAfter' . ucfirst($this->task);
 
@@ -287,9 +289,11 @@ abstract class View implements ViewInterface
 	/**
 	 * Load a template and return its rendered result
 	 *
-	 * @param   string  $subTemplate
+	 * @param   string  $view         The view where the view template belongs to
+	 * @param   string  $layout       The base name of the view template
+	 * @param   string  $subTemplate  The name of the view subtemplate
 	 *
 	 * @return  bool
 	 */
-	abstract protected function getRenderedTemplate($subTemplate);
+	abstract public function getRenderedTemplate($view, $layout, $subTemplate);
 }

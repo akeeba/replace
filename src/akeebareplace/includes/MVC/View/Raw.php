@@ -51,31 +51,61 @@ HTML;
 	/**
 	 * Load a template and return its rendered result
 	 *
-	 * @param   string  $subTemplate
+	 * @param   string  $view         The view where the view template belongs to
+	 * @param   string  $layout       The base name of the view template
+	 * @param   string  $subTemplate  The name of the view subtemplate
 	 *
 	 * @return  bool
 	 */
-	protected function getRenderedTemplate($subTemplate)
+	public function getRenderedTemplate($view = null, $layout = null, $subTemplate = '')
 	{
-		$includeFile = $this->getViewTemplatePath($this->layout, $subTemplate);
+		$view        = empty($view) ? $this->name : $view;
+		$layout      = empty($layout) ? $this->layout : $layout;
+		$includeFile = $this->getViewTemplatePath($view, $layout, $subTemplate);
 
 		if (!file_exists($includeFile))
 		{
+			$technicalDetails = '';
+
+			if (WP_DEBUG)
+			{
+				$traceInfo = "(Not available on this server)";
+				$trace = "";
+
+				if (function_exists('debug_print_backtrace'))
+				{
+					$traceInfo = "(See below)";
+					@ob_start();
+					debug_print_backtrace();
+					$trace = "\n" . @ob_get_clean();
+				}
+
+
+				$technicalDetails = <<< HTML
+<h4>
+	Technical details:
+</h4>
+<pre>
+Current View     : {$this->name}
+Current Layout   : {$this->layout}
+Requested View   : $view
+Requested Layout : $layout
+Sub-template     : $subTemplate
+Requested Path   : $includeFile
+Stack Trace      : $traceInfo
+$trace
+</pre>
+
+HTML;
+			}
+
 			return <<< HTML
 <div class="notice notice-error">
-	<h3>Cannot load View Template</h3>
+	<h3>Cannot load View Template “$view/{$layout}”</h3>
 	<p>
-		The view template {$this->layout} was not found in view {$this->name}
+		The view template “{$layout}” was not found in view “{$view}”
 	</p>
-	<p>
-		Technical details:
-	</p>
-	<pre>
-View        : {$this->name}
-Layout      : {$this->layout}
-Sub-template: {$subTemplate}
-Path        : {$includeFile}
-	</pre>
+	$technicalDetails
 </div>
 HTML;
 
