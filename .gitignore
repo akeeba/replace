@@ -68,6 +68,10 @@ fabric.properties
 
 release/**
 
+src/akeebareplace/fef/css
+src/akeebareplace/fef/fonts
+src/akeebareplace/fef/images
+src/akeebareplace/fef/js
 src/akeebareplace/includes/lib
 src/akeebareplace/readme.txt
 
