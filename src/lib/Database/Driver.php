@@ -217,7 +217,7 @@ abstract class Driver implements DatabaseInterface
 		{
 
 			// Derive the class name from the driver.
-			$class = '\\Akeeba\\Replace\\Database\\Driver\\' . ucfirst(strtolower($options['driver']));
+			$class = '\\Akeeba\\Replace\\Database\\Driver\\' . ucfirst($options['driver']);
 
 			// If the class still doesn't exist we have nothing left to do but throw an exception.  We did our best.
 			if (!class_exists($class))

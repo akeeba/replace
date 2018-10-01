@@ -10,12 +10,4 @@
 /** @var \Akeeba\Replace\WordPress\View\ControlPanel\Html $this */
 ?>
 
-<?php echo $this->getRenderedTemplate('Common', 'header'); ?>
-
-<?php echo $this->getRenderedTemplate(null, 'welcome'); ?>
-
-<?php if (!defined('DISABLE_NAG_NOTICES') || !DISABLE_NAG_NOTICES) {
-	echo $this->getRenderedTemplate(null, 'nag');
-} ?>
-
-<?php echo $this->getRenderedTemplate(null, 'form'); ?>
+<?php echo $this->getRenderedTemplate(null, 'newrun'); ?>
