@@ -104,6 +104,7 @@ HTML;
 
 		if (!file_exists($includeFile))
 		{
+			$errorLayout      = $layout . (empty($subTemplate) ? '' : ('_' . $subTemplate));
 			$technicalDetails = '';
 
 			if (WP_DEBUG)
@@ -138,14 +139,14 @@ $trace
 HTML;
 			}
 
+			$class       = WP_DEBUG ? 'akeeba-panel--danger' : 'akeeba-block--failure';
+			$headerClass = WP_DEBUG ? 'akeeba-block-header' : '';
+
 			return <<< HTML
-<div class="notice notice-error akeeba-panel--danger">
-	<header class="akeeba-block-header">
-		<h3>Cannot load View Template “$view/{$layout}”</h3>
+<div class="notice notice-error $class">
+	<header class="$headerClass">
+		<h3>Cannot load View Template “$view/{$errorLayout}”</h3>
 	</header>
-	<p>
-		The view template “{$layout}” was not found in view “{$view}”
-	</p>
 	$technicalDetails
 </div>
 HTML;

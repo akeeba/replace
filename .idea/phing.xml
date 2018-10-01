@@ -39,6 +39,6 @@
         </targetsToHide>
       </buildFile>
     </buildFilePaths>
-    <phingPath>$USER_HOME$/AppData/Roaming/Composer/vendor/bin/phing.bat</phingPath>
+    <phingPath>$USER_HOME$/.composer/vendor/bin/phing</phingPath>
   </component>
 </project>
