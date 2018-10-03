@@ -46,6 +46,11 @@ akeeba.replace.editor.render = function(container, data)
 
 		var valTo = data[valFrom];
 
+		if ((valFrom === '') && (valTo === ''))
+		{
+			continue;
+		}
+
 		akeeba.replace.editor.renderRow(elContainer, valFrom, valTo);
 	}
 
@@ -194,16 +199,16 @@ akeeba.replace.editor.reflow = function(elContainer)
 		// If the From value is empty I may have to delete this row
 		if (valFrom === '')
 		{
-			if (idx < elRows.length)
-			{
-				// This is an empty From in a row other than the last. Remove it.
-				$elRow.remove();
-			}
-			else
+			if (idx >= elRows.length)
 			{
 				// This is the last empty row. Do not remove and set the flag of having a last empty row.
 				hasEmptyRow = true;
+
+				return;
 			}
+
+			// This is an empty From in a row other than the last. Remove it.
+			$elRow.remove();
 
 			return;
 		}
