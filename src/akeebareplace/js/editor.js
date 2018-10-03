@@ -15,11 +15,12 @@ if (typeof(akeeba) === 'undefined')
 if (typeof akeeba.replace === 'undefined')
 {
 	akeeba.replace = {
-		editor: {},
-		strings: {
-			'lblKey': '',
-			'lblValue': '',
-			'lblDelete': '',
+		editor:        {},
+		tablesAjaxURL: '',
+		strings:       {
+			'lblKey':    '',
+			'lblValue':  '',
+			'lblDelete': ''
 		}
 	};
 }
@@ -30,7 +31,7 @@ if (typeof akeeba.replace === 'undefined')
  * @param   {Element}  container  The container element (e.g. div) of the editor to render
  * @param   {object}   data       The data to render the editor with
  */
-akeeba.replace.editor.render = function(container, data)
+akeeba.replace.editor.render = function (container, data)
 {
 	// Get the row container from the selector
 	var elContainer = window.jQuery(container);
@@ -65,70 +66,74 @@ akeeba.replace.editor.render = function(container, data)
  * @param   {string}   valFrom      "From" value (left hand side)
  * @param   {string}   valTo        "To" value (right hand side)
  */
-akeeba.replace.editor.renderRow = function(elContainer, valFrom, valTo)
+akeeba.replace.editor.renderRow = function (elContainer, valFrom, valTo)
 {
 	var elRow = window.jQuery("<div />").addClass("akeeba-container--75-25");
 
 	var elFromInput = window.jQuery("<input />")
-		.addClass("akeebareplace-keyValueFrom")
-		.attr("type", "text")
-		.attr("title", akeeba.replace.strings["lblKey"])
-		.attr("placeholder", akeeba.replace.strings["lblKey"])
-		.val(valFrom);
+							.addClass("akeebareplace-keyValueFrom")
+							.attr("type", "text")
+							.attr("title", akeeba.replace.strings["lblKey"])
+							.attr("placeholder", akeeba.replace.strings["lblKey"])
+							.val(valFrom);
 
 	var elToInput = window.jQuery("<input />")
-		.addClass("akeebareplace-keyValueTo")
-		.attr("type", "text")
-		.attr("title", akeeba.replace.strings["lblValue"])
-		.attr("placeholder", akeeba.replace.strings["lblValue"])
-		.val(valTo);
+						  .addClass("akeebareplace-keyValueTo")
+						  .attr("type", "text")
+						  .attr("title", akeeba.replace.strings["lblValue"])
+						  .attr("placeholder", akeeba.replace.strings["lblValue"])
+						  .val(valTo);
 
 	var elDeleteIcon = window.jQuery("<span />")
-		.addClass("akion-trash-a");
+							 .addClass("akion-trash-a");
 
 	var elDeleteButton = window.jQuery("<span />")
-		.addClass("akeeba-btn--small--red akeebareplace-keyValueButtonDelete")
-		.addClass("title", akeeba.replace.strings["lblDelete"])
-		.append(elDeleteIcon);
+							   .addClass("akeeba-btn--small--red akeebareplace-keyValueButtonDelete")
+							   .addClass("title", akeeba.replace.strings["lblDelete"])
+							   .append(elDeleteIcon);
 
 	var elUpIcon = window.jQuery("<span />")
-		.addClass("akion-chevron-up");
+						 .addClass("akion-chevron-up");
 
 	var elUpButton = window.jQuery("<span />")
-		.addClass("akeeba-btn--small akeebareplace-keyValueButtonUp")
-		.append(elUpIcon);
+						   .addClass("akeeba-btn--small akeebareplace-keyValueButtonUp")
+						   .append(elUpIcon);
 
 	var elDownIcon = window.jQuery("<span />")
-		.addClass("akion-chevron-down");
+						   .addClass("akion-chevron-down");
 
 	var elDownButton = window.jQuery("<span />")
-		.addClass("akeeba-btn--small akeebareplace-keyValueButtonDown")
-		.append(elDownIcon);
+							 .addClass("akeeba-btn--small akeebareplace-keyValueButtonDown")
+							 .append(elDownIcon);
 
 	var elInputWrapper = window.jQuery("<div />").addClass('akeeba-container--50-50')
-		.append(elFromInput)
-		.append(elToInput);
+							   .append(elFromInput)
+							   .append(elToInput);
 
 	var elButtonWrapper = window.jQuery("<div />")
-	   .append(elDeleteButton)
-	   .append(elUpButton)
-	   .append(elDownButton);
+								.append(elDeleteButton)
+								.append(elUpButton)
+								.append(elDownButton);
 
-	elFromInput.blur(function(e) {
+	elFromInput.blur(function (e)
+	{
 		akeeba.replace.editor.reflow(elContainer);
 	});
 
-	elToInput.blur(function(e) {
+	elToInput.blur(function (e)
+	{
 		akeeba.replace.editor.reflow(elContainer);
 	});
 
-	elDeleteButton.click(function(e) {
+	elDeleteButton.click(function (e)
+	{
 		elFromInput.val("");
 		elToInput.val("");
 		akeeba.replace.editor.reflow(elContainer);
 	});
 
-	elUpButton.click(function(e) {
+	elUpButton.click(function (e)
+	{
 		var elPrev = elRow.prev();
 
 		if (!elPrev.length)
@@ -137,10 +142,10 @@ akeeba.replace.editor.renderRow = function(elContainer, valFrom, valTo)
 		}
 
 		var elPrevFrom = elPrev.find('.akeebareplace-keyValueFrom');
-		var elPrevTo = elPrev.find('.akeebareplace-keyValueTo');
+		var elPrevTo   = elPrev.find('.akeebareplace-keyValueTo');
 
 		var prevFrom = elPrevFrom.val();
-		var prevTo = elPrevTo.val();
+		var prevTo   = elPrevTo.val();
 
 		elPrevFrom.val(elFromInput.val());
 		elPrevTo.val(elToInput.val());
@@ -150,7 +155,8 @@ akeeba.replace.editor.renderRow = function(elContainer, valFrom, valTo)
 		akeeba.replace.editor.reflow(elContainer);
 	});
 
-	elDownButton.click(function(e) {
+	elDownButton.click(function (e)
+	{
 		var elNext = elRow.next();
 
 		if (!elNext.length)
@@ -159,10 +165,10 @@ akeeba.replace.editor.renderRow = function(elContainer, valFrom, valTo)
 		}
 
 		var elNextFrom = elNext.find('.akeebareplace-keyValueFrom');
-		var elNextTo = elNext.find('.akeebareplace-keyValueTo');
+		var elNextTo   = elNext.find('.akeebareplace-keyValueTo');
 
 		var nextFrom = elNextFrom.val();
-		var nextTo = elNextTo.val();
+		var nextTo   = elNextTo.val();
 
 		elNextFrom.val(elFromInput.val());
 		elNextTo.val(elToInput.val());
@@ -181,7 +187,7 @@ akeeba.replace.editor.renderRow = function(elContainer, valFrom, valTo)
  *
  * @param   {Element}  elContainer  The container element of the editor
  */
-akeeba.replace.editor.reflow = function(elContainer)
+akeeba.replace.editor.reflow = function (elContainer)
 {
 	var data        = {};
 	var strFrom     = "";
@@ -263,19 +269,89 @@ akeeba.replace.showEditor = function (editorContainer, textareaContainer)
 	akeeba.replace.editor.render(elContainer, extractedValues);
 };
 
-akeeba.replace.showOptions = function(panelID)
+/**
+ * Show or hide the advanced options
+ *
+ * @param   {string}  panelID  The ID attribute of the advacned options panel
+ */
+akeeba.replace.showOptions = function (panelID)
 {
-	var elPanel = document.getElementById(panelID);
+	var elPanel        = document.getElementById(panelID);
 	var currentDisplay = elPanel.style.display;
 
-	if (elPanel.style.display === 'none')
+	if (currentDisplay === 'none')
 	{
 		elPanel.style.display = 'block';
-		window.location.hash = '#' + panelID;
+		window.location.hash  = '#' + panelID;
 
 		return;
 	}
 
 	elPanel.style.display = 'none';
-	window.location.hash = '';
+	window.location.hash  = '';
+};
+
+akeeba.replace.onAllTablesChange = function ()
+{
+	// Store current exclusions
+	var currentExclusions = [];
+	var elSelect          = document.getElementById('akeebareplaceExcludeTables');
+	var allOptions        = elSelect.querySelectorAll('option');
+	var strNone           = '- none -';
+
+	for (var i = 0; i < allOptions.length; i++)
+	{
+		var thisOption = allOptions[i];
+
+		if (thisOption.value === '')
+		{
+			strNone = thisOption.innerText;
+		}
+
+		if (thisOption.selected)
+		{
+			currentExclusions.push(thisOption.value);
+		}
+	}
+
+	// Do an AJAX request
+	console.info(akeeba.replace.tablesAjaxURL);
+	var ajax = new AkeebaReplaceAjax(akeeba.replace.tablesAjaxURL);
+	ajax.callJSON({
+		'_akeeba_ajax_method': 'GET',
+		'allTables': document.getElementById('akeebareplace-allTables').checked ? 1 : 0
+	}, function (newTables)
+	{
+		elSelect.innerHTML = '';
+
+		var elRow = document.createElement('option');
+		elRow.value = '';
+		elRow.innerText = strNone;
+
+		if (currentExclusions.indexOf('') > -1)
+		{
+			elRow.selected = true;
+		}
+
+		elSelect.appendChild(elRow);
+
+		for (var j = 0; j < newTables.length; j++)
+		{
+			var thisTable = newTables[j];
+
+			elRow = document.createElement('option');
+			elRow.value = thisTable;
+			elRow.innerText = thisTable;
+
+			if (currentExclusions.indexOf(thisTable) > -1)
+			{
+				elRow.selected = true;
+			}
+
+			elSelect.appendChild(elRow);
+		}
+
+	}, function (msg) {
+		alert(msg);
+	}, false, 10000);
 };

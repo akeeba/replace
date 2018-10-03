@@ -11,6 +11,7 @@ namespace Akeeba\Replace\WordPress\Helper;
 
 
 use Akeeba\Replace\WordPress\Model\Replace;
+use Akeeba\Replace\WordPress\MVC\Model\Model;
 
 abstract class Form
 {
@@ -50,7 +51,8 @@ abstract class Form
 
 	public static function selectExcludeTables($name, $id, $selected = [], $allTables = false)
 	{
-		$model  = new Replace();
+		/** @var Replace $model */
+		$model  = Model::getInstance('Replace');
 		$tables = $model->getDatabaseTables($allTables);
 
 		array_unshift($tables, '');

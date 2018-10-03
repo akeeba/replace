@@ -107,7 +107,7 @@ class Input implements InputInterface, Serializable, Countable
 	 *
 	 * @param   mixed  $name  Name of the input object to retrieve.
 	 *
-	 * @return  InputInterface  The request input object
+	 * @return  self  The request input object
 	 */
 	public function __get($name)
 	{

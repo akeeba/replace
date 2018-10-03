@@ -19,7 +19,8 @@ $lblKey            = addcslashes(__('Replace this', 'akeebareplace'), "'\\");
 $lblValue          = addcslashes(__('Replace with that', 'akeebareplace'), "'\\");
 $lblDelete         = addcslashes(__('Delete this replacement', 'akeebareplace'), "'\\");
 
-wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_REPLACE_SELF), ['jquery'], Application::getMediaVersion());
+wp_enqueue_script('akeebareplace-ajax', plugins_url('/js/ajax.js', AKEEBA_REPLACE_SELF), ['jquery'], Application::getMediaVersion());
+wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_REPLACE_SELF), ['jquery', 'akeebareplace-ajax'], Application::getMediaVersion());
 
 ?>
 
@@ -198,7 +199,7 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
 
         <div class="akeeba-form-group--checkbox--pull-right">
             <label>
-                <input type="checkbox" name="allTables" <?php if ($this->configuration->isAllTables()) echo 'checked="checked"' ?>>
+                <input type="checkbox" name="allTables" id="akeebareplace-allTables" <?php if ($this->configuration->isAllTables()) echo 'checked="checked"' ?>>
 				<?php _e('All tables', 'akeebareplace') ?>
                 <p class="akeeba-help-text">
 					<?php _e('Replace data in all database tables, even those whose name does not begin with your site\'s prefix.', 'akeebareplace') ?>
@@ -268,7 +269,10 @@ window.jQuery(document).ready(function($) {
 		akeeba.replace.strings['lblValue'] = '<?php echo $lblValue ?>';
 		akeeba.replace.strings['lblDelete'] = '<?php echo $lblDelete ?>';
 
-		akeeba.replace.showEditor(window.jQuery('#akeebareplaceGUIEditor'), window.jQuery('#akeebareplaceTextboxEditor'))
+		akeeba.replace.showEditor(window.jQuery('#akeebareplaceGUIEditor'), window.jQuery('#akeebareplaceTextboxEditor'));
+
+		akeeba.replace.tablesAjaxURL = '<?php echo addcslashes($this->tablesURL, "'\\") ?>';
+		document.getElementById('akeebareplace-allTables').onchange = akeeba.replace.onAllTablesChange;
 	}
 
 	akeebaReplaceSetupEditor();

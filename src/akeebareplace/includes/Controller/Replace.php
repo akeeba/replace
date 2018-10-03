@@ -10,6 +10,8 @@
 namespace Akeeba\Replace\WordPress\Controller;
 
 use Akeeba\Replace\Engine\Core\Configuration;
+use Akeeba\Replace\WordPress\Helper\Form;
+use Akeeba\Replace\WordPress\Model\Replace as ReplaceModel;
 use Akeeba\Replace\WordPress\MVC\Controller\Controller;
 use Akeeba\Replace\WordPress\View\Replace\Html;
 
@@ -29,9 +31,14 @@ class Replace extends Controller
 		}
 	}
 
+	/**
+	 * Start a new replacement job. Displays the interface to set up the replacements.
+	 *
+	 * @return  void
+	 */
 	public function newJob()
 	{
-		/** @var \Akeeba\Replace\WordPress\Model\Replace $model */
+		/** @var ReplaceModel $model */
 		$model = $this->model;
 
 		// Assign the Configuration object to the View object
@@ -41,5 +48,31 @@ class Replace extends Controller
 
 		// Display the HTML page
 		$this->display();
+	}
+
+	/**
+	 * Returns a list of all database tables.
+	 *
+	 * @return  void
+	 */
+	public function getTablesHTML()
+	{
+		@ob_clean();
+
+		if (!$this->csrfProtection('getTablesHTML', false))
+		{
+			header($_SERVER["SERVER_PROTOCOL"]." 403 Forbidden");
+
+			exit();
+		}
+
+		/** @var ReplaceModel $model */
+		$model     = $this->model;
+		$allTables = $this->input->getBool('allTables', false);
+		$tables    = $model->getDatabaseTables($allTables);
+
+		echo '###' . json_encode($tables) . '###';
+
+		exit();
 	}
 }

@@ -29,6 +29,13 @@ class Html extends AbstractHtml
 	public $cancelURL = '';
 
 	/**
+	 * The URL to fetch a list of all database tables
+	 *
+	 * @var  string
+	 */
+	public $tablesURL = '';
+
+	/**
 	 * The configuration for this job
 	 *
 	 * @var  Configuration
@@ -52,7 +59,13 @@ class Html extends AbstractHtml
 		if (empty($this->actionURL))
 		{
 			$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=start');
-			$this->actionURL = wp_nonce_url($url, 'post_Replace_start');
+			$this->actionURL = wp_nonce_url($url, 'get_Replace_start');
+		}
+
+		if (empty($this->tablesURL))
+		{
+			$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=getTablesHTML');
+			$this->tablesURL = html_entity_decode(wp_nonce_url($url, 'get_Replace_getTablesHTML'));
 		}
 
 		if (empty($this->cancelURL))
