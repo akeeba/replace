@@ -28,7 +28,7 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
 </h3>
 
 <form
-        method="get"
+        method="post"
         action="<?php echo $this->actionURL ?>"
         class="akeeba-form--horizontal">
 
