@@ -7,12 +7,19 @@
  *
  */
 
+use Akeeba\Replace\WordPress\Helper\Application;
 use Akeeba\Replace\WordPress\Helper\Form;
 
 /** @var \Akeeba\Replace\WordPress\View\Replace\Html $this */
 
 $effectiveLogLevel = $this->configuration->getMinLogLevel();
 $effectiveLogLevel = ($this->configuration->getLogFile()) == '' ? 50 : $effectiveLogLevel;
+$replacements      = $this->configuration->getReplacements();
+$lblKey            = addcslashes(__('Replace this', 'akeebareplace'), "'\\");
+$lblValue          = addcslashes(__('Replace with that', 'akeebareplace'), "'\\");
+$lblDelete         = addcslashes(__('Delete this replacement', 'akeebareplace'), "'\\");
+
+wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_REPLACE_SELF), ['jquery'], Application::getMediaVersion());
 
 ?>
 
@@ -28,10 +35,23 @@ $effectiveLogLevel = ($this->configuration->getLogFile()) == '' ? 50 : $effectiv
             </h3>
         </header>
 
-        <div class="akeeba-form-group">
-            <!-- TODO: Set up replacements interface -->
+        <div id="akeebareplaceTextboxEditor">
+            <div class="akeeba-form-group">
+                <label for="akeebareplaceTextboxFrom">
+				    <?php _e('Replace this', 'akeebareplace') ;?>
+                </label>
+                <textarea id="akeebareplaceTextboxFrom" aria-label="<?php _e('Replace this', 'akeebareplace') ?>" name="replace_from"><?php echo implode("\n", array_keys($replacements)) ?></textarea>
+            </div>
+            <div class="akeeba-form-group">
+                <label for="akeebareplaceTextboxTo">
+				    <?php _e('Replace with that', 'akeebareplace') ;?>
+                </label>
+                <textarea id="akeebareplaceTextboxTo" aria-label="<?php _e('Replace with that', 'akeebareplace') ?>" name="replace_to"><?php echo implode("\n", array_values($replacements)) ?></textarea>
+            </div>
+
         </div>
 
+        <div id="akeebareplaceGUIEditor"></div>
     </div>
 
     <div class="akeeba-panel--information">
@@ -66,7 +86,6 @@ $effectiveLogLevel = ($this->configuration->getLogFile()) == '' ? 50 : $effectiv
 	            <?php _e('Exclude these tables', 'akeebareplace') ?>
             </label>
             <?php echo Form::selectExcludeTables('excludeTables', 'akeebareplaceExcludeTables', $this->configuration->getExcludeTables(), $this->configuration->isAllTables()) ?>
-            <!-- TODO Table list -->
             <p class="akeeba-help-text">
 		        <?php _e('Select which tables should not have their data replaced. Useful for very big log tables with no replaceable data such as those created by security and e-commerce plugins. Use CTRL-click (CMD-click on macOS) to select multiple tables.', 'akeebareplace') ?>
             </p>
@@ -213,3 +232,26 @@ $effectiveLogLevel = ($this->configuration->getLogFile()) == '' ? 50 : $effectiv
         </div>
     </div>
 </form>
+
+<script type="text/javascript">
+window.jQuery(document).ready(function($) {
+	function akeebaReplaceSetupEditor()
+	{
+		if ((typeof(akeeba) === 'undefined') || typeof(akeeba.replace) === 'undefined')
+		{
+			setTimeout(akeebaReplaceSetupEditor, 500);
+
+			return;
+		}
+
+		akeeba.replace.strings['lblKey'] = '<?php echo $lblKey ?>';
+		akeeba.replace.strings['lblValue'] = '<?php echo $lblValue ?>';
+		akeeba.replace.strings['lblDelete'] = '<?php echo $lblDelete ?>';
+
+		akeeba.replace.showEditor(window.jQuery('#akeebareplaceGUIEditor'), window.jQuery('#akeebareplaceTextboxEditor'))
+	}
+
+	akeebaReplaceSetupEditor();
+});
+
+</script>
