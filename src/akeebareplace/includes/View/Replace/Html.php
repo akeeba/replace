@@ -22,6 +22,13 @@ class Html extends AbstractHtml
 	public $actionURL = '';
 
 	/**
+	 * The URL to go to when canceling the replacements
+	 *
+	 * @var  string
+	 */
+	public $cancelURL = '';
+
+	/**
 	 * The configuration for this job
 	 *
 	 * @var  Configuration
@@ -42,8 +49,17 @@ class Html extends AbstractHtml
 	{
 		$this->layout = 'new';
 
-		$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=start');
-		$this->actionURL = wp_nonce_url($url, 'post_Replace_start');
+		if (empty($this->actionURL))
+		{
+			$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=start');
+			$this->actionURL = wp_nonce_url($url, 'post_Replace_start');
+		}
+
+		if (empty($this->cancelURL))
+		{
+			$this->cancelURL = admin_url('admin.php?page=akeebareplace');
+		}
+
 		$this->excludedColumns = $this->makeExcludedColumnsText();
 	}
 

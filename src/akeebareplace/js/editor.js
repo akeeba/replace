@@ -82,7 +82,7 @@ akeeba.replace.editor.renderRow = function(elContainer, valFrom, valTo)
 		.addClass("akion-trash-a");
 
 	var elDeleteButton = window.jQuery("<span />")
-		.addClass("akeeba-btn--red akeebareplace-keyValueButtonDelete")
+		.addClass("akeeba-btn--small--red akeebareplace-keyValueButtonDelete")
 		.addClass("title", akeeba.replace.strings["lblDelete"])
 		.append(elDeleteIcon);
 
@@ -90,14 +90,14 @@ akeeba.replace.editor.renderRow = function(elContainer, valFrom, valTo)
 		.addClass("akion-chevron-up");
 
 	var elUpButton = window.jQuery("<span />")
-		.addClass("akeeba-btn akeebareplace-keyValueButtonUp")
+		.addClass("akeeba-btn--small akeebareplace-keyValueButtonUp")
 		.append(elUpIcon);
 
 	var elDownIcon = window.jQuery("<span />")
 		.addClass("akion-chevron-down");
 
 	var elDownButton = window.jQuery("<span />")
-		.addClass("akeeba-btn akeebareplace-keyValueButtonDown")
+		.addClass("akeeba-btn--small akeebareplace-keyValueButtonDown")
 		.append(elDownIcon);
 
 	var elInputWrapper = window.jQuery("<div />").addClass('akeeba-container--50-50')
@@ -256,4 +256,21 @@ akeeba.replace.showEditor = function (editorContainer, textareaContainer)
 	elContainer.show();
 	window.jQuery(textareaContainer).hide();
 	akeeba.replace.editor.render(elContainer, extractedValues);
+};
+
+akeeba.replace.showOptions = function(panelID)
+{
+	var elPanel = document.getElementById(panelID);
+	var currentDisplay = elPanel.style.display;
+
+	if (elPanel.style.display === 'none')
+	{
+		elPanel.style.display = 'block';
+		window.location.hash = '#' + panelID;
+
+		return;
+	}
+
+	elPanel.style.display = 'none';
+	window.location.hash = '';
 };

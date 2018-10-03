@@ -23,12 +23,16 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
 
 ?>
 
+<h3>
+    <?php _e('Set up replacements', 'akeebabackup') ?>
+</h3>
+
 <form
         method="get"
         action="<?php echo $this->actionURL ?>"
         class="akeeba-form--horizontal">
 
-    <div class="akeeba-panel--primary">
+    <div id="akeebareplace-replace-main" class="akeeba-panel--primary">
         <header class="akeeba-block-header">
             <h3>
 				<?php _e('What to replace', 'akeebareplace') ?>
@@ -52,9 +56,25 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
         </div>
 
         <div id="akeebareplaceGUIEditor"></div>
+
+        <p></p>
+
+        <div class="akeeba-form-group--actions">
+            <button type="submit" class="akeeba-btn--big">
+                <?php _e('Start replacing', 'akeebabackup') ?>
+            </button>
+
+            <a href="<?php echo $this->cancelURL ?>" class="akeeba-btn--red">
+                <?php _e('Cancel', 'akeebabackup') ?>
+            </a>
+
+            <button type="button" onclick="akeeba.replace.showOptions('akeebareplace-replace-advanced'); return false;" class="akeeba-btn--dark">
+                <?php _e('Show / hide advanced options', 'akeebabackup') ?>
+            </button>
+        </div>
     </div>
 
-    <div class="akeeba-panel--information">
+    <div id="akeebareplace-replace-options" class="akeeba-panel--information">
         <header class="akeeba-block-header">
             <h3>
 				<?php _e('Where and how to replace') ?>
@@ -92,7 +112,7 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
         </div>
     </div>
 
-    <div class="akeeba-panel--danger">
+    <div id="akeebareplace-replace-advanced" class="akeeba-panel--danger" style="display: none">
         <header class="akeeba-block-header">
             <h3>
 				<?php _e('Advanced options') ?>
