@@ -7,52 +7,66 @@
  *
  * Error handler page
  */
+
+wp_enqueue_style('fef', plugins_url('/fef/css/style.css', AKEEBA_REPLACE_SELF), []);
 ?>
-<div class="wrap">
-	<h1>
-		<?php _e('Akeeba Replace - An error has occurred', 'akeebareplace') ?>
-	</h1>
-	<p>
-		<?php _e('The following error occurred while we were trying to process your request.', 'akeebareplace') ?>
-	</p>
-	<p>
-		<?php echo $e->getCode() ?> :: <?php echo $e->getMessage() ?>
-	</p>
-	<p>
-		<?php _e('Please check the documentation for further information or ask for technical support on the plugin\'s listing in the WordPress Plugin Directory.' , 'akeebareplace') ?>
-	</p>
+<div class="akeeba-renderer-fef">
 
-	<h2>
-		<?php _e('Technical Information', 'akeebareplace') ?>
-	</h2>
-	<p>
-		<?php _e('If you want to get technical support, please provide the following information and a short description of what you were trying to do when the error occurred.', 'akeebareplace') ?>
+	<div class="akeeba-panel--danger ">
+		<header class="akeeba-block-header">
+			<h2>
+				<?php _e('Akeeba Replace - An error has occurred', 'akeebareplace') ?>
+			</h2>
+		</header>
 
-	</p>
-	<table>
-		<tr>
-			<td><strong>Code</strong></td>
-			<td><?php echo $e->getCode() ?></td>
-		</tr>
-		<tr>
-			<td><strong>Message</strong></td>
-			<td><?php echo $e->getMessage() ?></td>
-		</tr>
-		<tr>
-			<td><strong>Type</strong></td>
-			<td><?php echo get_class($e) ?></td>
-		</tr>
-		<tr>
-			<td><strong>File</strong></td>
-			<td><?php echo $e->getFile() ?></td>
-		</tr>
-		<tr>
-			<td><strong>Line</strong></td>
-			<td><?php echo $e->getLine() ?></td>
-		</tr>
-		<tr>
-			<td><strong>Trace</strong></td>
-			<td><pre><?php echo $e->getTraceAsString() ?></pre></td>
-		</tr>
-	</table>
+		<h3>
+			<span class="akeeba-label--red">
+				<?php echo $e->getCode() ?>
+			</span>
+			 <?php echo $e->getMessage() ?>
+		</h3>
+		<p>
+			<?php _e('The error above occurred while we were trying to process your request.', 'akeebareplace') ?>
+		</p>
+		<p>
+			<?php _e('Please check the documentation for further information or ask for technical support on the plugin\'s listing in the WordPress Plugin Directory.' , 'akeebareplace') ?>
+		</p>
+
+		<h4>
+			<?php _e('Technical Information', 'akeebareplace') ?>
+		</h4>
+		<p>
+			<?php _e('If you want to get technical support, please provide the following information and a short description of what you were trying to do when the error occurred.', 'akeebareplace') ?>
+
+		</p>
+		<table class="akeeba-table--leftbold--striped">
+			<tr>
+				<td>Code</td>
+				<td><?php echo $e->getCode() ?></td>
+			</tr>
+			<tr>
+				<td>Message</td>
+				<td><?php echo $e->getMessage() ?></td>
+			</tr>
+			<tr>
+				<td>Type</td>
+				<td><?php echo get_class($e) ?></td>
+			</tr>
+			<tr>
+				<td>File</td>
+				<td><?php echo $e->getFile() ?></td>
+			</tr>
+			<tr>
+				<td>Line</td>
+				<td><?php echo $e->getLine() ?></td>
+			</tr>
+			<tr>
+				<td>Trace</td>
+				<td><pre><?php
+					$trace = $e->getTraceAsString();
+					echo str_replace(rtrim(ABSPATH, '/\\'), '[ SITE ROOT ]', $trace);
+				?></pre></td>
+			</tr>
+		</table>
+	</div>
 </div>
