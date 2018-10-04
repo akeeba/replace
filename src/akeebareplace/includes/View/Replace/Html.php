@@ -58,8 +58,8 @@ class Html extends AbstractHtml
 
 		if (empty($this->actionURL))
 		{
-			$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=start');
-			$this->actionURL = wp_nonce_url($url, 'get_Replace_start');
+			$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=replace');
+			$this->actionURL = wp_nonce_url($url, 'post_Replace_replace');
 		}
 
 		if (empty($this->tablesURL))
@@ -74,6 +74,14 @@ class Html extends AbstractHtml
 		}
 
 		$this->excludedColumns = $this->makeExcludedColumnsText();
+	}
+
+	/**
+	 * Runs when the “replace” task is being executed
+	 */
+	public function onBeforeReplace()
+	{
+		$this->layout = 'replace';
 	}
 
 	/**

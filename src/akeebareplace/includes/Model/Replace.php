@@ -54,7 +54,7 @@ class Replace extends Model
 	 *
 	 * @return  void
 	 */
-	public function setCacheConfiguration(Configuration $configuration)
+	public function setCachedConfiguration(Configuration $configuration)
 	{
 		$user = wp_get_current_user();
 		$transient = $this->getConfigTransientForUser($user);

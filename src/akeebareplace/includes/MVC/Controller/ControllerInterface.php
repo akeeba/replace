@@ -33,12 +33,13 @@ interface ControllerInterface
 	/**
 	 * Protect against CSRF using WordPress' nonce.
 	 *
-	 * @param   string  $task  The task the nonce is expected to be valid for
-	 * @param   bool    $post  True to check only the POST data. False to check only the GET data.
+	 * @param   string  $task    The task the nonce is expected to be valid for
+	 * @param   bool    $post    True to check only the POST data. False to check only the GET data.
+	 * @param   string  $source  Where to look the nonce for. "auto" takes $post into account. Other values: 'post', 'get'
 	 *
 	 * @return  bool  True if the nonce check passes.
 	 *
 	 * @throws  \RuntimeException
 	 */
-	public function csrfProtection($task = '', $post = false);
+	public function csrfProtection($task = '', $post = false, $source = 'auto');
 }

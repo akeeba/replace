@@ -181,14 +181,23 @@ abstract class Controller implements ControllerInterface
 		exit();
 	}
 
-	public function csrfProtection($task = '', $post = false)
+	public function csrfProtection($task = '', $post = false, $source = 'auto')
 	{
-		$token  = $this->input->get->get('_wpnonce', '');
+		if (!in_array($source, ['auto', 'post', 'get']))
+		{
+			$source = 'auto';
+		}
+
+		if ($source == 'auto')
+		{
+			$source = $post ? 'post' : 'get';
+		}
+
+		$token  = $this->input->{$source}->get('_wpnonce', '');
 		$action = "get_{$this->name}" . (empty($task) ? '' : "_$task");
 
 		if ($post)
 		{
-			$token  = $this->input->post->get('_wpnonce', '');
 			$action = "post" . substr($action, 3);
 		}
 
