@@ -29,6 +29,13 @@ class Html extends AbstractHtml
 	public $cancelURL = '';
 
 	/**
+	 * The URL to go to view the latest log file
+	 *
+	 * @var  string
+	 */
+	public $logURL = '';
+
+	/**
 	 * The URL to fetch a list of all database tables
 	 *
 	 * @var  string
@@ -88,6 +95,10 @@ class Html extends AbstractHtml
 			$this->cancelURL = admin_url('admin.php?page=akeebareplace&view=Replace');
 		}
 
+		if (empty($this->logURL))
+		{
+			$this->logURL = admin_url('admin.php?page=akeebareplace&view=Log&latest=1');
+		}
 	}
 
 	/**
