@@ -88,19 +88,51 @@ class Replace extends Controller
 			throw new \RuntimeException(__('Access denied', 'akeebareplace'), 403);
 		}
 
+		/**
+		 * If this is a POST request we need to apply and cache the new configuration.
+		 */
+		if ($this->input->getMethod() == 'POST')
+		{
+			$this->applyNewConfiguration();
+		}
+
+		// Set up the view
+		/** @var Html $view */
+		$view                = $this->view;
+		/** @var \Akeeba\Replace\WordPress\Model\Replace $model */
+		$model               = $this->model;
+		$view->configuration = $model->getCachedConfiguration();
+
+		$this->display();
+	}
+
+	/**
+	 * Convert the input data to a Configuration object and cache it
+	 */
+	protected function applyNewConfiguration()
+	{
 		/** @var ReplaceModel $model */
 		$model         = $this->model;
 		$defaultConfig = $model->makeConfiguration()->toArray();
 
-		// Process POST data
+		/**
+		 * Process POST data
+		 *
+		 * A few words about checkboxes. Browsers only submit the checkboxes which are checked. The unchecked boxes are
+		 * NOT submitted. The value of the submitted checkboxes is _usually_ on except if you have a value attribute
+		 * which we don't. So, we can't use getBool because the input is not boolean and not guaranteed to be there.
+		 * Instead we try to fetch as a filtered string (cmd) with the default value "borg". If a checkbox was unchecked
+		 * the value we fetch will be "borg". Therefore "borg" == false and anything else == true. Don't you LOVE how
+		 * the web is cardboard held together by string and duct tape?
+		 */
 		$from               = $this->input->post->get('replace_from', [], 'array');
 		$to                 = $this->input->post->get('replace_to', [], 'array');
-		$hasOutput          = $this->input->post->getBool('exportAsSQL', true);
-		$hasBackup          = $this->input->post->getBool('takeBackups', true);
+		$hasOutput          = $this->input->post->getCmd('exportAsSQL', 'borg') != 'borg';
+		$hasBackup          = $this->input->post->getCmd('takeBackups', 'borg') != 'borg';
 		$logLevel           = $this->input->post->getInt('akeebareplaceLogLevel', 10);
-		$liveMode           = $this->input->post->getBool('liveMode', true);
-		$allTables          = $this->input->post->getBool('allTables', false);
-		$regularExpressions = $this->input->post->getBool('regularExpressions', false);
+		$liveMode           = $this->input->post->getCmd('liveMode', 'borg') != 'borg';
+		$allTables          = $this->input->post->getCmd('allTables', 'borg') != 'borg';
+		$regularExpressions = $this->input->post->getCmd('regularExpressions', 'borg') != 'borg';
 		$maxBatchSize       = $this->input->post->getInt('batchSize', 1000);
 		$excludeTables      = $this->input->post->get('excludeTables', [], 'array');
 		$rawExcludeColumns  = $this->input->post->get('excludeRows', '', 'raw');
@@ -169,12 +201,5 @@ class Replace extends Controller
 		$configuration = new Configuration($newConfig);
 
 		$model->setCachedConfiguration($configuration);
-
-		// Set up the view
-		/** @var Html $view */
-		$view = $this->view;
-		$view->configuration = $configuration;
-
-		$this->display();
 	}
 }

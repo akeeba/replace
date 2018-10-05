@@ -82,6 +82,12 @@ class Html extends AbstractHtml
 	public function onBeforeReplace()
 	{
 		$this->layout = 'replace';
+
+		if (empty($this->cancelURL))
+		{
+			$this->cancelURL = admin_url('admin.php?page=akeebareplace&view=Replace');
+		}
+
 	}
 
 	/**
