@@ -109,6 +109,8 @@ class Html extends AbstractHtml
 				}
 
 				$ret .= $table . '.' . $column;
+
+				return $ret;
 			});
 
 			if (!empty($returnValue))
