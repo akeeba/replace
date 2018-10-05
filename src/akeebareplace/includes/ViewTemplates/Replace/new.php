@@ -255,8 +255,10 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
     </div>
 </form>
 
-<script type="text/javascript">
-window.jQuery(document).ready(function($) {
+<?php
+$escapedTablesUrl = addcslashes($this->tablesURL, "'\\");
+$js = <<< JS
+akeeba.System.documentReady(function() {
 	function akeebaReplaceSetupEditor()
 	{
 		if ((typeof(akeeba) === 'undefined') || typeof(akeeba.replace) === 'undefined')
@@ -266,17 +268,20 @@ window.jQuery(document).ready(function($) {
 			return;
 		}
 
-		akeeba.replace.strings['lblKey'] = '<?php echo $lblKey ?>';
-		akeeba.replace.strings['lblValue'] = '<?php echo $lblValue ?>';
-		akeeba.replace.strings['lblDelete'] = '<?php echo $lblDelete ?>';
+		akeeba.replace.strings['lblKey'] = '$lblKey';
+		akeeba.replace.strings['lblValue'] = '$lblValue';
+		akeeba.replace.strings['lblDelete'] = '$lblDelete';
 
 		akeeba.replace.showEditor(document.getElementById('akeebareplaceGUIEditor'), document.getElementById('akeebareplaceTextboxEditor'));
 
-		akeeba.replace.tablesAjaxURL = '<?php echo addcslashes($this->tablesURL, "'\\") ?>';
+		akeeba.replace.tablesAjaxURL = '$escapedTablesUrl';
 		document.getElementById('akeebareplace-allTables').onchange = akeeba.replace.onAllTablesChange;
 	}
 
 	akeebaReplaceSetupEditor();
 });
 
-</script>
+JS;
+
+wp_add_inline_script('akeebareplace-editor', $js);
+?>
