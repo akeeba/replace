@@ -125,8 +125,8 @@ class Replace extends Controller
 		 * the value we fetch will be "borg". Therefore "borg" == false and anything else == true. Don't you LOVE how
 		 * the web is cardboard held together by string and duct tape?
 		 */
-		$from               = $this->input->post->get('replace_from', [], 'array');
-		$to                 = $this->input->post->get('replace_to', [], 'array');
+		$from               = $this->input->post->get('replace_from', '', 'raw');
+		$to                 = $this->input->post->get('replace_to', '', 'raw');
 		$hasOutput          = $this->input->post->getCmd('exportAsSQL', 'borg') != 'borg';
 		$hasBackup          = $this->input->post->getCmd('takeBackups', 'borg') != 'borg';
 		$logLevel           = $this->input->post->getInt('akeebareplaceLogLevel', 10);
@@ -139,6 +139,14 @@ class Replace extends Controller
 		$databaseCollation  = $this->input->post->getCmd('databaseCollation', '');
 		$tableCollation     = $this->input->post->getCmd('tableCollation', '');
 		$hasLog             = true;
+
+		/**
+		 * Convert from and to into proper arrays. Yes, browsers send \r\n even when running under Linux. No, we should
+		 * not array_map with trim because you might actually want to replace "foo " with "foo_" (but NOT "foo" with
+		 * "foo_") so it wouldn't really help you any if we trimmed the values.
+		 */
+		$from = explode("\r\n", $from);
+		$to   = explode("\r\n", $to);
 
 		// Filter table exclusions, removing empty and duplicate values
 		$excludeTables = array_map('trim', $excludeTables);
