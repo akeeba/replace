@@ -216,7 +216,7 @@ akeeba.replace.editor.reflow = function (elContainer)
 				// This is the last empty row. Do not remove and set the flag of having a last empty row.
 				hasEmptyRow = true;
 
-				return;
+				continue;
 			}
 
 			// This is an empty From in a row other than the last. Remove it.
@@ -240,8 +240,8 @@ akeeba.replace.editor.reflow = function (elContainer)
 	akeeba.System.data.set(elContainer, "keyValueData", data);
 
 	// Transfer the data to the textboxes
-	var elFrom = akeeba.System.data.get(elContainer, "fromElement");
-	var elTo   = akeeba.System.data.get(elContainer, "toElement");
+	var elFrom = document.getElementById(akeeba.System.data.get(elContainer, "fromElement"));
+	var elTo   = document.getElementById(akeeba.System.data.get(elContainer, "toElement"));
 
 	elFrom.value = strFrom.replace(/^\s+/g, "");
 	elTo.value   = strTo.replace(/^\s+/g, "");
@@ -259,8 +259,8 @@ akeeba.replace.showEditor = function (editorContainer, textareaContainer)
 	var elFrom    = textAreas[0];
 	var elTo      = textAreas[1];
 
-	akeeba.System.data.set(editorContainer, "fromElement", elFrom);
-	akeeba.System.data.set(editorContainer, "toElement", elTo);
+	akeeba.System.data.set(editorContainer, "fromElement", elFrom.id);
+	akeeba.System.data.set(editorContainer, "toElement", elTo.id);
 
 	var from            = elFrom.value.split("\n");
 	var to              = elTo.value.split("\n");
