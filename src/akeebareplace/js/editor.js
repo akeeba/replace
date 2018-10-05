@@ -4,23 +4,24 @@
  * @author    Nicholas K. Dionysopoulos
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
  *
+ * GUI editor for replacement options
  */
 
 // Object initialization
-if (typeof(akeeba) === 'undefined')
+if (typeof(akeeba) === "undefined")
 {
 	var akeeba = {};
 }
 
-if (typeof akeeba.replace === 'undefined')
+if (typeof akeeba.replace === "undefined")
 {
 	akeeba.replace = {
-		editor:        {},
-		tablesAjaxURL: '',
-		strings:       {
-			'lblKey':    '',
-			'lblValue':  '',
-			'lblDelete': ''
+		editor: {},
+		tablesAjaxURL: "",
+		strings: {
+			"lblKey": "",
+			"lblValue": "",
+			"lblDelete": ""
 		}
 	};
 }
@@ -33,30 +34,30 @@ if (typeof akeeba.replace === 'undefined')
  */
 akeeba.replace.editor.render = function (container, data)
 {
-	// Get the row container from the selector
-	var elContainer = window.jQuery(container);
-
 	// Store the key-value information as a data property
-	elContainer.data('keyValueData', data);
+	akeeba.System.data.set(container, "keyValueData", data);
 
 	// Render one GUI row per data row
 	for (var valFrom in data)
 	{
 		// Skip if the key is a property from the object's prototype
-		if (!data.hasOwnProperty(valFrom)) continue;
-
-		var valTo = data[valFrom];
-
-		if ((valFrom === '') && (valTo === ''))
+		if (!data.hasOwnProperty(valFrom))
 		{
 			continue;
 		}
 
-		akeeba.replace.editor.renderRow(elContainer, valFrom, valTo);
+		var valTo = data[valFrom];
+
+		if ((valFrom === "") && (valTo === ""))
+		{
+			continue;
+		}
+
+		akeeba.replace.editor.renderRow(container, valFrom, valTo);
 	}
 
 	// Add the last, empty row
-	akeeba.replace.editor.renderRow(elContainer, "", "");
+	akeeba.replace.editor.renderRow(container, "", "");
 };
 
 /**
@@ -68,118 +69,121 @@ akeeba.replace.editor.render = function (container, data)
  */
 akeeba.replace.editor.renderRow = function (elContainer, valFrom, valTo)
 {
-	var elRow = window.jQuery("<div />").addClass("akeeba-container--75-25");
+	var elRow       = document.createElement("div");
+	elRow.className = "akeeba-container--75-25";
 
-	var elFromInput = window.jQuery("<input />")
-							.addClass("akeebareplace-keyValueFrom")
-							.attr("type", "text")
-							.attr("title", akeeba.replace.strings["lblKey"])
-							.attr("placeholder", akeeba.replace.strings["lblKey"])
-							.val(valFrom);
+	var elFromInput         = document.createElement("input");
+	elFromInput.className   = "akeebareplace-keyValueFrom";
+	elFromInput.type        = "text";
+	elFromInput.title       = akeeba.replace.strings["lblKey"];
+	elFromInput.placeholder = akeeba.replace.strings["lblKey"];
+	elFromInput.value       = valFrom;
 
-	var elToInput = window.jQuery("<input />")
-						  .addClass("akeebareplace-keyValueTo")
-						  .attr("type", "text")
-						  .attr("title", akeeba.replace.strings["lblValue"])
-						  .attr("placeholder", akeeba.replace.strings["lblValue"])
-						  .val(valTo);
+	var elToInput         = document.createElement("input");
+	elToInput.className   = "akeebareplace-keyValueTo";
+	elToInput.type        = "text";
+	elToInput.title       = akeeba.replace.strings["lblValue"];
+	elToInput.placeholder = akeeba.replace.strings["lblValue"];
+	elToInput.value       = valTo;
 
-	var elDeleteIcon = window.jQuery("<span />")
-							 .addClass("akion-trash-a");
+	var elDeleteIcon       = document.createElement("span");
+	elDeleteIcon.className = "akion-trash-a";
 
-	var elDeleteButton = window.jQuery("<span />")
-							   .addClass("akeeba-btn--small--red akeebareplace-keyValueButtonDelete")
-							   .addClass("title", akeeba.replace.strings["lblDelete"])
-							   .append(elDeleteIcon);
+	var elDeleteButton       = document.createElement("span");
+	elDeleteButton.className = "akeeba-btn--small--red akeebareplace-keyValueButtonDelete";
+	elDeleteButton.title     = akeeba.replace.strings["lblDelete"];
+	elDeleteButton.appendChild(elDeleteIcon);
 
-	var elUpIcon = window.jQuery("<span />")
-						 .addClass("akion-chevron-up");
+	var elUpIcon       = document.createElement("span");
+	elUpIcon.className = "akion-chevron-up";
 
-	var elUpButton = window.jQuery("<span />")
-						   .addClass("akeeba-btn--small akeebareplace-keyValueButtonUp")
-						   .append(elUpIcon);
+	var elUpButton       = document.createElement("span");
+	elUpButton.className = "akeeba-btn--small akeebareplace-keyValueButtonUp";
+	elUpButton.appendChild(elUpIcon);
 
-	var elDownIcon = window.jQuery("<span />")
-						   .addClass("akion-chevron-down");
+	var elDownIcon       = document.createElement("span");
+	elDownIcon.className = "akion-chevron-down";
 
-	var elDownButton = window.jQuery("<span />")
-							 .addClass("akeeba-btn--small akeebareplace-keyValueButtonDown")
-							 .append(elDownIcon);
+	var elDownButton       = document.createElement("span");
+	elDownButton.className = "akeeba-btn--small akeebareplace-keyValueButtonDown";
+	elDownButton.appendChild(elDownIcon);
 
-	var elInputWrapper = window.jQuery("<div />").addClass('akeeba-container--50-50')
-							   .append(elFromInput)
-							   .append(elToInput);
+	var elInputWrapper       = document.createElement("div");
+	elInputWrapper.className = "akeeba-container--50-50";
+	elInputWrapper.appendChild(elFromInput);
+	elInputWrapper.appendChild(elToInput);
 
-	var elButtonWrapper = window.jQuery("<div />")
-								.append(elDeleteButton)
-								.append(elUpButton)
-								.append(elDownButton);
+	var elButtonWrapper = document.createElement("div");
+	elButtonWrapper.appendChild(elDeleteButton);
+	elButtonWrapper.appendChild(elUpButton);
+	elButtonWrapper.appendChild(elDownButton);
 
-	elFromInput.blur(function (e)
+	akeeba.System.addEventListener(elFromInput, "blur", function (e)
 	{
 		akeeba.replace.editor.reflow(elContainer);
 	});
 
-	elToInput.blur(function (e)
+	akeeba.System.addEventListener(elToInput, "blur", function (e)
 	{
 		akeeba.replace.editor.reflow(elContainer);
 	});
 
-	elDeleteButton.click(function (e)
+	akeeba.System.addEventListener(elDeleteButton, "click", function (e)
 	{
-		elFromInput.val("");
-		elToInput.val("");
+		elFromInput.value = "";
+		elToInput.value   = "";
 		akeeba.replace.editor.reflow(elContainer);
 	});
 
-	elUpButton.click(function (e)
+	akeeba.System.addEventListener(elUpButton, "click", function (e)
 	{
-		var elPrev = elRow.prev();
+		var elPrev = this.parentElement.parentElement.previousSibling;
 
-		if (!elPrev.length)
+		if (elPrev === null)
 		{
 			return;
 		}
 
-		var elPrevFrom = elPrev.find('.akeebareplace-keyValueFrom');
-		var elPrevTo   = elPrev.find('.akeebareplace-keyValueTo');
+		var elPrevFrom = elPrev.querySelector(".akeebareplace-keyValueFrom");
+		var elPrevTo   = elPrev.querySelector(".akeebareplace-keyValueTo");
 
-		var prevFrom = elPrevFrom.val();
-		var prevTo   = elPrevTo.val();
+		var prevFrom = elPrevFrom.value;
+		var prevTo   = elPrevTo.value;
 
-		elPrevFrom.val(elFromInput.val());
-		elPrevTo.val(elToInput.val());
-		elFromInput.val(prevFrom);
-		elToInput.val(prevTo);
+		elPrevFrom.value  = elFromInput.value;
+		elPrevTo.value    = elToInput.value;
+		elFromInput.value = prevFrom;
+		elToInput.value   = prevTo;
 
 		akeeba.replace.editor.reflow(elContainer);
 	});
 
-	elDownButton.click(function (e)
+	akeeba.System.addEventListener(elDownButton, "click", function (e)
 	{
-		var elNext = elRow.next();
+		var elNext = this.parentElement.parentElement.nextSibling;
 
-		if (!elNext.length)
+		if (elNext === null)
 		{
 			return;
 		}
 
-		var elNextFrom = elNext.find('.akeebareplace-keyValueFrom');
-		var elNextTo   = elNext.find('.akeebareplace-keyValueTo');
+		var elNextFrom = elNext.querySelector(".akeebareplace-keyValueFrom");
+		var elNextTo   = elNext.querySelector(".akeebareplace-keyValueTo");
 
-		var nextFrom = elNextFrom.val();
-		var nextTo   = elNextTo.val();
+		var nextFrom = elNextFrom.value;
+		var nextTo   = elNextTo.value;
 
-		elNextFrom.val(elFromInput.val());
-		elNextTo.val(elToInput.val());
-		elFromInput.val(nextFrom);
-		elToInput.val(nextTo);
+		elNextFrom.value  = elFromInput.value;
+		elNextTo.value    = elToInput.value;
+		elFromInput.value = nextFrom;
+		elToInput.value   = nextTo;
 
 		akeeba.replace.editor.reflow(elContainer);
 	});
 
-	elRow.append(elInputWrapper, elButtonWrapper);
-	elContainer.append(elRow);
+	elRow.appendChild(elInputWrapper);
+	elRow.appendChild(elButtonWrapper);
+	elContainer.appendChild(elRow);
 };
 
 /**
@@ -192,20 +196,22 @@ akeeba.replace.editor.reflow = function (elContainer)
 	var data        = {};
 	var strFrom     = "";
 	var strTo       = "";
-	var elRows      = elContainer.children();
+	var elRows      = elContainer.childNodes;
 	var hasEmptyRow = false;
 
 	// Convert rows to a data object
-	window.jQuery.each(elRows, function (idx, elRow)
+
+	for (var i = 0; i < elRows.length; i++)
 	{
-		var $elRow  = window.jQuery(elRow);
-		var valFrom = $elRow.find('.akeebareplace-keyValueFrom').val();
-		var valTo   = $elRow.find('.akeebareplace-keyValueTo').val();
+		var elRow = elRows[i];
+
+		var valFrom = elRow.querySelector(".akeebareplace-keyValueFrom").value;
+		var valTo   = elRow.querySelector(".akeebareplace-keyValueTo").value;
 
 		// If the From value is empty I may have to delete this row
-		if (valFrom === '')
+		if (valFrom === "")
 		{
-			if (idx >= elRows.length)
+			if (i === (elRows.length - 1))
 			{
 				// This is the last empty row. Do not remove and set the flag of having a last empty row.
 				hasEmptyRow = true;
@@ -214,15 +220,15 @@ akeeba.replace.editor.reflow = function (elContainer)
 			}
 
 			// This is an empty From in a row other than the last. Remove it.
-			$elRow.remove();
+			elRow.parentNode.removeChild(elRow);
 
-			return;
+			continue;
 		}
 
 		data[valFrom] = valTo;
 		strFrom += "\n" + valFrom;
 		strTo += "\n" + valTo;
-	});
+	}
 
 	// If I don't have a last empty row, create one
 	if (!hasEmptyRow)
@@ -231,13 +237,14 @@ akeeba.replace.editor.reflow = function (elContainer)
 	}
 
 	// Store the key-value information as a data property
-	window.jQuery(elContainer).data('keyValueData', data);
+	akeeba.System.data.set(elContainer, "keyValueData", data);
 
 	// Transfer the data to the textboxes
-	var elFrom = window.jQuery(elContainer).data('fromElement');
-	var elTo   = window.jQuery(elContainer).data('toElement');
-	window.jQuery(elFrom).val(strFrom.replace(/^\s+/g, ""));
-	window.jQuery(elTo).val(strTo.replace(/^\s+/g, ""));
+	var elFrom = akeeba.System.data.get(elContainer, "fromElement");
+	var elTo   = akeeba.System.data.get(elContainer, "toElement");
+
+	elFrom.value = strFrom.replace(/^\s+/g, "");
+	elTo.value   = strTo.replace(/^\s+/g, "");
 };
 
 /**
@@ -248,15 +255,15 @@ akeeba.replace.editor.reflow = function (elContainer)
  */
 akeeba.replace.showEditor = function (editorContainer, textareaContainer)
 {
-	var elContainer = window.jQuery(editorContainer);
-	var elFrom      = window.jQuery(textareaContainer).find('textarea').first();
-	var elTo        = window.jQuery(textareaContainer).find('textarea:eq(1)').first();
+	var textAreas = textareaContainer.querySelectorAll("textarea");
+	var elFrom    = textAreas[0];
+	var elTo      = textAreas[1];
 
-	elContainer.data('fromElement', elFrom);
-	elContainer.data('toElement', elTo);
+	akeeba.System.data.set(editorContainer, "fromElement", elFrom);
+	akeeba.System.data.set(editorContainer, "toElement", elTo);
 
-	var from            = elFrom.val().split("\n");
-	var to              = elTo.val().split("\n");
+	var from            = elFrom.value.split("\n");
+	var to              = elTo.value.split("\n");
 	var extractedValues = {};
 
 	for (var i = 0; i < Math.min(from.length, to.length); i++)
@@ -264,9 +271,9 @@ akeeba.replace.showEditor = function (editorContainer, textareaContainer)
 		extractedValues[from[i]] = to[i];
 	}
 
-	elContainer.show();
-	window.jQuery(textareaContainer).hide();
-	akeeba.replace.editor.render(elContainer, extractedValues);
+	editorContainer.style.display   = "block";
+	textareaContainer.style.display = "none";
+	akeeba.replace.editor.render(editorContainer, extractedValues);
 };
 
 /**
@@ -279,31 +286,31 @@ akeeba.replace.showOptions = function (panelID)
 	var elPanel        = document.getElementById(panelID);
 	var currentDisplay = elPanel.style.display;
 
-	if (currentDisplay === 'none')
+	if (currentDisplay === "none")
 	{
-		elPanel.style.display = 'block';
-		window.location.hash  = '#' + panelID;
+		elPanel.style.display = "block";
+		window.location.hash  = "#" + panelID;
 
 		return;
 	}
 
-	elPanel.style.display = 'none';
-	window.location.hash  = '';
+	elPanel.style.display = "none";
+	window.location.hash  = "";
 };
 
 akeeba.replace.onAllTablesChange = function ()
 {
 	// Store current exclusions
 	var currentExclusions = [];
-	var elSelect          = document.getElementById('akeebareplaceExcludeTables');
-	var allOptions        = elSelect.querySelectorAll('option');
-	var strNone           = '- none -';
+	var elSelect          = document.getElementById("akeebareplaceExcludeTables");
+	var allOptions        = elSelect.querySelectorAll("option");
+	var strNone           = "- none -";
 
 	for (var i = 0; i < allOptions.length; i++)
 	{
 		var thisOption = allOptions[i];
 
-		if (thisOption.value === '')
+		if (thisOption.value === "")
 		{
 			strNone = thisOption.innerText;
 		}
@@ -315,20 +322,19 @@ akeeba.replace.onAllTablesChange = function ()
 	}
 
 	// Do an AJAX request
-	console.info(akeeba.replace.tablesAjaxURL);
-	var ajax = new AkeebaReplaceAjax(akeeba.replace.tablesAjaxURL);
-	ajax.callJSON({
-		'_akeeba_ajax_method': 'GET',
-		'allTables': document.getElementById('akeebareplace-allTables').checked ? 1 : 0
+	akeeba.System.params.AjaxURL = akeeba.replace.tablesAjaxURL;
+	akeeba.System.doAjax({
+		"_akeeba_ajax_method": "GET",
+		"allTables": document.getElementById("akeebareplace-allTables").checked ? 1 : 0
 	}, function (newTables)
 	{
-		elSelect.innerHTML = '';
+		elSelect.innerHTML = "";
 
-		var elRow = document.createElement('option');
-		elRow.value = '';
+		var elRow       = document.createElement("option");
+		elRow.value     = "";
 		elRow.innerText = strNone;
 
-		if (currentExclusions.indexOf('') > -1)
+		if (currentExclusions.indexOf("") > -1)
 		{
 			elRow.selected = true;
 		}
@@ -339,8 +345,8 @@ akeeba.replace.onAllTablesChange = function ()
 		{
 			var thisTable = newTables[j];
 
-			elRow = document.createElement('option');
-			elRow.value = thisTable;
+			elRow           = document.createElement("option");
+			elRow.value     = thisTable;
 			elRow.innerText = thisTable;
 
 			if (currentExclusions.indexOf(thisTable) > -1)
