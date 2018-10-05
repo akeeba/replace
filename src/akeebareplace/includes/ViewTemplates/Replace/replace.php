@@ -12,6 +12,8 @@ $dryRun     = !$this->configuration->isLiveMode();
 $hasBackups = $this->configuration->getBackupSQLFile() != '';
 ?>
 
+<?php echo $this->getRenderedTemplate('Common', 'errorDialog'); ?>
+
 <div class="akeeba-panel--warning">
 	<header class="akeeba-block-header">
 		<h3><?php _e('Start replacing?', 'akeebareplace')?></h3>

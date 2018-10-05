@@ -23,7 +23,7 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
 
 ?>
 
-<!--TODO Set up error dialog-->
+<?php echo $this->getRenderedTemplate('Common', 'errorDialog'); ?>
 
 <h2>
     <?php _e('Set up replacements', 'akeebabackup') ?>
