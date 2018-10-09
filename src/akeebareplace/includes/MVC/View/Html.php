@@ -46,7 +46,7 @@ abstract class Html extends Raw
 
 		if ($this->useFEF)
 		{
-			$html .= '</div>' . "\n" . '<div class="akeeba-renderer-fef">';
+			$html .= '</div>' . "\n" . '<div class="akeeba-renderer-fef akeeba-wp">';
 		}
 
 		return $html;

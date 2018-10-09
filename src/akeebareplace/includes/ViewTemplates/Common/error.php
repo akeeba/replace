@@ -10,7 +10,7 @@
 
 wp_enqueue_style('fef', plugins_url('/fef/css/style.css', AKEEBA_REPLACE_SELF), []);
 ?>
-<div class="akeeba-renderer-fef">
+<div class="akeeba-renderer-fef akeeba-wp">
 
 	<div class="akeeba-panel--danger ">
 		<header class="akeeba-block-header">

@@ -34,7 +34,7 @@ abstract class Raw extends View
 	 */
 	public function preRender()
 	{
-		$class = $this->useFEF ? 'akeeba-renderer-fef' : 'wrap';
+		$class = $this->useFEF ? 'akeeba-renderer-fef akeeba-wp' : 'wrap';
 
 		return <<< HTML
 <html>

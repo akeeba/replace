@@ -14,6 +14,7 @@ use Akeeba\Replace\WordPress\Helper\Application;
 wp_enqueue_style('akeebareplace-backend', plugins_url('/css/backend.css', AKEEBA_REPLACE_SELF), ['fef'], Application::getMediaVersion());
 ?>
 
+<?php echo $this->getRenderedTemplate('Common', 'header'); ?>
 <?php echo $this->getRenderedTemplate('Common', 'errorDialog'); ?>
 <?php echo $this->getRenderedTemplate('', 'initial_confirmation'); ?>
 <?php echo $this->getRenderedTemplate('', 'progress'); ?>

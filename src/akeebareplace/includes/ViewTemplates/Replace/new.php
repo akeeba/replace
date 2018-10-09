@@ -23,6 +23,7 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
 
 ?>
 
+<?php echo $this->getRenderedTemplate('Common', 'header'); ?>
 <?php echo $this->getRenderedTemplate('Common', 'errorDialog'); ?>
 
 <h2>
