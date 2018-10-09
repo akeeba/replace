@@ -231,7 +231,7 @@ akeeba.replace.onStep = function (data)
 	}
 
 	// No errors. Good! Are we finished yet?
-	if (data["HasRun"] === 1)
+	if (data["HasRun"] === 0)
 	{
 		try
 		{
@@ -345,7 +345,7 @@ akeeba.replace.onError = function (message)
 	document.getElementById("akeebareplace-error-panel").style.display = "none";
 
 	// Setup and show the retry pane
-	document.getElementById("akeebareplace-error-message-retry").textContent = message;
+	document.getElementById("akeebareplace-error-message-retry").innerHTML = message;
 	document.getElementById("akeebareplace-retry-panel").style.display = "block";
 
 	// Start the countdown

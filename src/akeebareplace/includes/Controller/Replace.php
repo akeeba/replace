@@ -11,6 +11,7 @@ namespace Akeeba\Replace\WordPress\Controller;
 
 use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Engine\Core\Part\Database;
+use Akeeba\Replace\Engine\ErrorHandling\ErrorException;
 use Akeeba\Replace\Engine\PartStatus;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\WordPress\Model\Replace as ReplaceModel;
@@ -149,8 +150,10 @@ class Replace extends Controller
 			$status = $engine->tick();
 		}
 
+		$statusArray = $status->toArray();
+
 		// If we are done (or died with an error) we set the engine to null; this will unset it from the cache.
-		if ($status->isDone() || ($status->getError() !== ''))
+		if ($status->isDone() || !empty($statusArray['Error']))
 		{
 			$engine = null;
 		}
@@ -161,7 +164,7 @@ class Replace extends Controller
 		// Send the output to the browser
 		@ob_end_clean();
 
-		echo '###' . json_encode($status->toArray()) . '###';
+		echo '###' . json_encode($statusArray) . '###';
 
 		exit();
 	}
