@@ -50,6 +50,20 @@ class Html extends AbstractHtml
 	public $tablesURL = '';
 
 	/**
+	 * The URL to go back to the jobs management page
+	 *
+	 * @var  string
+	 */
+	public $manageURL = '';
+
+	/**
+	 * TODO The URL to the troubleshooting documentation
+	 *
+	 * @var  string
+	 */
+	public $troubleshootingURL = '#';
+
+	/**
 	 * The configuration for this job
 	 *
 	 * @var  Configuration
@@ -110,6 +124,11 @@ class Html extends AbstractHtml
 		if (empty($this->logURL))
 		{
 			$this->logURL = admin_url('admin.php?page=akeebareplace&view=Log&latest=1');
+		}
+
+		if (empty($this->manageURL))
+		{
+			$this->manageURL = admin_url('admin.php?page=akeebareplace');
 		}
 	}
 
