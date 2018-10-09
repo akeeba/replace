@@ -41,10 +41,12 @@ class Replace extends Controller
 		/** @var ReplaceModel $model */
 		$model = $this->model;
 
+		$reset = $this->input->getBool('reset', false);
+
 		// Assign the Configuration object to the View object
 		/** @var Html $view */
 		$view                = $this->view;
-		$view->configuration = $model->getCachedConfiguration();
+		$view->configuration = $model->getCachedConfiguration($reset);
 
 		// Display the HTML page
 		$this->display();

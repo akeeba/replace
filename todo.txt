@@ -1,7 +1,6 @@
 GUI
 ================================================================================
 Replace
-	Exclude own table by default (we don't want to replace the replacement setup!)
 	JS to run replacements. Will reuse and adapt code from Akeeba Backup
 
 Main page (Control Panel)

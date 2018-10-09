@@ -24,15 +24,24 @@ class Replace extends Model
 	 * Returns the cached Configuration for the user. If no user is logged in or no valid configuration is cached it
 	 * returns the default configuration.
 	 *
+	 * @param   $reset  bool  Should I reset the cached configuration and return the default values?
+	 *
 	 * @return  Configuration
 	 */
-	public function getCachedConfiguration()
+	public function getCachedConfiguration($reset = false)
 	{
 		$user = wp_get_current_user();
 		$transient = $this->getConfigTransientForUser($user);
 
 		if (empty($transient))
 		{
+			return $this->makeConfiguration();
+		}
+
+		if ($reset)
+		{
+			delete_transient($transient);
+
 			return $this->makeConfiguration();
 		}
 
@@ -78,14 +87,17 @@ class Replace extends Model
 	 */
 	public function makeConfiguration($overrides = [])
 	{
+		global $wpdb;
+
 		$config = [
 			'outputSQLFile' => '[OUTPUT_PATH][YEAR][MONTH][DAY]_[TIME_TZ]_replace.sql',
 			'backupSQLFile' => '[OUTPUT_PATH][YEAR][MONTH][DAY]_[TIME_TZ]_backup.sql',
 			'logFile'       => '[OUTPUT_PATH][YEAR][MONTH][DAY]_[TIME_TZ].log',
 			'minLogLevel'   => LoggerInterface::SEVERITY_INFO,
+			'excludeTables' => [$wpdb->prefix . 'akeebareplace_jobs'],
 		];
 
-		$config = array_merge($config, $overrides);
+		$config = array_merge_recursive($config, $overrides);
 
 		return new Configuration($config);
 	}
