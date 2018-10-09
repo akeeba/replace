@@ -161,6 +161,8 @@ class Replace extends Controller
 		// Cache the new engine status
 		$model->setEngineCache($engine);
 
+		// TODO Enforce minimum execution time
+
 		// Send the output to the browser
 		@ob_end_clean();
 
