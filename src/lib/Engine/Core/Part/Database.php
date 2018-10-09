@@ -142,6 +142,7 @@ class Database extends AbstractPart implements
 		$this->logBackupWriter();
 		$this->logLiveModeStatus();
 		$this->logMessageAboutBackups();
+		$this->logReplacements();
 
 		// Run once-per-database callbacks.
 		$this->getLogger()->debug("Retrieving database metadata");
@@ -347,6 +348,24 @@ class Database extends AbstractPart implements
 		}
 
 		$this->addWarningMessage('YOU ARE RUNNING Akeeba Replace WITHOUT TAKING BACKUPS. IF YOUR SITE BREAKS WE WILL NOT BE ABLE TO HELP YOU.');
+	}
+
+	protected function logReplacements()
+	{
+		$replacements = $this->getConfig()->getReplacements();
+
+		$this->getLogger()->debug('The following replacements have been set up (FROM ===> TO)');
+		$this->getLogger()->debug('========== BEGINNING OF LIST ==========');
+
+		foreach ($replacements as $from => $to)
+		{
+			$this->getLogger()->debug("$from ===> $to");
+		}
+
+		$this->getLogger()->debug('========== END OF LIST ==========');
+
+		$replacementMode = $this->getConfig()->isRegularExpressions() ? 'Regular Expressions' : 'Plain Text';
+		$this->getLogger()->debug("Replacements mode: $replacementMode");
 	}
 
 	/**
