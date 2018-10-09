@@ -62,18 +62,28 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
         <p></p>
 
         <div class="akeeba-form-group--actions">
-            <button type="submit" class="akeeba-btn--big">
-                <?php _e('Start replacing', 'akeebabackup') ?>
-            </button>
+			<button type="submit" class="akeeba-btn--big">
+				<span class="akion-play"></span>
+		        <?php _e('Start replacing', 'akeebabackup') ?>
+			</button>
 
-            <a href="<?php echo $this->cancelURL ?>" class="akeeba-btn--red">
-                <?php _e('Cancel', 'akeebabackup') ?>
-            </a>
+			<button type="button" onclick="akeeba.replace.showOptions('akeebareplace-replace-advanced'); return false;" class="akeeba-btn--dark">
+				<span class="akion-ios-gear"></span>
+		        <?php _e('Show / hide advanced options', 'akeebabackup') ?>
+			</button>
 
-            <button type="button" onclick="akeeba.replace.showOptions('akeebareplace-replace-advanced'); return false;" class="akeeba-btn--dark">
-                <?php _e('Show / hide advanced options', 'akeebabackup') ?>
-            </button>
-        </div>
+			<a href="<?php echo $this->cancelURL ?>" class="akeeba-btn--orange">
+				<span class="akion-android-close"></span>
+		        <?php _e('Cancel', 'akeebabackup') ?>
+			</a>
+
+			<a href="<?php echo $this->resetURL ?>" class="akeeba-btn--red">
+				<span class="akion-android-refresh"></span>
+		        <?php _e('Reset', 'akeebabackup') ?>
+			</a>
+
+
+		</div>
     </div>
 
     <div id="akeebareplace-replace-options" class="akeeba-panel--information">

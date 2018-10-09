@@ -29,6 +29,13 @@ class Html extends AbstractHtml
 	public $cancelURL = '';
 
 	/**
+	 * The URL to reset the replacements
+	 *
+	 * @var  string
+	 */
+	public $resetURL = '';
+
+	/**
 	 * The URL to go to view the latest log file
 	 *
 	 * @var  string
@@ -78,6 +85,11 @@ class Html extends AbstractHtml
 		if (empty($this->cancelURL))
 		{
 			$this->cancelURL = admin_url('admin.php?page=akeebareplace');
+		}
+
+		if (empty($this->resetURL))
+		{
+			$this->resetURL = admin_url('admin.php?page=akeebareplace&view=Replace&reset=1');
 		}
 
 		$this->excludedColumns = $this->makeExcludedColumnsText();
