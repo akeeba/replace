@@ -108,4 +108,21 @@ class WordPressMySQL extends Mysql
 
 		$this->connect();
 	}
+
+	public function connect()
+	{
+		if ($this->connection)
+		{
+			return;
+		}
+
+		$this->connection = $this->getWordPressDBConnectionObject();
+
+		if ($this->connection)
+		{
+			return;
+		}
+
+		parent::connect();
+	}
 }
