@@ -35,7 +35,7 @@ $hasBackups = $this->configuration->getBackupSQLFile() != '';
 		<?php _e('Shall I continue?', 'akeebareplace') ?>
 	</p>
 	<p>
-		<button type="button" class="akeeba-btn--green--big">
+		<button type="button" class="akeeba-btn--green--big" id="akeebareplace-button-start">
 			<span class="akion-play"></span>
 			<?php _e('Continue', 'akeebareplace') ?>
 		</button>

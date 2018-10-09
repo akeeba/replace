@@ -16,7 +16,6 @@ if (typeof(akeeba) === "undefined")
 if (typeof akeeba.replace === "undefined")
 {
 	akeeba.replace = {
-		replacementAjaxURL: "",
 		logUrl            : "",
 		strings           : {
 			"lblLastResponse": "Last response from the server: %s seconds ago."
@@ -158,7 +157,6 @@ akeeba.replace.start = function ()
 	{
 	}
 
-	// TODO Hide the initial confirmation dialog
 	document.getElementById("akeebareplace-last-chance").style.display = "none";
 	// Show the replacement progress
 	document.getElementById("akeebareplace-progress-pane").style.display = "block";

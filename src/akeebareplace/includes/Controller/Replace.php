@@ -111,43 +111,32 @@ class Replace extends Controller
 	}
 
 	/**
-	 * Start a replacement job. Resets the replacement engine and triggers a step.
+	 * AJAX handler for starting / stepping a replacement operation
 	 */
-	public function start()
+	public function ajax()
 	{
 		if (!$this->csrfProtection('replace', true, 'get'))
 		{
 			throw new \RuntimeException(__('Access denied', 'akeebareplace'), 403);
 		}
 
+		$action = $this->input->post->getCmd('ajax', 'step');
+
 		/** @var \Akeeba\Replace\WordPress\Model\Replace $model */
 		$model  = $this->model;
 
-		// Create a new engine
-		/** @var Database $engine */
-		$engine = $model->makeEngine($model->getCachedConfiguration());
-		$model->setEngineCache($engine);
-
-		// Run the first engine step
-		$this->step();
-	}
-
-	/**
-	 * Process the next replacement step.
-	 */
-	public function step()
-	{
-		if (!$this->csrfProtection('replace', true, 'get'))
-		{
-			throw new \RuntimeException(__('Access denied', 'akeebareplace'), 403);
-		}
-
-		// Get the engine
-		/** @var \Akeeba\Replace\WordPress\Model\Replace $model */
-		$model  = $this->model;
+		// Load the saved engine
 		$engine = $model->getEngine();
 
-		// Prime the status with an error if we cannot find an engine
+		// If we are starting a new replacement we have to create a new engine instead
+		if ($action == 'start')
+		{
+			// Create a new engine
+			/** @var Database $engine */
+			$engine = $model->makeEngine($model->getCachedConfiguration());
+		}
+
+		// Prime the status with an error -- this is used if we cannot load a cached engine
 		$status = new PartStatus([
 			'Error' => 'Trying to step the replacement engine after it has finished processing replacements.'
 		]);

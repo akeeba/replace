@@ -116,6 +116,12 @@ class Html extends AbstractHtml
 	{
 		$this->layout = 'replace';
 
+		if (empty($this->actionURL))
+		{
+			$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=ajax');
+			$this->actionURL = wp_nonce_url($url, 'post_Replace_ajax');
+		}
+
 		if (empty($this->cancelURL))
 		{
 			$this->cancelURL = admin_url('admin.php?page=akeebareplace&view=Replace');
