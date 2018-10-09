@@ -14,6 +14,7 @@ use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Engine\Core\Helper\OutFileSetup;
 use Akeeba\Replace\Engine\Core\Part\Database;
+use Akeeba\Replace\Engine\PartInterface;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\Timer;
 use Akeeba\Replace\WordPress\MVC\Model\Model;
@@ -113,7 +114,7 @@ class Replace extends Model
 	{
 		// Get additional path definitions, used for setting up the file writers
 		$additional = [
-			'OUTPUT_PATH' => plugin_dir_path(AKEEBA_REPLACE_SELF) . 'output',
+			'[OUTPUT_PATH]' => plugin_dir_path(AKEEBA_REPLACE_SELF) . 'output',
 		];
 
 		// Set up and return a new core engine
@@ -126,6 +127,64 @@ class Replace extends Model
 		$memoryInfo   = new MemoryInfo();
 
 		return new Database($timer, $db, $logger, $outputWriter, $backupWriter, $configuration, $memoryInfo);
+	}
+
+	/**
+	 * Save the engine state to WordPress' options
+	 *
+	 * @param   PartInterface|null  $engine
+	 */
+	public function setEngineCache($engine)
+	{
+		// Get the saved engine cache
+		$current = $this->getEngine(true);
+
+		// Add the current engine state
+		$user = wp_get_current_user();
+		$current[$user->ID] = $engine;
+
+		// Maybe we were trying to delete the engine cache?
+		if (is_null($engine))
+		{
+			unset($current[$user->ID]);
+		}
+
+		// Save the option to the database
+		update_option('akeebareplace_engine_cache', $current, false);
+	}
+
+	/**
+	 * Retrieve the engine from the cache
+	 *
+	 * @param   bool  $allEntries  Should I retrieve all cached values? False to only retrieve the currently configured engine.
+	 *
+	 * @return  array|PartInterface|null
+	 */
+	public function getEngine($allEntries = false)
+	{
+		$current = get_option('akeebareplace_engine_cache');
+
+		if ($current === false)
+		{
+			// The option had not been registered yet.
+			add_option('akeebareplace_engine_cache', [], false, false);
+
+			$current = [];
+		}
+
+		if ($allEntries)
+		{
+			return $current;
+		}
+
+		$user = wp_get_current_user();
+
+		if (!array_key_exists($user->ID, $current))
+		{
+			return null;
+		}
+
+		return $current[$user->ID];
 	}
 
 	/**

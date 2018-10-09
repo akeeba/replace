@@ -10,6 +10,8 @@
 namespace Akeeba\Replace\WordPress\Controller;
 
 use Akeeba\Replace\Engine\Core\Configuration;
+use Akeeba\Replace\Engine\Core\Part\Database;
+use Akeeba\Replace\Engine\PartStatus;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\WordPress\Model\Replace as ReplaceModel;
 use Akeeba\Replace\WordPress\MVC\Controller\Controller;
@@ -106,6 +108,71 @@ class Replace extends Controller
 		$view->configuration = $model->getCachedConfiguration();
 
 		$this->display();
+	}
+
+	/**
+	 * Start a replacement job. Resets the replacement engine and triggers a step.
+	 */
+	public function start()
+	{
+		if (!$this->csrfProtection('replace', true, 'get'))
+		{
+			throw new \RuntimeException(__('Access denied', 'akeebareplace'), 403);
+		}
+
+		/** @var \Akeeba\Replace\WordPress\Model\Replace $model */
+		$model  = $this->model;
+
+		// Create a new engine
+		/** @var Database $engine */
+		$engine = $model->makeEngine($model->getCachedConfiguration());
+		$model->setEngineCache($engine);
+
+		// Run the first engine step
+		$this->step();
+	}
+
+	/**
+	 * Process the next replacement step.
+	 */
+	public function step()
+	{
+		if (!$this->csrfProtection('replace', true, 'get'))
+		{
+			throw new \RuntimeException(__('Access denied', 'akeebareplace'), 403);
+		}
+
+		// Get the engine
+		/** @var \Akeeba\Replace\WordPress\Model\Replace $model */
+		$model  = $this->model;
+		$engine = $model->getEngine();
+
+		// Prime the status with an error if we cannot find an engine
+		$status = new PartStatus([
+			'Error' => 'Trying to step the replacement engine after it has finished processing replacements.'
+		]);
+
+		// Run a single step if we really do have an engine
+		if (!is_null($engine))
+		{
+			$status = $engine->tick();
+		}
+
+		// If we are done (or died with an error) we set the engine to null; this will unset it from the cache.
+		if ($status->isDone() || ($status->getError() !== ''))
+		{
+			$engine = null;
+		}
+
+		// Cache the new engine status
+		$model->setEngineCache($engine);
+
+		// Send the output to the browser
+		@ob_end_clean();
+
+		echo '###' . json_encode($status->toArray()) . '###';
+
+		exit();
 	}
 
 	/**

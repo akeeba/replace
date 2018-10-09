@@ -45,4 +45,4 @@ $dbInstaller->uninstall();
 /**
  * Remove options
  */
-// delete_option('akeebareplace_SOMETHING');
+delete_option('akeebareplace_engine_cache');
