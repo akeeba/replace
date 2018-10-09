@@ -115,7 +115,7 @@ class Replace extends Controller
 	 */
 	public function ajax()
 	{
-		if (!$this->csrfProtection('replace', true, 'get'))
+		if (!$this->csrfProtection('ajax', true, 'get'))
 		{
 			throw new \RuntimeException(__('Access denied', 'akeebareplace'), 403);
 		}
@@ -131,6 +131,8 @@ class Replace extends Controller
 		// If we are starting a new replacement we have to create a new engine instead
 		if ($action == 'start')
 		{
+			// TODO Record this replacement attempt in the database table
+
 			// Create a new engine
 			/** @var Database $engine */
 			$engine = $model->makeEngine($model->getCachedConfiguration());

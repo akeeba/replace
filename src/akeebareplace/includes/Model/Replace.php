@@ -114,7 +114,7 @@ class Replace extends Model
 	{
 		// Get additional path definitions, used for setting up the file writers
 		$additional = [
-			'[OUTPUT_PATH]' => plugin_dir_path(AKEEBA_REPLACE_SELF) . 'output',
+			'[OUTPUT_PATH]' => plugin_dir_path(AKEEBA_REPLACE_SELF) . 'output/',
 		];
 
 		// Set up and return a new core engine

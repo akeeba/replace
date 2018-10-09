@@ -1,8 +1,5 @@
 GUI
 ================================================================================
-Replace
-	JS to run replacements. Will reuse and adapt code from Akeeba Backup
-
 Main page (Control Panel)
 	Show grid of replacement jobs
 		View log

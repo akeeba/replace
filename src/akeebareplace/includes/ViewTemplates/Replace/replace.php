@@ -17,7 +17,7 @@ wp_enqueue_script('akeebareplace-replace', plugins_url('/js/replace.js', AKEEBA_
 $actionURL       = addcslashes(html_entity_decode($this->actionURL), "\\'");
 $logURL          = addcslashes($this->logURL, "\\'");
 $lblLastResponse = __('Last response from the server: %s seconds ago.', 'akeebareplace');
-$js = <<< JS
+$js              = <<< JS
 akeeba.System.documentReady(function() {
 	function akeebaReplaceSetupReplacements()
 	{
@@ -28,7 +28,7 @@ akeeba.System.documentReady(function() {
 			return;
 		}
 		
-		akeeba.System.AjaxURL = '$actionURL';
+		akeeba.System.params.AjaxURL = '$actionURL';
 		akeeba.replace.logUrl = '$logURL';
 
 		akeeba.replace.strings['lblLastResponse'] = '$lblLastResponse';
