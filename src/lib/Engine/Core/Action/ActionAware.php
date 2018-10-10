@@ -53,7 +53,7 @@ trait ActionAware
 				$logger->debug("Backup SQL: " . $query);
 			}
 
-			$backupWriter->writeLine($query);
+			$backupWriter->writeLine(rtrim($query, ';') . ';');
 		}, $response->getRestorationQueries());
 	}
 
@@ -93,7 +93,7 @@ trait ActionAware
 				$logger->debug("Output SQL: " . $query);
 			}
 
-			$outputWriter->writeLine($query);
+			$outputWriter->writeLine(rtrim($query, ';') . ';');
 
 			if (!$liveMode)
 			{

@@ -63,10 +63,10 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 				new SQL([], []), ''
 			],
 			'One query' => [
-				new SQL([], ['Foo']), 'Foo' . PHP_EOL
+				new SQL([], ['Foo']), 'Foo;' . PHP_EOL
 			],
 			'Two queries' => [
-				new SQL([], ['Foo', 'Bar']), "Foo" . PHP_EOL . "Bar" . PHP_EOL
+				new SQL([], ['Foo', 'Bar']), "Foo;" . PHP_EOL . "Bar;" . PHP_EOL
 			],
 		];
 	}
@@ -151,7 +151,7 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 				// $liveMode, $failOnError, $dbSetToFail
 				false, true, true,
 				// $expectedContent, $expectedException
-				'Foo' . PHP_EOL, null
+				'Foo;' . PHP_EOL, null
 			],
 			// SQL $response, $liveMode, $failOnError, $dbSetToFail, $expectedContent, $expectedWarning, $expectedError
 			'Failing query, expect error' => [
@@ -160,7 +160,7 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 				// $liveMode, $failOnError, $dbSetToFail
 				true, true, true,
 				// $expectedContent, $expectedException
-				'Foo' . PHP_EOL, new \RuntimeException('Database error #0 with message “Simulated query execution failure” when trying to run SQL command Foo')
+				'Foo;' . PHP_EOL, new \RuntimeException('Database error #0 with message “Simulated query execution failure” when trying to run SQL command Foo')
 			],
 			// SQL $response, $liveMode, $failOnError, $dbSetToFail, $expectedContent, $expectedWarning, $expectedError
 			'Failing query, expect warning' => [
@@ -169,7 +169,7 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 				// $liveMode, $failOnError, $dbSetToFail
 				true, false, true,
 				// $expectedContent, $expectedException
-				'Foo' . PHP_EOL, new WarningException('Database error #0 with message “Simulated query execution failure” when trying to run SQL command Foo')
+				'Foo;' . PHP_EOL, new WarningException('Database error #0 with message “Simulated query execution failure” when trying to run SQL command Foo')
 			],
 			// SQL $response, $liveMode, $failOnError, $dbSetToFail, $expectedContent, $expectedWarning, $expectedError
 			'Working query' => [
@@ -178,7 +178,7 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 				// $liveMode, $failOnError, $dbSetToFail
 				true, false, false,
 				// $expectedContent, $expectedException
-				'Foo' . PHP_EOL, null
+				'Foo;' . PHP_EOL, null
 			],
 			// SQL $response, $liveMode, $failOnError, $dbSetToFail, $expectedContent, $expectedWarning, $expectedError
 			'Working queries, two of them' => [
@@ -187,7 +187,7 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 				// $liveMode, $failOnError, $dbSetToFail
 				true, false, false,
 				// $expectedContent, $expectedException
-				'Foo' . PHP_EOL . 'Bar' . PHP_EOL, null
+				'Foo;' . PHP_EOL . 'Bar;' . PHP_EOL, null
 			],
 		];
 	}
