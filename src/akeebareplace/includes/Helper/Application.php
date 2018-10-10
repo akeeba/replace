@@ -102,7 +102,15 @@ class Application
 		$dbInstaller = new CustomTables();
 		$dbInstaller->install();
 
-		// TODO Install default options, see update_option()
+		/**
+		 * Install the plugin options and their default values
+		 */
+		// Saves the engine progress in the database
+		add_option('akeebareplace_engine_cache', [], false, false);
+		// Min / max / bias options for the engine
+		add_option('akeebareplace_min_execution', 1);
+		add_option('akeebareplace_max_execution', 10);
+		add_option('akeebareplace_runtime_bias', 75);
 	}
 
 	/**

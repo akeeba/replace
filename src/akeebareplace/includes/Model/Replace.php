@@ -117,9 +117,13 @@ class Replace extends Model
 			'[OUTPUT_PATH]' => plugin_dir_path(AKEEBA_REPLACE_SELF) . 'output/',
 		];
 
+		// Load options
+		$maxExec     = get_option('akeebareplace_max_execution', 10);
+		$runtimeBias = get_option('akeebareplace_runtime_bias', 75);
+
 		// Set up and return a new core engine
 		$helper       = new OutFileSetup();
-		$timer        = new Timer();
+		$timer        = new Timer($maxExec, $runtimeBias);
 		$db           = $this->getDatabaseDriver();
 		$logger       = $helper->makeLogger($configuration, true, $additional);
 		$outputWriter = $helper->makeOutputWriter($configuration, true, $additional);

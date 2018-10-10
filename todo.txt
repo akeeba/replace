@@ -1,7 +1,6 @@
 Bugs
 ================================================================================
 Controller: Record this replacement attempt in the database table
-Controller: Enforce minimum execution time
 We should be excluding our own options (do not try to replace the replacement setup of the replacement engine!)
 
 GUI

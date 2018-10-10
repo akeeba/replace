@@ -37,12 +37,15 @@ Akeeba\Replace\Autoloader\Autoloader::getInstance()->addMap('Akeeba\\Replace\\Wo
 load_plugin_textdomain('akeebareplace', false, 'language');
 
 /**
- * Remove tables
+ * Remove database tables
  */
 $dbInstaller = new \Akeeba\Replace\WordPress\Helper\CustomTables();
 $dbInstaller->uninstall();
 
 /**
- * Remove options
+ * Remove WordPress options
  */
 delete_option('akeebareplace_engine_cache');
+delete_option('akeebareplace_min_execution');
+delete_option('akeebareplace_max_execution');
+delete_option('akeebareplace_runtime_bias');

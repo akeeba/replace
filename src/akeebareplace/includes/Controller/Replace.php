@@ -137,6 +137,7 @@ class Replace extends Controller
 			// Create a new engine
 			/** @var Database $engine */
 			$engine = $model->makeEngine($model->getCachedConfiguration());
+			$engine->getLogger()->debug("Starting a new replacement job");
 		}
 
 		// Prime the status with an error -- this is used if we cannot load a cached engine
@@ -144,16 +145,53 @@ class Replace extends Controller
 			'Error' => 'Trying to step the replacement engine after it has finished processing replacements.'
 		]);
 
-		// Run a single step if we really do have an engine
+		$warnings = [];
+		$error    = null;
+
+		// Run a few steps if we really do have an engine
 		if (!is_null($engine))
 		{
-			$status = $engine->tick();
+			$timer = $engine->getTimer();
+
+			// Run steps while we have time left
+			while ($timer->getTimeLeft())
+			{
+				// Run a single step
+				$status = $engine->tick();
+
+				// Merge any warnings
+				$newWarnings = $status->getWarnings();
+				$warnings    = array_merge($warnings, $newWarnings);
+
+				// Are we done already?
+				if ($status->isDone())
+				{
+					break;
+				}
+
+				// Check for an error
+				$error = $status->getError();
+
+				if (!is_object($error) || !($error instanceof ErrorException))
+				{
+					$error = null;
+
+					continue;
+				}
+
+				// We hit an error
+				break;
+			}
 		}
 
-		$statusArray = $status->toArray();
+		// Construct a new status array with the merged warnings and the carried over error (if any)
+		$configArray             = $status->toArray();
+		$configArray['Warnings'] = $warnings;
+		$configArray['Error']    = $error;
+		$status                  = new PartStatus($configArray);
 
 		// If we are done (or died with an error) we set the engine to null; this will unset it from the cache.
-		if ($status->isDone() || !empty($statusArray['Error']))
+		if ($status->isDone() || !is_null($error))
 		{
 			$engine = null;
 		}
@@ -161,12 +199,23 @@ class Replace extends Controller
 		// Cache the new engine status
 		$model->setEngineCache($engine);
 
-		// TODO Enforce minimum execution time
+		// Enforce minimum execution time but only if we haven't finished already (done or error)
+		if (!is_null($engine))
+		{
+			$minExec     = get_option('akeebareplace_min_execution', 1);
+			$runningTime = $timer->getRunningTime();
+
+			if ($runningTime < $minExec)
+			{
+				$sleepForSeconds = $minExec - $runningTime;
+				usleep($sleepForSeconds * 1000000);
+			}
+		}
 
 		// Send the output to the browser
 		@ob_end_clean();
 
-		echo '###' . json_encode($statusArray) . '###';
+		echo '###' . json_encode($status->toArray()) . '###';
 
 		exit();
 	}
