@@ -48,6 +48,7 @@
                 <file>src/lib/Engine/Core/Action/Database/AbstractAction.php</file>
                 <file>src/lib/Engine/Core/Action/Table/AbstractAction.php</file>
                 <file>src/lib/Engine/Core/Filter/Table/AbstractFilter.php</file>
+                <file>src/lib/Engine/Core/Filter/Row/AbstractFilter.php</file>
                 <file>src/lib/Engine/Core/Response/SQL.php</file>
                 <file>src/lib/Logger/NullLogger.php</file>
                 <file>src/lib/Writer/NullWriter.php</file>

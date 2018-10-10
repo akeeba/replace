@@ -10,4 +10,4 @@
 /** @var \Akeeba\Replace\WordPress\View\ControlPanel\Html $this */
 ?>
 
-<?php echo $this->getRenderedTemplate(null, 'newrun'); ?>
+<?php echo $this->getRenderedTemplate('Common', 'header'); ?>
