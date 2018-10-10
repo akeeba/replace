@@ -175,10 +175,10 @@ class TableTest extends \PHPUnit_Extensions_Database_TestCase
 				5, 1000,
 				// $expectedOutSQL, $expectedBackupSQL
 				[
-					'UPDATE `tst_table1` SET `title` = \'My test\' WHERE (`id` = \'3\')'
+					'UPDATE `tst_table1` SET `title` = \'My test\' WHERE (`id` = \'3\');'
 				],
 				[
-					'UPDATE `tst_table1` SET `title` = \'My BORG\' WHERE (`id` = \'3\')'
+					'UPDATE `tst_table1` SET `title` = \'My BORG\' WHERE (`id` = \'3\');'
 				]
 			],
 			'Plain text replacement, composite key' => [
@@ -192,12 +192,12 @@ class TableTest extends \PHPUnit_Extensions_Database_TestCase
 				5, 1000,
 				// $expectedOutSQL, $expectedBackupSQL
 				array(
-					'UPDATE `tst_table2` SET `foo` = \'test bar\' WHERE (`foo` = \'BORG bar\') AND (`title` = \'Baz\')',
-					'UPDATE `tst_table2` SET `title` = \'test\' WHERE (`foo` = \'Forg\') AND (`title` = \'BORG\')',
+					'UPDATE `tst_table2` SET `foo` = \'test bar\' WHERE (`foo` = \'BORG bar\') AND (`title` = \'Baz\');',
+					'UPDATE `tst_table2` SET `title` = \'test\' WHERE (`foo` = \'Forg\') AND (`title` = \'BORG\');',
 				),
 				array(
-					'UPDATE `tst_table2` SET `foo` = \'BORG bar\' WHERE (`foo` = \'test bar\') AND (`title` = \'Baz\')',
-					'UPDATE `tst_table2` SET `title` = \'BORG\' WHERE (`foo` = \'Forg\') AND (`title` = \'test\')',
+					'UPDATE `tst_table2` SET `foo` = \'BORG bar\' WHERE (`foo` = \'test bar\') AND (`title` = \'Baz\');',
+					'UPDATE `tst_table2` SET `title` = \'BORG\' WHERE (`foo` = \'Forg\') AND (`title` = \'test\');',
 				),
 			],
 			'Plain text replacement, string key, serialized data' => [
@@ -211,14 +211,14 @@ class TableTest extends \PHPUnit_Extensions_Database_TestCase
 				5, 1000,
 				// $expectedOutSQL, $expectedBackupSQL
 				array (
-					'UPDATE `tst_table3` SET `key` = \'stdClass with “Just testing”\', `serialized` = \'O:8:\\"stdClass\\":4:{s:3:\\"foo\\";s:0:\\"\\";s:3:\\"bar\\";s:12:\\"Just testing\\";s:3:\\"bat\\";s:4:\\"dorg\\";s:12:\\"Just testing\\";s:4:\\"morg\\";}\' WHERE (`key` = \'stdClass with “Just BORGing”\')',
-					'UPDATE `tst_table3` SET `key` = \'SomeRandomClass with “Just testing”\', `serialized` = \'O:15:\\"SomeRandomClass\\":1:{s:20:\\" SomeRandomClass foo\\";s:12:\\"Just testing\\";}\' WHERE (`key` = \'SomeRandomClass with “Just BORGing”\')',
-					'UPDATE `tst_table3` SET `key` = \'array with “Just testing”\', `serialized` = \'a:4:{s:3:\\"foo\\";s:0:\\"\\";s:3:\\"bar\\";s:12:\\"Just testing\\";s:3:\\"bat\\";s:4:\\"dorg\\";s:12:\\"Just testing\\";s:4:\\"morg\\";}\' WHERE (`key` = \'array with “Just BORGing”\')',
+					'UPDATE `tst_table3` SET `key` = \'stdClass with “Just testing”\', `serialized` = \'O:8:\\"stdClass\\":4:{s:3:\\"foo\\";s:0:\\"\\";s:3:\\"bar\\";s:12:\\"Just testing\\";s:3:\\"bat\\";s:4:\\"dorg\\";s:12:\\"Just testing\\";s:4:\\"morg\\";}\' WHERE (`key` = \'stdClass with “Just BORGing”\');',
+					'UPDATE `tst_table3` SET `key` = \'SomeRandomClass with “Just testing”\', `serialized` = \'O:15:\\"SomeRandomClass\\":1:{s:20:\\" SomeRandomClass foo\\";s:12:\\"Just testing\\";}\' WHERE (`key` = \'SomeRandomClass with “Just BORGing”\');',
+					'UPDATE `tst_table3` SET `key` = \'array with “Just testing”\', `serialized` = \'a:4:{s:3:\\"foo\\";s:0:\\"\\";s:3:\\"bar\\";s:12:\\"Just testing\\";s:3:\\"bat\\";s:4:\\"dorg\\";s:12:\\"Just testing\\";s:4:\\"morg\\";}\' WHERE (`key` = \'array with “Just BORGing”\');',
 				),
 				array (
-					'UPDATE `tst_table3` SET `key` = \'stdClass with “Just BORGing”\', `serialized` = \'O:8:\\"stdClass\\":4:{s:3:\\"foo\\";s:0:\\"\\";s:3:\\"bar\\";s:12:\\"Just BORGing\\";s:3:\\"bat\\";s:4:\\"dorg\\";s:12:\\"Just BORGing\\";s:4:\\"morg\\";}\' WHERE (`key` = \'stdClass with “Just testing”\')',
-					'UPDATE `tst_table3` SET `key` = \'SomeRandomClass with “Just BORGing”\', `serialized` = \'O:15:\\"SomeRandomClass\\":1:{s:20:\\" SomeRandomClass foo\\";s:12:\\"Just BORGing\\";}\' WHERE (`key` = \'SomeRandomClass with “Just testing”\')',
-					'UPDATE `tst_table3` SET `key` = \'array with “Just BORGing”\', `serialized` = \'a:4:{s:3:\\"foo\\";s:0:\\"\\";s:3:\\"bar\\";s:12:\\"Just BORGing\\";s:3:\\"bat\\";s:4:\\"dorg\\";s:12:\\"Just BORGing\\";s:4:\\"morg\\";}\' WHERE (`key` = \'array with “Just testing”\')',
+					'UPDATE `tst_table3` SET `key` = \'stdClass with “Just BORGing”\', `serialized` = \'O:8:\\"stdClass\\":4:{s:3:\\"foo\\";s:0:\\"\\";s:3:\\"bar\\";s:12:\\"Just BORGing\\";s:3:\\"bat\\";s:4:\\"dorg\\";s:12:\\"Just BORGing\\";s:4:\\"morg\\";}\' WHERE (`key` = \'stdClass with “Just testing”\');',
+					'UPDATE `tst_table3` SET `key` = \'SomeRandomClass with “Just BORGing”\', `serialized` = \'O:15:\\"SomeRandomClass\\":1:{s:20:\\" SomeRandomClass foo\\";s:12:\\"Just BORGing\\";}\' WHERE (`key` = \'SomeRandomClass with “Just testing”\');',
+					'UPDATE `tst_table3` SET `key` = \'array with “Just BORGing”\', `serialized` = \'a:4:{s:3:\\"foo\\";s:0:\\"\\";s:3:\\"bar\\";s:12:\\"Just BORGing\\";s:3:\\"bat\\";s:4:\\"dorg\\";s:12:\\"Just BORGing\\";s:4:\\"morg\\";}\' WHERE (`key` = \'array with “Just testing”\');',
 				),
 			],
 
@@ -247,12 +247,12 @@ class TableTest extends \PHPUnit_Extensions_Database_TestCase
 				5, 1000,
 				// $expectedOutSQL, $expectedBackupSQL
 				array (
-					'UPDATE `tst_partial` SET `something` = \'Just testing\' WHERE (`id` = \'7\')',
-					'UPDATE `tst_partial` SET `something` = \'Just testing\' WHERE (`id` = \'13\')',
+					'UPDATE `tst_partial` SET `something` = \'Just testing\' WHERE (`id` = \'7\');',
+					'UPDATE `tst_partial` SET `something` = \'Just testing\' WHERE (`id` = \'13\');',
 				),
 				array (
-					'UPDATE `tst_partial` SET `something` = \'Just BORGing\' WHERE (`id` = \'7\')',
-					'UPDATE `tst_partial` SET `something` = \'Just BORGing\' WHERE (`id` = \'13\')',
+					'UPDATE `tst_partial` SET `something` = \'Just BORGing\' WHERE (`id` = \'7\');',
+					'UPDATE `tst_partial` SET `something` = \'Just BORGing\' WHERE (`id` = \'13\');',
 				),
 			],
 			'SPECIAL: Large table, tight memory conditions' => [
@@ -266,14 +266,14 @@ class TableTest extends \PHPUnit_Extensions_Database_TestCase
 				16, 100,
 				// $expectedOutSQL, $expectedBackupSQL
 				array(
-					'UPDATE `tst_large` SET `something` = \'Recusandae dolor test magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\')',
-					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint test ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est test eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\')',
-					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A test consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\')',
+					'UPDATE `tst_large` SET `something` = \'Recusandae dolor test magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\');',
+					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint test ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est test eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\');',
+					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A test consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\');',
 				),
 				array(
-					'UPDATE `tst_large` SET `something` = \'Recusandae dolor BORG magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\')',
-					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint BORG ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est BORG eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\')',
-					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A BORG consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\')',
+					'UPDATE `tst_large` SET `something` = \'Recusandae dolor BORG magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\');',
+					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint BORG ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est BORG eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\');',
+					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A BORG consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\');',
 				),
 			],
 			'SPECIAL: Large table, medium memory' => [
@@ -287,14 +287,14 @@ class TableTest extends \PHPUnit_Extensions_Database_TestCase
 				7, 350,
 				// $expectedOutSQL, $expectedBackupSQL
 				array(
-					'UPDATE `tst_large` SET `something` = \'Recusandae dolor test magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\')',
-					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint test ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est test eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\')',
-					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A test consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\')',
+					'UPDATE `tst_large` SET `something` = \'Recusandae dolor test magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\');',
+					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint test ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est test eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\');',
+					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A test consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\');',
 				),
 				array(
-					'UPDATE `tst_large` SET `something` = \'Recusandae dolor BORG magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\')',
-					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint BORG ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est BORG eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\')',
-					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A BORG consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\')',
+					'UPDATE `tst_large` SET `something` = \'Recusandae dolor BORG magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\');',
+					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint BORG ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est BORG eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\');',
+					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A BORG consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\');',
 				),
 			],
 			'SPECIAL: Large table, ample memory' => [
@@ -308,14 +308,14 @@ class TableTest extends \PHPUnit_Extensions_Database_TestCase
 				5, 1000,
 				// $expectedOutSQL, $expectedBackupSQL
 				array(
-					'UPDATE `tst_large` SET `something` = \'Recusandae dolor test magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\')',
-					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint test ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est test eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\')',
-					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A test consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\')',
+					'UPDATE `tst_large` SET `something` = \'Recusandae dolor test magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\');',
+					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint test ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est test eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\');',
+					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A test consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\');',
 				),
 				array(
-					'UPDATE `tst_large` SET `something` = \'Recusandae dolor BORG magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\')',
-					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint BORG ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est BORG eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\')',
-					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A BORG consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\')',
+					'UPDATE `tst_large` SET `something` = \'Recusandae dolor BORG magnam aut. Mollitia quaerat vitae temporibus. Omnis qui quae rem molestiae aut\\n                similique id.\\n            \' WHERE (`id` = \'4\');',
+					'UPDATE `tst_large` SET `something` = \'Adipisci id odio corrupti sit sint BORG ipsum. Cupiditate quaerat temporibus sed quia et. Deserunt labore\\n                nesciunt nostrum autem rerum. Est BORG eum quisquam magnam ratione doloribus.\\n            \' WHERE (`id` = \'160\');',
+					'UPDATE `tst_large` SET `something` = \'Hic natus illum magnam nulla ullam unde voluptas. Labore odit id magni sint qui. Et ut sunt nemo\\n                voluptas occaecati. A BORG consequatur est sed eum. Expedita quidem atque natus non.\\n            \' WHERE (`id` = \'250\');',
 				),
 			],
 		];

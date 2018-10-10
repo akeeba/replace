@@ -25,6 +25,7 @@ use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Engine\Core\ConfigurationAware;
 use Akeeba\Replace\Engine\Core\ConfigurationAwareInterface;
 use Akeeba\Replace\Engine\Core\Filter\Column\FilterInterface;
+use Akeeba\Replace\Engine\Core\Filter\Row\FilterInterface as RowFilterInterface;
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Engine\Core\OutputWriterAware;
 use Akeeba\Replace\Engine\Core\OutputWriterAwareInterface;
@@ -56,7 +57,7 @@ class Table extends AbstractPart implements
 	use ActionAware;
 
 	/**
-	 * Hard-coded list of table filter classes. This is for my convenience.
+	 * Hard-coded list of table column filter classes. This is for my convenience.
 	 *
 	 * @var  array
 	 */
@@ -66,12 +67,29 @@ class Table extends AbstractPart implements
 	];
 
 	/**
+	 * Hard-coded list of table row filter classes. This is for my convenience.
+	 *
+	 * @var  RowFilterInterface[]
+	 */
+	protected $rowFilters = [
+		'Akeeba\\Replace\\Engine\\Core\\Filter\\Row\\WordPressOptions',
+	];
+
+	/**
+	 * Cache for the row filter object instances. Saves a ton of time since PHP doesn't have to create and destroy
+	 * myriads of objects on each page load.
+	 *
+	 * @var  array
+	 */
+	protected $rowFilterInstances = [];
+
+	/**
 	 * Hard-coded list of per-table action classes. This is for my convenience.
 	 *
 	 * @var  array
 	 */
 	protected $perTableActions = [
-		'Akeeba\\Replace\\Engine\\Core\\Action\\Table\\Collation'
+		'Akeeba\\Replace\\Engine\\Core\\Action\\Table\\Collation',
 	];
 
 	/**
@@ -334,6 +352,43 @@ class Table extends AbstractPart implements
 
 	}
 
+	protected function applyRowFilters($tableName, array $row, array $filters)
+	{
+		if (empty($this->rowFilterInstances))
+		{
+			foreach ($filters as $class)
+			{
+				if (!class_exists($class))
+				{
+					$this->addWarningMessage(sprintf("Row filter class “%s” not found. Is your installation broken?", $class));
+
+					continue;
+				}
+
+				if (!in_array('Akeeba\\Replace\\Engine\\Core\\Filter\\Row\\FilterInterface', class_implements($class)))
+				{
+					$this->addWarningMessage(sprintf("Filter class “%s” is not a valid row filter. Is your installation broken?", $class));
+
+					continue;
+				}
+
+				/** @var FilterInterface $o */
+				$this->rowFilterInstances[$class] = new $class($this->getLogger(), $this->getDbo(), $this->getConfig());
+			}
+		}
+
+		/** @var RowFilterInterface $filter */
+		foreach ($this->rowFilterInstances as $filter)
+		{
+			if (!$filter->filter($tableName, $row))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	/**
 	 * Returns the optimum batch size for a table. This depends on the average row size of the table and the available
 	 * PHP memory. If we have plenty of memory (or no limit) we are going to use the default batch size. The returned
@@ -553,6 +608,27 @@ class Table extends AbstractPart implements
 	protected function processRow($tableName, array $row, array $replaceableColumns, array $pkColumns,
 	                              array $replacements, $isRegularExpressions, Driver $db)
 	{
+		// Apply row filtering
+		if (!$this->applyRowFilters($tableName, $row, $this->rowFilters))
+		{
+			// Log the primary key identification of the filtered row
+			$pkSig = '';
+
+			foreach ($pkColumns as $c)
+			{
+				$v = addcslashes($row[$c], "\\'");
+				$pkSig = "$c = '$v' ,";
+			}
+
+			// Log the filtered row
+			$this->getLogger()->debug(sprintf('Skipping row [%s] of table `%s`', substr($pkSig, 0, -2), $tableName));
+
+			// Return an empty response, skipping everything else
+			$response = new SQL([], []);
+
+			return $response;
+		}
+
 		$newRow  = array_merge($row);
 		$changed = false;
 
