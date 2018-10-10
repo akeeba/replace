@@ -59,15 +59,23 @@ abstract class DataModel extends Model implements DataModelInterface
 	 */
 	public static function getInstance($name)
 	{
-		$model = Model::getInstance($name);
+		$className = "Akeeba\\Replace\\WordPress\\Model\\" . ucfirst($name);
 
-		if ($model instanceof DataModelInterface)
+		if (!class_exists($className))
 		{
-			/** @var DataModelInterface $model */
-			return $model;
+			throw new \InvalidArgumentException(sprintf("I cannot find model %s (class %s does not exist or cannot be loaded)", $name, $className));
 		}
 
-		throw new \InvalidArgumentException(sprintf("The Model $name does not implement the DataModelInterface", $name));
+		$interfaces = class_implements($className);
+
+		if (!in_array('Akeeba\Replace\WordPress\MVC\Model\DataModelInterface', $interfaces))
+		{
+			throw new \InvalidArgumentException(sprintf("The Model $name does not implement the DataModelInterface", $name));
+		}
+
+		global $wpdb;
+
+		return new $className($wpdb);
 	}
 
 	/**
