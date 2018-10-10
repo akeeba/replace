@@ -14,7 +14,9 @@ use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Engine\Core\Helper\MemoryInfo;
 use Akeeba\Replace\Engine\Core\Helper\OutFileSetup;
 use Akeeba\Replace\Engine\Core\Part\Database;
+use Akeeba\Replace\Engine\ErrorHandling\ErrorException;
 use Akeeba\Replace\Engine\PartInterface;
+use Akeeba\Replace\Engine\PartStatus;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\Timer;
 use Akeeba\Replace\WordPress\MVC\Model\Model;
@@ -131,6 +133,116 @@ class Replace extends Model
 		$memoryInfo   = new MemoryInfo();
 
 		return new Database($timer, $db, $logger, $outputWriter, $backupWriter, $configuration, $memoryInfo);
+	}
+
+	public function stepEngine($startNew = false)
+	{
+		// Load the saved engine
+		/** @var Database $engine */
+		$engine = $this->getEngine();
+
+		// If we are starting a new replacement we have to create a new engine instead
+		if ($startNew)
+		{
+			// TODO Record this replacement attempt in the database table
+
+			// Create a new engine
+			$engine = $this->makeEngine($this->getCachedConfiguration());
+			$engine->getLogger()->debug("===== Starting a new replacement job =====");
+		}
+		else
+		{
+			$engine->getLogger()->debug("===== Continuing the replacement job (new page load) =====");
+		}
+
+		// Prime the status with an error -- this is used if we cannot load a cached engine
+		$status = new PartStatus([
+			'Error' => 'Trying to step the replacement engine after it has finished processing replacements.'
+		]);
+
+		$warnings = [];
+		$error    = null;
+
+		// Run a few steps if we really do have an engine
+		if (!is_null($engine))
+		{
+			$timer = $engine->getTimer();
+
+			// Run steps while we have time left
+			while ($timer->getTimeLeft())
+			{
+				$engine->getLogger()->debug("----- Ticking the engine (running one more step) -----");
+
+				// Run a single step
+				$status = $engine->tick();
+
+				// Merge any warnings
+				$newWarnings = $status->getWarnings();
+				$warnings    = array_merge($warnings, $newWarnings);
+
+				// Are we done already?
+				if ($status->isDone())
+				{
+					break;
+				}
+
+				// Check for an error
+				$error = $status->getError();
+
+				if (!is_object($error) || !($error instanceof ErrorException))
+				{
+					$error = null;
+
+					continue;
+				}
+
+				// We hit an error
+				break;
+			}
+		}
+
+		// Construct a new status array with the merged warnings and the carried over error (if any)
+		$configArray             = $status->toArray();
+		$configArray['Warnings'] = $warnings;
+		$configArray['Error']    = $error;
+		$status                  = new PartStatus($configArray);
+
+		// If we are done (or died with an error) we set the engine to null; this will unset it from the cache.
+		if ($status->isDone() || !is_null($error))
+		{
+			// Log that we're all done
+			$reason = !is_null($error) ? 'error' : 'all done';
+			$engine->getLogger()->debug("===== Engine has stopped executing ($reason) =====");
+			$engine->getLogger()->debug("Cached engine state will be cleared and the results returned to the caller");
+
+			// Do not move this above the logging lines or you'll get a Fatal Error
+			$engine = null;
+		}
+		else
+		{
+			$engine->getLogger()->debug('===== Engine paused (will continue in the next page load) =====');
+		}
+
+		// Cache the new engine status
+		$this->setEngineCache($engine);
+
+		// Enforce minimum execution time but only if we haven't finished already (done or error)
+		if (!is_null($engine))
+		{
+			$minExec     = get_option('akeebareplace_min_execution', 1);
+			$runningTime = $timer->getRunningTime();
+
+			if ($runningTime < $minExec)
+			{
+				$sleepForSeconds = $minExec - $runningTime;
+				$engine->getLogger()->debug(sprintf("Applying minimum execution time (sleep for %0.3f seconds)", $sleepForSeconds));
+				usleep($sleepForSeconds * 1000000);
+			}
+
+			$engine->getLogger()->debug('Caching the engine and returning results to the caller');
+		}
+
+		return $status;
 	}
 
 	/**

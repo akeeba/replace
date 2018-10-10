@@ -10,9 +10,6 @@
 namespace Akeeba\Replace\WordPress\Controller;
 
 use Akeeba\Replace\Engine\Core\Configuration;
-use Akeeba\Replace\Engine\Core\Part\Database;
-use Akeeba\Replace\Engine\ErrorHandling\ErrorException;
-use Akeeba\Replace\Engine\PartStatus;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\WordPress\Model\Replace as ReplaceModel;
 use Akeeba\Replace\WordPress\MVC\Controller\Controller;
@@ -121,96 +118,10 @@ class Replace extends Controller
 			throw new \RuntimeException(__('Access denied', 'akeebareplace'), 403);
 		}
 
-		$action = $this->input->post->getCmd('ajax', 'step');
-
 		/** @var \Akeeba\Replace\WordPress\Model\Replace $model */
 		$model  = $this->model;
-
-		// Load the saved engine
-		$engine = $model->getEngine();
-
-		// If we are starting a new replacement we have to create a new engine instead
-		if ($action == 'start')
-		{
-			// TODO Record this replacement attempt in the database table
-
-			// Create a new engine
-			/** @var Database $engine */
-			$engine = $model->makeEngine($model->getCachedConfiguration());
-			$engine->getLogger()->debug("Starting a new replacement job");
-		}
-
-		// Prime the status with an error -- this is used if we cannot load a cached engine
-		$status = new PartStatus([
-			'Error' => 'Trying to step the replacement engine after it has finished processing replacements.'
-		]);
-
-		$warnings = [];
-		$error    = null;
-
-		// Run a few steps if we really do have an engine
-		if (!is_null($engine))
-		{
-			$timer = $engine->getTimer();
-
-			// Run steps while we have time left
-			while ($timer->getTimeLeft())
-			{
-				// Run a single step
-				$status = $engine->tick();
-
-				// Merge any warnings
-				$newWarnings = $status->getWarnings();
-				$warnings    = array_merge($warnings, $newWarnings);
-
-				// Are we done already?
-				if ($status->isDone())
-				{
-					break;
-				}
-
-				// Check for an error
-				$error = $status->getError();
-
-				if (!is_object($error) || !($error instanceof ErrorException))
-				{
-					$error = null;
-
-					continue;
-				}
-
-				// We hit an error
-				break;
-			}
-		}
-
-		// Construct a new status array with the merged warnings and the carried over error (if any)
-		$configArray             = $status->toArray();
-		$configArray['Warnings'] = $warnings;
-		$configArray['Error']    = $error;
-		$status                  = new PartStatus($configArray);
-
-		// If we are done (or died with an error) we set the engine to null; this will unset it from the cache.
-		if ($status->isDone() || !is_null($error))
-		{
-			$engine = null;
-		}
-
-		// Cache the new engine status
-		$model->setEngineCache($engine);
-
-		// Enforce minimum execution time but only if we haven't finished already (done or error)
-		if (!is_null($engine))
-		{
-			$minExec     = get_option('akeebareplace_min_execution', 1);
-			$runningTime = $timer->getRunningTime();
-
-			if ($runningTime < $minExec)
-			{
-				$sleepForSeconds = $minExec - $runningTime;
-				usleep($sleepForSeconds * 1000000);
-			}
-		}
+		$action = $this->input->post->getCmd('ajax', 'step');
+		$status = $model->stepEngine($action === 'start');
 
 		// Send the output to the browser
 		@ob_end_clean();
