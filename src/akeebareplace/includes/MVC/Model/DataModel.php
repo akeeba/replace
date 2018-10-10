@@ -264,8 +264,7 @@ abstract class DataModel extends Model implements DataModelInterface
 	 */
 	public function save(array $data)
 	{
-		$data = $this->filterDataColumns($data);
-
+		$data         = $this->filterDataColumns($data);
 		$rowsAffected = $this->db->replace($this->tableName, $data);
 
 		if ($rowsAffected === false)
@@ -309,6 +308,18 @@ abstract class DataModel extends Model implements DataModelInterface
 		}
 
 		return true;
+	}
+
+	/**
+	 * Returns a new record as a stdClass object, populated with the default values of the table columns.
+	 *
+	 * @return  stdClass
+	 */
+	public function getNewRecord()
+	{
+		$defaults = $this->filterDataColumns([]);
+
+		return (object) $defaults;
 	}
 
 	/**

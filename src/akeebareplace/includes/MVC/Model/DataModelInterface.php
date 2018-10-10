@@ -113,4 +113,11 @@ interface DataModelInterface
 	 * @return  bool
 	 */
 	public function delete(array $ids = []);
+
+	/**
+	 * Returns a new record as a stdClass object, populated with the default values of the table columns.
+	 *
+	 * @return  stdClass
+	 */
+	public function getNewRecord();
 }

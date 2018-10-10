@@ -33,7 +33,14 @@ abstract class Model implements ModelInterface
 	 */
 	protected $state = [];
 
-	/**
+    /**
+     * The name of the Model
+     *
+     * @var  string
+     */
+	protected $name = '';
+
+    /**
 	 * Return an instance of a Model by name.
 	 *
 	 * @param   string  $name      The name of the Model to return
@@ -194,4 +201,33 @@ abstract class Model implements ModelInterface
 			unset($this->state[$k]);
 		}
 	}
+
+    /**
+     * Get the View name from its class name
+     *
+     * @return  string
+     */
+    protected function getNameFromClassName()
+    {
+        // Fetch the name from the full namespace
+        $className = get_class($this);
+        $parts     = explode('\\', $className);
+
+        return $parts[count($parts) - 1];
+    }
+
+    /**
+     * Returns the name of the Model
+     *
+     * @return  string
+     */
+    public function getName()
+    {
+        if (empty($this->name))
+        {
+            $this->name = $this->getNameFromClassName();
+        }
+
+        return $this->name;
+    }
 }

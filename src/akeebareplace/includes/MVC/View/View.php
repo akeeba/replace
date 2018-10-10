@@ -12,6 +12,7 @@ namespace Akeeba\Replace\WordPress\MVC\View;
 use Akeeba\Replace\WordPress\MVC\Input\Filter;
 use Akeeba\Replace\WordPress\MVC\Model\Model;
 use Akeeba\Replace\WordPress\MVC\Model\ModelInterface;
+use stdClass;
 
 /**
  * Abstract MVC View
@@ -49,6 +50,13 @@ abstract class View implements ViewInterface
 	 * @var  ModelInterface[]
 	 */
 	protected $modelInstances = [];
+
+	/**
+	 * The item being edited (for add and edit task)
+	 *
+	 * @var  null|stdClass
+	 */
+	public $item = null;
 
 	/**
 	 * Return an instance of a View by name.
@@ -296,4 +304,19 @@ abstract class View implements ViewInterface
 	 * @return  bool
 	 */
 	abstract public function getRenderedTemplate($view, $layout, $subTemplate);
+
+    /**
+     * Returns the name of the View
+     *
+     * @return  string
+     */
+    public function getName()
+    {
+        if (empty($this->name))
+        {
+            $this->name = $this->getNameFromClassName();
+        }
+
+        return $this->name;
+    }
 }

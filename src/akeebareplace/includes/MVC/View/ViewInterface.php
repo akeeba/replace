@@ -133,4 +133,12 @@ interface ViewInterface
 	 * @return  string
 	 */
 	public function getNonce($task = '', $post = false);
+
+    /**
+     * Returns the name of the View
+     *
+     * @return  string
+     */
+    public function getName();
+
 }

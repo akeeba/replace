@@ -71,4 +71,11 @@ interface ModelInterface
 	 * @return  void
 	 */
 	public function setStateFromInput(InputInterface $input, $unset = false);
+
+    /**
+     * Returns the name of the Model
+     *
+     * @return  string
+     */
+	public function getName();
 }
