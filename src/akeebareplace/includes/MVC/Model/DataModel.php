@@ -330,7 +330,7 @@ abstract class DataModel extends Model implements DataModelInterface
 
 		foreach ($data as $k => $v)
 		{
-			if (in_array($k, $columnNames))
+			if (!in_array($k, $columnNames))
 			{
 				continue;
 			}
