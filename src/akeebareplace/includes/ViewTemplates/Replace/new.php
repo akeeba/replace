@@ -21,7 +21,7 @@ $lblDelete         = addcslashes(__('Delete this replacement', 'akeebareplace'),
 
 wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_REPLACE_SELF), ['akeebareplace-system'], Application::getMediaVersion());
 
-$subheading = __('Set up replacements', 'akeebareplace');
+$subheading = __('Set up a replacement job', 'akeebareplace');
 ?>
 
 <?php echo $this->getRenderedTemplate('Common', 'header', '', ['subheading' => $subheading]); ?>

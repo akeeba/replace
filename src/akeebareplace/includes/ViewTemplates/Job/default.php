@@ -15,7 +15,7 @@ use Akeeba\Replace\WordPress\Helper\Form;
 wp_enqueue_style('akeebareplace-backend', plugins_url('/css/backend.css', AKEEBA_REPLACE_SELF), ['fef'], Application::getMediaVersion());
 wp_enqueue_script('akeebareplace-jobs', plugins_url('/js/jobs.js', AKEEBA_REPLACE_SELF), ['akeebareplace-system'], Application::getMediaVersion());
 
-$subheading = __('Jobs', 'akeebareplace');
+$subheading = __('Manage', 'akeebareplace');
 
 function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 {
