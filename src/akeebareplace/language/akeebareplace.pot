@@ -1,0 +1,962 @@
+# Akeeba Replace Pot
+# Copyright 2018 Akeeba Ltd
+# This file is distributed under the GNU General Public License v3 or later.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: "
+"Akeeba Replace v1.0.0\n"
+"POT-Creation-Date: "
+"2018-10-12 16:51+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Akeeba "
+"Ltd Team <no-"
+"reply@akeebabackup.com>\n"
+"Language-Team: Akeeba "
+"Ltd Team <no-"
+"reply@akeebabackup.com>\n"
+"Report-Msgid-Bugs-To: "
+"Nicholas Dionysopoulos "
+"<nicholas@akeebabackup."
+"com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/"
+"plain; charset=UTF-8\n"
+"Content-Transfer-"
+"Encoding: 8bit\n"
+"Plural-Forms: "
+"nplurals=2; plural=n != "
+"1;\n"
+"X-Textdomain-Support: "
+"yesX-Generator: Poedit "
+"1.6.4\n"
+"X-Poedit-SourceCharset: "
+"UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;esc_html_e;"
+"esc_html_x:1,2c;"
+"esc_html__;esc_attr_e;"
+"esc_attr_x:1,2c;"
+"esc_attr__;_ex:1,2c;"
+"_nx:4c,1,2;"
+"_nx_noop:4c,1,2;_x:1,2c;"
+"_n:1,2;_n_noop:1,2;"
+"__ngettext:1,2;"
+"__ngettext_noop:1,2;_c,"
+"_nc:4c,1,2\n"
+"X-Poedit-Basepath: ../"
+"includes\n"
+"Language: en_US\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-"
+"SearchPath-0: .\n"
+
+#: Controller/Replace.php:106
+#: Controller/Replace.php:134
+msgid "Access denied"
+msgstr ""
+
+#: Helper/Form.php:40
+msgid "(no change)"
+msgstr ""
+
+#: Helper/Form.php:81
+msgid "(none)"
+msgstr ""
+
+#: Helper/Form.php:176
+#, php-format
+msgctxt "paging"
+msgid "%1$s of %2$s"
+msgstr ""
+
+#: Helper/Form.php:217
+#, php-format
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: MVC/Controller/DataController.php:168
+#: MVC/Controller/DataController.php:181
+#: MVC/Controller/DataController.php:226
+#: MVC/Controller/DataController.php:239
+msgid ""
+"Could not load record"
+msgstr ""
+
+#: MVC/Controller/DataController.php:216
+msgid ""
+"The record has been saved"
+msgstr ""
+
+#: MVC/Controller/DataController.php:296
+msgid ""
+"The record has been "
+"deleted"
+msgstr ""
+
+#: MVC/Controller/DataController.php:305
+msgid ""
+"The record could not be "
+"deleted"
+msgstr ""
+
+#: Model/Replace.php:158
+#, php-format
+msgid ""
+"Replacement job started "
+"on %s"
+msgstr ""
+
+#: ViewTemplates/Common/error.php:18
+msgid ""
+"Akeeba Replace - An "
+"error has occurred"
+msgstr ""
+
+#: ViewTemplates/Common/error.php:29
+msgid ""
+"The error above occurred "
+"while we were trying to "
+"process your request."
+msgstr ""
+
+#: ViewTemplates/Common/error.php:32
+msgid ""
+"Please check the "
+"documentation for "
+"further information or "
+"ask for technical "
+"support on the plugin's "
+"listing in the WordPress "
+"Plugin Directory."
+msgstr ""
+
+#: ViewTemplates/Common/error.php:36
+msgid ""
+"Technical Information"
+msgstr ""
+
+#: ViewTemplates/Common/error.php:39
+msgid ""
+"If you want to get "
+"technical support, "
+"please provide the "
+"following information "
+"and a short description "
+"of what you were trying "
+"to do when the error "
+"occurred."
+msgstr ""
+
+#: ViewTemplates/Common/errorDialog.php:15
+msgid "AJAX Error"
+msgstr ""
+
+#: ViewTemplates/Common/errorDialog.php:19
+msgid ""
+"An error has occurred "
+"while waiting for an "
+"AJAX response:"
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:15
+#, php-format
+msgid ""
+"Outdated PHP version %s "
+"detected"
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:22
+#, php-format
+msgid ""
+"Akeeba Replace requires "
+"PHP %s or any later "
+"version to work"
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:27
+#, php-format
+msgid ""
+"We <b>strongly</b> urge "
+"you to update to PHP %s "
+"or later. If unsure how "
+"to do this, please ask "
+"your host."
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:31
+msgid ""
+"Version numbers don't "
+"make sense?"
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:38
+msgid "Security advice"
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:41
+#, php-format
+msgid ""
+"The version of PHP you "
+"are currently using, %s, "
+"has reached the end of "
+"its life."
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:42
+msgid ""
+"End-of-life versions of "
+"PHP contain bugs and "
+"security issues which "
+"may lead to your site "
+"becoming compromised "
+"(hacked). These issues "
+"are fixed in newer "
+"versions of PHP."
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:43
+msgid ""
+"Please refer to the <a "
+"href=\"http://php.net/"
+"eol.php\">official PHP "
+"end-of-life page</a> for "
+"more information."
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:47
+msgid ""
+"Have you upgraded PHP "
+"and still see this "
+"message?"
+msgstr ""
+
+#: ViewTemplates/Common/wrongphp.php:50
+msgid ""
+"Akeeba Replace displays "
+"this page based on the "
+"version that PHP itself "
+"reports. Simply put, it "
+"cannot detect the wrong "
+"version. You can, "
+"however, end up using "
+"the wrong PHP version "
+"instead of the one you "
+"intended. If you have "
+"replaced or removed "
+"your .htaccess file your "
+"PHP version upgrade may "
+"have been undone. On "
+"some servers you have to "
+"tell it to apply the new "
+"PHP version on each "
+"folder separately. "
+"Please ask your host for "
+"further information."
+msgstr ""
+
+#: ViewTemplates/Job/default.php:18
+msgid "Manage"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:25
+msgid "Bulk Actions"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:26
+#: ViewTemplates/Job/default.php:112
+msgid "Delete"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:27
+#: ViewTemplates/Job/default.php:105
+msgid "Delete Files"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:30
+msgid "Apply"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:45
+msgid "Add New"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:58
+#: ViewTemplates/Job/default.php:76
+msgid "Description"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:61
+msgctxt ""
+"Verb, displayed on a "
+"button"
+msgid "Search"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:75
+msgid "ID"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:77
+msgctxt ""
+"Shorthand for \"this job "
+"was last run on the date "
+"printed in this column\""
+msgid "Run On"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:98
+msgid "Clone"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:118
+msgid "View log"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:124
+msgid "Download output SQL"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:130
+msgid "Download backup"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:134
+msgid "Restore backup"
+msgstr ""
+
+#: ViewTemplates/Job/default.php:147
+msgid ""
+"You have not run any "
+"replacement jobs yet. "
+"Click the Add New button "
+"at the top of the page "
+"to start your first "
+"replacement."
+msgstr ""
+
+#: ViewTemplates/Job/default.php:149
+msgid ""
+"Nothing matches the "
+"filters you specified."
+msgstr ""
+
+#: ViewTemplates/Replace/complete.php:20
+msgid ""
+"The replacement "
+"operation has completed "
+"successfully"
+msgstr ""
+
+#: ViewTemplates/Replace/complete.php:27
+#: ViewTemplates/Replace/complete.php:30
+msgid ""
+"You chose not to apply "
+"the replacements to your "
+"database. Nothing has "
+"changed on your site."
+msgstr ""
+
+#: ViewTemplates/Replace/complete.php:28
+msgid ""
+"All changes have been "
+"written to a SQL file, "
+"though. You can apply it "
+"manually using "
+"phpMyAdmin or a similar "
+"tool."
+msgstr ""
+
+#: ViewTemplates/Replace/complete.php:31
+msgid ""
+"You will need to check "
+"the log file to see "
+"which replacements would "
+"take place."
+msgstr ""
+
+#: ViewTemplates/Replace/complete.php:33
+#: ViewTemplates/Replace/complete.php:36
+msgid ""
+"The replacements have "
+"been applied to your "
+"database,"
+msgstr ""
+
+#: ViewTemplates/Replace/complete.php:34
+msgid ""
+"Should the results be "
+"unsatisfactory please "
+"restore the database "
+"from the backup taken "
+"automatically, per the "
+"instructions in the "
+"documentation."
+msgstr ""
+
+#: ViewTemplates/Replace/complete.php:38
+msgid ""
+"You chose not to take "
+"any automatic backups. "
+"Should the results be "
+"unsatisfactory you will "
+"need to revert them by "
+"manually editing your "
+"database."
+msgstr ""
+
+#: ViewTemplates/Replace/complete.php:45
+msgid ""
+"Manage replacement jobs"
+msgstr ""
+
+#: ViewTemplates/Replace/complete.php:49
+msgid "View the log file"
+msgstr ""
+
+#: ViewTemplates/Replace/error.php:17
+msgid ""
+"The replacement "
+"operation has failed"
+msgstr ""
+
+#: ViewTemplates/Replace/error.php:23
+msgid ""
+"The replacement "
+"operation has been "
+"halted because an error "
+"was detected.<br />The "
+"last error message was:"
+msgstr ""
+
+#: ViewTemplates/Replace/error.php:28
+msgid ""
+"Please click the 'View "
+"Log' button below to "
+"view the Akeeba Replace "
+"log file for further "
+"information."
+msgstr ""
+
+#: ViewTemplates/Replace/error.php:33
+#, php-format
+msgid ""
+"We strongly recommend "
+"going through the step-"
+"by-step instructions in "
+"our <a href=\"%s"
+"\">troubleshooting "
+"documentation</a> to "
+"easily resolve this "
+"issue yourself."
+msgstr ""
+
+#: ViewTemplates/Replace/error.php:36
+#, php-format
+msgid ""
+"If you ask for technical "
+"support please remember "
+"to ZIP and attach your "
+"<a href=\"%s\">log file</"
+"a> in your post to help "
+"us help you faster."
+msgstr ""
+
+#: ViewTemplates/Replace/error.php:42
+msgid ""
+"Troubleshooting "
+"documentation"
+msgstr ""
+
+#: ViewTemplates/Replace/error.php:47
+msgid "View Log"
+msgstr ""
+
+#: ViewTemplates/Replace/initial_confirmation.php:18
+msgid "Start replacing?"
+msgstr ""
+
+#: ViewTemplates/Replace/initial_confirmation.php:22
+msgid ""
+"You are about to start "
+"replacing data, without "
+"applying these changes "
+"to your database. You "
+"will need to check the "
+"log file to see which "
+"replacements would take "
+"place."
+msgstr ""
+
+#: ViewTemplates/Replace/initial_confirmation.php:24
+#: ViewTemplates/Replace/initial_confirmation.php:27
+msgid ""
+"You are about to start "
+"replacing data in your "
+"database. Depending on "
+"your settings this may "
+"cause your site to "
+"become unresponsive."
+msgstr ""
+
+#: ViewTemplates/Replace/initial_confirmation.php:25
+msgid ""
+"In this case, you will "
+"need to restore the "
+"database from a backup, "
+"per the instructions in "
+"the documentation."
+msgstr ""
+
+#: ViewTemplates/Replace/initial_confirmation.php:29
+msgid ""
+"You have indicated that "
+"no backups are to be "
+"taken. If something "
+"breaks you will have to "
+"fix it on your own. By "
+"continuing you assume "
+"all responsibility for "
+"your actions and accept "
+"that you will receive "
+"ABSOLUTELY NO SUPPORT "
+"WHATSOEVER."
+msgstr ""
+
+#: ViewTemplates/Replace/initial_confirmation.php:35
+msgid "Shall I continue?"
+msgstr ""
+
+#: ViewTemplates/Replace/initial_confirmation.php:40
+msgid "Continue"
+msgstr ""
+
+#: ViewTemplates/Replace/initial_confirmation.php:44
+#: ViewTemplates/Replace/new.php:75
+msgid "Go back"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:18
+#: ViewTemplates/Replace/new.php:45
+#: ViewTemplates/Replace/new.php:47
+msgid "Replace this"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:19
+#: ViewTemplates/Replace/new.php:51
+#: ViewTemplates/Replace/new.php:53
+msgid "Replace with that"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:20
+msgid ""
+"Delete this replacement"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:24
+msgid ""
+"Set up a replacement job"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:38
+msgid "What to replace"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:65
+msgid "Start replacing"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:70
+msgid ""
+"Show / hide advanced "
+"options"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:80
+msgid "Reset"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:90
+msgid ""
+"Where and how to replace"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:97
+msgid "Live mode"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:99
+msgid ""
+"Apply the replacements "
+"in the database. Uncheck "
+"this, run and view the "
+"log to see what will "
+"happen without messing "
+"up your database."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:107
+msgid ""
+"Export as a SQL file"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:109
+msgid ""
+"Writes the database "
+"commands which apply the "
+"replacements to a SQL "
+"file before executing "
+"them in the database."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:116
+msgid ""
+"Exclude these tables"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:120
+msgid ""
+"Select which tables "
+"should not have their "
+"data replaced. Useful "
+"for very big log tables "
+"with no replaceable data "
+"such as those created by "
+"security and e-commerce "
+"plugins. Use CTRL-click "
+"(CMD-click on macOS) to "
+"select multiple tables."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:128
+msgid "Advanced options"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:133
+msgid ""
+"These options are meant "
+"for expert users. Please "
+"consult the "
+"documentation for more "
+"information on the "
+"subtle but important "
+"ways they change the way "
+"Akeeba Replace works."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:138
+msgid "Behaviour"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:142
+msgid ""
+"Options which modify the "
+"way replacements take "
+"place."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:147
+msgid "Maximum batch size"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:151
+msgid ""
+"The maximum number of "
+"database rows to read at "
+"once. The bigger this "
+"number the faster the "
+"replacement is but the "
+"more memory it needs to "
+"run."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:157
+msgid "Log level"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:161
+msgid ""
+"All information and debug"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:164
+msgid "All information"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:167
+msgid "Warnings and errors"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:170
+msgid "Only errors"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:173
+msgid "None"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:177
+msgid ""
+"How much detail should "
+"be included in the log "
+"file."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:184
+msgid ""
+"Replacements are given "
+"as Regular Expressions"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:186
+msgid ""
+"Treat the replacements "
+"in the “What to replace” "
+"area as Regular "
+"Expressions."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:194
+msgid "Take backups"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:196
+msgid ""
+"Create a backup of the "
+"data it replaces, before "
+"it applies the "
+"replacement."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:202
+msgid "Advanced exclusions"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:206
+msgid ""
+"Change which database "
+"tables and columns will "
+"be considered for data "
+"replacements."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:212
+msgid "All tables"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:214
+msgid ""
+"Replace data in all "
+"database tables, even "
+"those whose name does "
+"not begin with your "
+"site's prefix."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:221
+msgid ""
+"Exclude specific columns"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:225
+msgid ""
+"Enter the name of "
+"specific table columns "
+"to exclude in the form "
+"tableName.columnName e."
+"g. <code>wp_options."
+"option_name</code>. "
+"Separate multiple table "
+"and column pairs with "
+"spaces, commas or new "
+"lines e.g. "
+"<code>wp_options."
+"option_name, wp_comments."
+"comment_author</code>."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:230
+msgid "Collation change"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:234
+msgid ""
+"Change the database and "
+"table collation (some "
+"people call it "
+"“encoding”). The "
+"collation is what helps "
+"the database understand "
+"a bunch of ones and "
+"zeroes as text. If you "
+"are using Emojis, "
+"Traditional Chinese "
+"characters or other less "
+"frequently used "
+"characters / languages "
+"you are recommended "
+"setting this to "
+"<code>utf8mb4_unicode_520_ci</"
+"code> if your database "
+"server supports it. "
+"Otherwise select "
+"<code>utf8_general_ci</"
+"code>. Only use other "
+"collations if you know "
+"what you are doing and "
+"have a specific use case "
+"which calls for it."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:239
+msgid ""
+"Going from a UTF8MB4 "
+"collation to UTF8 or "
+"from either of them to a "
+"non-UTF8 collation may "
+"result <strong>in "
+"permanent loss of data</"
+"strong>. This is how "
+"collations work and it "
+"can NOT be prevented. "
+"Automatic backups taken "
+"by Akeeba Replace WILL "
+"NOT help you in this "
+"case. <strong>Always "
+"take a full database "
+"backup before applying "
+"collation changes</"
+"strong>."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:244
+msgid ""
+"Change the database "
+"collation"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:248
+msgid ""
+"Change the default "
+"database collation. This "
+"only affects tables "
+"which will be created "
+"after this change takes "
+"place. It does not "
+"modify existing tables. "
+"It may not always work, "
+"depending on your "
+"database server type, "
+"database server version "
+"and the privileges your "
+"database user has on the "
+"database server."
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:256
+msgid ""
+"Change the collation of "
+"existing tables"
+msgstr ""
+
+#: ViewTemplates/Replace/new.php:260
+msgid ""
+"Change the collation of "
+"tables already present "
+"in the database. This "
+"will not affect tables "
+"which will be created "
+"after this change takes "
+"place. It may not always "
+"work, depending on the "
+"table structure, your "
+"database server type, "
+"database server version "
+"and the privileges your "
+"database user has on the "
+"database server."
+msgstr ""
+
+#: ViewTemplates/Replace/progress.php:14
+msgid ""
+"Please do not close this "
+"browser tab, let your "
+"device sleep or "
+"disconnect from the "
+"network while the "
+"replacement operation is "
+"in progress."
+msgstr ""
+
+#: ViewTemplates/Replace/progress.php:20
+msgid ""
+"Replacement in progress"
+msgstr ""
+
+#: ViewTemplates/Replace/progress.php:27
+msgid ""
+"Please wait. Replacement "
+"is in progress."
+msgstr ""
+
+#: ViewTemplates/Replace/progress.php:30
+msgid ""
+"You will see more "
+"information here as the "
+"replacement progresses."
+msgstr ""
+
+#: ViewTemplates/Replace/replace.php:19
+#, php-format
+msgid ""
+"Last response from the "
+"server: %s seconds ago."
+msgstr ""
+
+#: ViewTemplates/Replace/retry.php:17
+msgid ""
+"Replacement operation "
+"has halted but will "
+"resume automatically"
+msgstr ""
+
+#: ViewTemplates/Replace/retry.php:22
+msgid ""
+"The replacement "
+"operation has been "
+"halted because an error "
+"was detected. However, "
+"Akeeba Replace will "
+"attempt to resume the "
+"replacement operation. "
+"If you do not want to "
+"resume the replacement "
+"operation please click "
+"the Cancel button below."
+msgstr ""
+
+#: ViewTemplates/Replace/retry.php:26
+msgid ""
+"The replacement "
+"operation will resume in"
+msgstr ""
+
+#: ViewTemplates/Replace/retry.php:32
+msgid "Cancel"
+msgstr ""
+
+#: ViewTemplates/Replace/retry.php:36
+msgid "Resume"
+msgstr ""
+
+#: ViewTemplates/Replace/retry.php:40
+msgid ""
+"The last error message "
+"was:"
+msgstr ""
+
+#: ViewTemplates/Replace/warnings.php:17
+msgid "Warnings"
+msgstr ""
