@@ -164,9 +164,9 @@ abstract class DataModel extends Model implements DataModelInterface
 	 *
 	 * @return  array
 	 */
-	public function getItems($overrideLimits = false, $limitstart = 0, $limit = 0)
+	public function getItems($overrideLimits = false, $limitstart = -1, $limit = 0)
 	{
-		if ((int) $limitstart <= 0)
+		if ((int) $limitstart < 0)
 		{
 			$limitstart = (int) filter_input(INPUT_GET, 'limitstart', FILTER_SANITIZE_NUMBER_INT);
 		}

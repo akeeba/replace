@@ -25,6 +25,13 @@ abstract class Dispatcher implements DispatcherInterface
 	protected $input;
 
 	/**
+	 * The name of the default view to use in the plugin
+	 *
+	 * @var  string
+	 */
+	protected $defaultView = 'ControlPanel';
+
+	/**
 	 * Dispatcher constructor.
 	 *
 	 * @param   InputInterface  $input  The Input data object. Null to get a new one from the request & server data.
@@ -55,7 +62,7 @@ abstract class Dispatcher implements DispatcherInterface
 
 		$this->convertLimitStart($input);
 
-		$view = $input->get('view', 'ControlPanel');
+		$view = $input->get('view', $this->defaultView);
 		$task = $input->get('task', 'display');
 
 		if (method_exists($this, 'onBeforeRoute'))

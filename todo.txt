@@ -1,7 +1,3 @@
-Bugs
-================================================================================
-We should be excluding our own options (do not try to replace the replacement setup of the replacement engine!)
-
 GUI
 ================================================================================
 Main page (Control Panel)

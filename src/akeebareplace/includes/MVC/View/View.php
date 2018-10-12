@@ -59,6 +59,34 @@ abstract class View implements ViewInterface
 	public $item = null;
 
 	/**
+	 * Total amount of records being displayed (after filters are applied) in DataController's browse views
+	 *
+	 * @var  int
+	 */
+	public $total = 0;
+
+	/**
+	 * Offset to the first record being displayed in DataController's browse views
+	 *
+	 * @var  int
+	 */
+	public $LimitStart = 0;
+
+	/**
+	 * How many items are being displayed in DataController's browse views
+	 *
+	 * @var  int
+	 */
+	public $Limit = 0;
+
+	/**
+	 * A list of items being displayed in a DataController's browse task
+	 *
+	 * @var  array
+	 */
+	public $items = [];
+
+	/**
 	 * Return an instance of a View by name.
 	 *
 	 * @param   string  $name  The name of the View to return
