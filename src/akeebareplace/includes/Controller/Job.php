@@ -39,8 +39,6 @@ class Job extends DataController
 			exit();
 		}
 
-
-
 		// Get the IDs to delete from the request
 		$ids = $this->getIDsFromRequest();
 
@@ -61,13 +59,90 @@ class Job extends DataController
 
 	public function downloadOutput()
 	{
-		// TODO Implement me
-		die('TODO');
+		$this->download('output');
 	}
 
 	public function downloadBackup()
 	{
-		// TODO Implement me
-		die('TODO');
+		$this->download('backup');
+	}
+
+	public function downloadLog()
+	{
+		$this->download('log');
+	}
+
+	private function download($key)
+	{
+		@ob_end_clean();
+
+		$ids = $this->getIDsFromRequest();
+		$id  = 0;
+
+		if (!empty($ids))
+		{
+			$id = $ids[0];
+		}
+
+		/** @var JobModel $model */
+		$model = $this->model;
+		$files = $model->getAllFiles($id, $key);
+
+		if (empty($files))
+		{
+			header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+		}
+
+		$canonicalName = basename($files[0]);
+
+		// Remove PHP's time limit
+		if (function_exists('ini_get') && function_exists('set_time_limit'))
+		{
+			if (!@ini_get('safe_mode'))
+			{
+				@set_time_limit(0);
+			}
+		}
+
+		@clearstatcache();
+
+		$fileSize = 0;
+
+		foreach ($files as $file)
+		{
+			if (!@file_exists($file) || !@is_readable($file))
+			{
+				continue;
+			}
+
+			$thisSize = @filesize($file);
+			$fileSize += ($thisSize === false) ? 0 : $thisSize;
+		}
+
+		// Send MIME headers
+		header('MIME-Version: 1.0');
+		header('Content-Disposition: attachment; filename="' . $canonicalName . '"');
+		header('Content-Transfer-Encoding: text');
+		header('Content-Type: text/plain');
+		header('Content-Length: ' . $fileSize);
+
+		// Disable caching
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Expires: 0");
+		header('Pragma: no-cache');
+
+		flush();
+
+		foreach ($files as $file)
+		{
+			if (!@file_exists($file) || !@is_readable($file))
+			{
+				continue;
+			}
+
+			echo file_get_contents($file);
+		}
+
+		exit(0);
 	}
 }

@@ -240,4 +240,47 @@ class Job extends DataModel
 		return $dirName . '/' . $baseName . $extension;
 	}
 
+	/**
+	 * Get all files for a specific job and area
+	 *
+	 * @param   int     $id   The ID of the job
+	 * @param   string  $key  The area you want files for: log, output, backup
+	 *
+	 * @return  array  List of files
+	 */
+	public function getAllFiles($id, $key = 'log')
+	{
+		$record = $this->getItem($id);
+
+		if (empty($record))
+		{
+			return [];
+		}
+
+		$files    = $this->getFilePathsForRecord($record);
+		$baseFile = $files[$key];
+
+		if (empty($baseFile))
+		{
+			return [];
+		}
+
+		$partNumber = 0;
+		$ret = [];
+
+		while (true)
+		{
+			$thisFile = $this->getPartPath($baseFile, $partNumber);
+
+			if (!file_exists($thisFile))
+			{
+				break;
+			}
+
+			$partNumber++;
+			$ret[] = $thisFile;
+		}
+
+		return $ret;
+	}
 }
