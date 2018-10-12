@@ -13,5 +13,8 @@ use Akeeba\Replace\WordPress\MVC\Controller\DataController;
 
 class Job extends DataController
 {
-
+	public function onBeforeBrowse()
+	{
+		$this->view->filters['description'] = $this->input->getString('description', '');
+	}
 }

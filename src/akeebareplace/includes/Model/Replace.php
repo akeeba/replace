@@ -19,6 +19,7 @@ use Akeeba\Replace\Engine\PartInterface;
 use Akeeba\Replace\Engine\PartStatus;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Timer\Timer;
+use Akeeba\Replace\WordPress\Helper\Form;
 use Akeeba\Replace\WordPress\MVC\Model\DataModel;
 use Akeeba\Replace\WordPress\MVC\Model\Model;
 
@@ -149,11 +150,12 @@ class Replace extends Model
 			$engine = $this->makeEngine($this->getCachedConfiguration());
 			$engine->getLogger()->debug("===== Starting a new replacement job =====");
 
-			// Record this replacement attempt in the database table
+			// TODO Record this replacement attempt in the database table ONLY if there is no job ID sent in the request, otherwise only update Last Run
 			$jobModel = DataModel::getInstance('Job');
 			$jobID = $jobModel->save([
 				'options'    => serialize($engine->getConfig()->toArray()),
-				'description' => sprintf(__('Replacement job started on %s', 'akeebareplace'), date('Y-m-d H:i:s T')),
+				// TODO Only use the default description if there is no description sent in the request
+				'description' => sprintf(__('Replacement job started on %s', 'akeebareplace'), Form::formatDate()),
 				'created_on' => gmdate('Y-m-d H:i:s'),
 				'run_on'     => gmdate('Y-m-d H:i:s'),
 			]);

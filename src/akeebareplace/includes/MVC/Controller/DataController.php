@@ -323,8 +323,8 @@ abstract class DataController extends Controller
 			return [$pkValue];
 		}
 
-		// No PK found. Let's load the "cid" array from the request.
-		$ids    = $this->input->{$method}->get('cid', [], 'array');
+		// No PK found. Let's load the "cb" array from the request.
+		$ids    = $this->input->{$method}->get('cb', [], 'array');
 		$filter = new Filter();
 
 		$ids = array_map(function ($v) use ($filter) {

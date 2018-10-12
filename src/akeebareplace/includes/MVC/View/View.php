@@ -70,14 +70,21 @@ abstract class View implements ViewInterface
 	 *
 	 * @var  int
 	 */
-	public $LimitStart = 0;
+	public $limitStart = 0;
 
 	/**
 	 * How many items are being displayed in DataController's browse views
 	 *
 	 * @var  int
 	 */
-	public $Limit = 0;
+	public $limit = 0;
+
+	/**
+	 * A list of filters set up in the view, passed by the DataController
+	 *
+	 * @var  array
+	 */
+	public $filters = [];
 
 	/**
 	 * A list of items being displayed in a DataController's browse task

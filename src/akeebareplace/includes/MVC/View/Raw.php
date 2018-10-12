@@ -93,10 +93,11 @@ HTML;
 	 * @param   string  $view         The view where the view template belongs to
 	 * @param   string  $layout       The base name of the view template
 	 * @param   string  $subTemplate  The name of the view subtemplate
+	 * @param   array   $extraVars    An array of additional variables to make visible in the view template file
 	 *
 	 * @return  bool
 	 */
-	public function getRenderedTemplate($view = null, $layout = null, $subTemplate = '')
+	public function getRenderedTemplate($view = null, $layout = null, $subTemplate = '', $extraVars = [])
 	{
 		$view        = empty($view) ? $this->name : $view;
 		$layout      = empty($layout) ? $this->layout : $layout;
@@ -154,6 +155,12 @@ HTML;
 		}
 
 		@ob_start();
+
+		if (!empty($extraVars))
+		{
+			extract($extraVars);
+		}
+
 		require_once $includeFile;
 		$foo = @ob_get_contents();
 		@ob_end_clean();

@@ -8,6 +8,13 @@
  */
 
 /**
+ * Header
+ */
+h2.akeebareplace-title-inline {
+    display: inline !important;
+}
+
+/**
  * Replace view
  */
 div.akeebareplace-steps-container {

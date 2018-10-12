@@ -7,5 +7,12 @@
  *
  */
 
+$hasSubheading = isset($subheading);
 ?>
-<h1 class="akeeba-cpanel-title"><span class="aklogo-akeebareplace-wp-small"></span> Akeeba Replace</h1>
+<h2 class="akeebareplace-title<?php echo $hasSubheading ? '-inline' : '' ?>">
+	<span class="aklogo-akeebareplace-wp-small"></span>
+	Akeeba Replace
+	<?php if ($hasSubheading): ?>
+	<small>:: <?php echo $subheading?></small>
+	<?php endif; ?>
+</h2>
