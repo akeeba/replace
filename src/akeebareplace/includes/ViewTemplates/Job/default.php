@@ -7,11 +7,7 @@
  *
  */
 
-namespace Akeeba\Replace\WordPress\View\ControlPanel;
+/** @var \Akeeba\Replace\WordPress\View\Job\Html $this */
+?>
 
-use Akeeba\Replace\WordPress\MVC\View\Html as AbstractHtml;
-
-class Html extends AbstractHtml
-{
-
-}
+<?php echo $this->getRenderedTemplate('Common', 'header'); ?>

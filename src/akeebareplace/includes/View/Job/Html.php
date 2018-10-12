@@ -7,11 +7,11 @@
  *
  */
 
-namespace Akeeba\Replace\WordPress\Controller;
+namespace Akeeba\Replace\WordPress\View\Job;
 
-use Akeeba\Replace\WordPress\MVC\Controller\Controller;
+use Akeeba\Replace\WordPress\MVC\View\Html as AbstractHtml;
 
-class ControlPanel extends Controller
+class Html extends AbstractHtml
 {
 
 }

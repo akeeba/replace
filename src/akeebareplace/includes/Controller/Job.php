@@ -7,7 +7,11 @@
  *
  */
 
-/** @var \Akeeba\Replace\WordPress\View\ControlPanel\Html $this */
-?>
+namespace Akeeba\Replace\WordPress\Controller;
 
-<?php echo $this->getRenderedTemplate('Common', 'header'); ?>
+use Akeeba\Replace\WordPress\MVC\Controller\DataController;
+
+class Job extends DataController
+{
+
+}
