@@ -296,6 +296,12 @@ abstract class DataModel extends Model implements DataModelInterface
 
 		foreach ($ids as $id)
 		{
+			// Call the "onBeforeDelete" on each record
+			if (method_exists($this, 'onBeforeDelete'))
+			{
+				$this->onBeforeDelete($id);
+			}
+
 			$rowsAffected = $this->db->delete($this->tableName, [$this->pkName => $id]);
 
 			if ($rowsAffected === false)

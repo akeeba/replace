@@ -15,7 +15,12 @@ if (typeof(akeeba) === "undefined")
 if (typeof akeeba.replace === "undefined")
 {
 	akeeba.replace = {
-		switchingTasks: false
+		switchingTasks: false,
+		nonces: {
+			'-1': '',
+			'delete': '',
+			'deleteFiles': ''
+		}
 	};
 }
 
@@ -37,6 +42,7 @@ akeeba.replace.onBulkChange = function(e)
 
 	document.getElementById(otherID).value = this.value;
 	document.getElementById('akeebareplace-task').value = this.value;
+	document.getElementById('akeebareplace-nonce').value = akeeba.replace.nonces[this.value];
 
 	akeeba.replace.switchingTasks = false;
 };

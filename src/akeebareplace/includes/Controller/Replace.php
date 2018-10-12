@@ -78,6 +78,7 @@ class Replace extends Controller
 
 		if (!$this->csrfProtection('getTablesHTML', false))
 		{
+			@ob_end_clean();
 			header($_SERVER["SERVER_PROTOCOL"] . " 403 Forbidden");
 
 			exit();

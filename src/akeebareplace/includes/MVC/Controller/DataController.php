@@ -207,6 +207,7 @@ abstract class DataController extends Controller
 
 		if (!$this->csrfProtection('save', $isPost))
 		{
+			@ob_end_clean();
 			header($_SERVER["SERVER_PROTOCOL"] . " 403 Forbidden");
 
 			exit();
@@ -285,6 +286,7 @@ abstract class DataController extends Controller
 
 		if (!$this->csrfProtection('delete', $isPost))
 		{
+			@ob_end_clean();
 			header($_SERVER["SERVER_PROTOCOL"] . " 403 Forbidden");
 
 			exit();

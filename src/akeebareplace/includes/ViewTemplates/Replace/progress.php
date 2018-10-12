@@ -23,8 +23,12 @@
 
 		<div id="akeebareplace-progress-content">
 			<div id="akeebareplace-status" class="akeebareplace-steps-container">
-				<div id="akeebareplace-step"></div>
-				<div id="akeebareplace-substep"></div>
+				<div id="akeebareplace-step">
+					<?php _e('Please wait. Replacement is in progress.', 'akeebareplace') ?>
+				</div>
+				<div id="akeebareplace-substep">
+					<?php _e('You will see more information here as the replacement progresses.', 'akeebareplace') ?>
+				</div>
 			</div>
 			<div id="akeebareplaceresponse-timer">
 				<div class="akeebareplace-text"></div>

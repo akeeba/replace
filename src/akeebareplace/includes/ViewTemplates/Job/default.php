@@ -50,7 +50,7 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 	<input type="hidden" name="page" value="akeebareplace"/>
 	<input type="hidden" name="view" value="Job"/>
 	<input type="hidden" name="task" value="browse" id="akeebareplace-task"/>
-	<input type="hidden" name="_wpnonce" value=""/>
+	<input type="hidden" name="_wpnonce" id="akeebareplace-nonce" value=""/>
 
 
 	<p class="search-box">
@@ -83,6 +83,7 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 			<?php
 			foreach ($this->items as $item):
 			$recordFiles = $this->getModel()->getFilePathsForRecord($item);
+			$hasFiles = !empty($recordFiles['log']) || !empty($recordFiles['output']) || !empty($recordFiles['backup']);
 			?>
 			<tr>
 				<td class="check-column">
@@ -97,12 +98,14 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 								<?php _e('Clone', 'akeebareplace') ?>
 							</a>
 						</span>
+						<?php if ($hasFiles): ?>
 						|
 						<span class="trash">
 							<a href="<?php echo wp_nonce_url(admin_url('admin.php?page=akeebareplace&view=Job&task=deleteFiles&id=' . $item->id), 'get_Job_deleteFiles') ?>" class="submitdelete">
 								<?php _e('Delete Files', 'akeebareplace') ?>
 							</a>
 						</span>
+						<?php endif; ?>
 						|
 						<span class="trash">
 							<a href="<?php echo wp_nonce_url(admin_url('admin.php?page=akeebareplace&view=Job&task=delete&id=' . $item->id), 'get_Job_delete') ?>" class="submitdelete">
@@ -156,3 +159,18 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 	</div>
 
 </form>
+
+<?php
+$nonceDeleteFiles = wp_create_nonce('post_Job_deleteFiles');
+$nonceDelete      = wp_create_nonce('post_Job_delete');
+
+$js = <<< JS
+akeeba.System.documentReady(function() {
+	akeeba.replace.nonces['delete'] = '{$nonceDelete}';
+	akeeba.replace.nonces['deleteFiles'] = '{$nonceDeleteFiles}';
+});
+
+JS;
+
+wp_add_inline_script('akeebareplace-jobs', $js);
+?>

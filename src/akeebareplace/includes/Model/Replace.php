@@ -126,7 +126,8 @@ class Replace extends Model
 		$runtimeBias = get_option('akeebareplace_runtime_bias', 75);
 
 		// Set up and return a new core engine
-		$helper       = new OutFileSetup();
+		$wpTimezone   = get_option('timezone_string', 'UTC');
+		$helper       = new OutFileSetup(null, $wpTimezone);
 		$timer        = new Timer($maxExec, $runtimeBias);
 		$db           = $this->getDatabaseDriver();
 		$logger       = $helper->makeLogger($configuration, true, $additional);

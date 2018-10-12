@@ -105,7 +105,8 @@ class Job extends DataModel
 			return $files;
 		}
 
-		$helper     = new OutFileSetup();
+		$wpTimezone = get_option('timezone_string', 'UTC');
+		$helper     = new OutFileSetup(null, $wpTimezone);
 		$config     = new Configuration(unserialize($record->options));
 		$additional = [
 			'[OUTPUT_PATH]' => plugin_dir_path(AKEEBA_REPLACE_SELF) . 'output/',
@@ -132,4 +133,111 @@ class Job extends DataModel
 
 		return $files;
 	}
+
+	/**
+	 * Runs before deleting a record from the database. Used to automatically delete the associated files as well. We
+	 * need to run this before deleting the record since loading the record is a requirement to finding out which files
+	 * we need to delete.
+	 *
+	 * @param   int  $id
+	 */
+	public function onBeforeDelete($id)
+	{
+		$this->deleteFiles($id);
+	}
+
+	/**
+	 * Delete all files (log, output, backup) for a record
+	 *
+	 * @param   int  $id  The record ID
+	 */
+	public function deleteFiles($id)
+	{
+		$record = $this->getItem($id);
+
+		if (empty($record))
+		{
+			return;
+		}
+
+		$files = $this->getFilePathsForRecord($record);
+		$keys  = ['log', 'output', 'backup'];
+
+		foreach ($keys as $key)
+		{
+			$baseFile = $files[$key];
+
+			if (empty($baseFile))
+			{
+				continue;
+			}
+
+			$partNumber = 0;
+
+			while (true)
+			{
+				$thisFile = $this->getPartPath($baseFile, $partNumber);
+
+				if (!file_exists($thisFile))
+				{
+					break;
+				}
+
+				$partNumber++;
+				@unlink($thisFile);
+			}
+		}
+	}
+
+	/**
+	 * Get the filename for a part number. Part numbers start with zero.
+	 *
+	 * @param   string  $filePath    The base path of the file
+	 * @param   int     $partNumber  The sequential part number
+	 *
+	 * @return  string
+	 */
+	protected function getPartPath($filePath, $partNumber)
+	{
+		if ($partNumber == 0)
+		{
+			return $filePath;
+		}
+
+		$dirName   = dirname($filePath);
+		$baseName  = basename($filePath);
+		$extension = '';
+		$dotPos    = strrpos($baseName, '.');
+
+		if ($dotPos !== false)
+		{
+			$extension = substr($baseName, $dotPos);
+			$baseName  = substr($baseName, 0, $dotPos);
+		}
+
+		if (strlen($extension) == 0)
+		{
+			/**
+			 * No extension: files are number foo, foo.01, foo.02, ...
+			 */
+			$extension = '.' . sprintf('%02u', $partNumber);
+		}
+		elseif ($extension == '.php')
+		{
+			/**
+			 * With PHP extension: .php, .01.php, .02.php, ...
+			 */
+			$extension = '.' . sprintf('%02u', $partNumber) . '.php';
+		}
+		else
+		{
+			/**
+			 * With extension: .sql, .s01, .s02, ...
+			 */
+			$extension = substr($extension, 0, -2) . sprintf('%02u', $partNumber);
+		}
+
+		return $dirName . '/' . $baseName . $extension;
+	}
+
 }
