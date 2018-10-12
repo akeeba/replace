@@ -204,7 +204,13 @@ abstract class DataController extends Controller
 
 		$method = strtolower($this->input->getMethod());
 		$isPost = $method == 'post';
-		$this->csrfProtection('save', $isPost);
+
+		if (!$this->csrfProtection('save', $isPost))
+		{
+			header($_SERVER["SERVER_PROTOCOL"] . " 403 Forbidden");
+
+			exit();
+		}
 
 		$msg  = __('The record has been saved', 'akeebareplace');
 		$type = 'info';
@@ -276,7 +282,14 @@ abstract class DataController extends Controller
 
 		$method = strtolower($this->input->getMethod());
 		$isPost = $method == 'post';
-		$this->csrfProtection('delete', $isPost);
+
+		if (!$this->csrfProtection('delete', $isPost))
+		{
+			header($_SERVER["SERVER_PROTOCOL"] . " 403 Forbidden");
+
+			exit();
+		}
+
 
 		$msg  = __('The record has been deleted', 'akeebareplace');
 		$type = 'info';

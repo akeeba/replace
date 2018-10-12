@@ -166,6 +166,8 @@ abstract class Controller implements ControllerInterface
 			$this->view->setLayout($layout);
 		}
 
+		$this->view->setModel($this->model);
+
 		$html = $this->view->display();
 
 		echo $html;

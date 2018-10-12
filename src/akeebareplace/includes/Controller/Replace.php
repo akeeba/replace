@@ -13,6 +13,7 @@ use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\WordPress\Model\Replace as ReplaceModel;
 use Akeeba\Replace\WordPress\MVC\Controller\Controller;
+use Akeeba\Replace\WordPress\MVC\Model\DataModel;
 use Akeeba\Replace\WordPress\View\Replace\Html;
 
 class Replace extends Controller
@@ -42,11 +43,25 @@ class Replace extends Controller
 		$model = $this->model;
 
 		$reset = $this->input->getBool('reset', false);
+		$id    = $this->input->getInt('id', 0);
 
 		// Assign the Configuration object to the View object
 		/** @var Html $view */
 		$view                = $this->view;
 		$view->configuration = $model->getCachedConfiguration($reset);
+
+		// Do I have to clone the Configuration from another record?
+		if ($id > 0)
+		{
+			$jobModel = DataModel::getInstance('Job');
+			$item = $jobModel->getItem($id);
+
+			if (!empty($item))
+			{
+				$view->configuration = new Configuration(unserialize($item->options));
+				$model->setCachedConfiguration($view->configuration);
+			}
+		}
 
 		// Display the HTML page
 		$this->display();

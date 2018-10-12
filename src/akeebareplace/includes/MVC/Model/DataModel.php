@@ -53,11 +53,12 @@ abstract class DataModel extends Model implements DataModelInterface
 	/**
 	 * Return an instance of a Model by name.
 	 *
-	 * @param   string  $name      The name of the Model to return
+	 * @param   string  $name  The name of the Model to return
+	 * @param   wpdb    $db    The WPDB object instance. Use null to retrieve from global $wpdb (default).
 	 *
 	 * @return  DataModelInterface
 	 */
-	public static function getInstance($name)
+	public static function getInstance($name, $db = null)
 	{
 		$className = "Akeeba\\Replace\\WordPress\\Model\\" . ucfirst($name);
 
@@ -75,7 +76,9 @@ abstract class DataModel extends Model implements DataModelInterface
 
 		global $wpdb;
 
-		return new $className($wpdb);
+		$db = is_null($db) ? $wpdb : $db;
+
+		return new $className($db);
 	}
 
 	/**

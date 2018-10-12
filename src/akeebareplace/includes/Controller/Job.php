@@ -15,6 +15,26 @@ class Job extends DataController
 {
 	public function onBeforeBrowse()
 	{
-		$this->view->filters['description'] = $this->input->getString('description', '');
+		$fltDescription                     = $this->input->getString('description', '');
+		$this->view->filters['description'] = $fltDescription;
+		$this->model->setState('description', $fltDescription);
+	}
+
+	public function deleteFiles()
+	{
+		// TODO Implement files-only deletion
+		die('TODO');
+	}
+
+	public function downloadOutput()
+	{
+		// TODO Implement me
+		die('TODO');
+	}
+
+	public function downloadBackup()
+	{
+		// TODO Implement me
+		die('TODO');
 	}
 }

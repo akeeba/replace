@@ -41,7 +41,7 @@ abstract class Html extends Raw
 		foreach ($messages as $message)
 		{
 			$class = 'notice notice-' . $message['type'] . ' is-dismissible';
-			$html .= '<div class="'.$class.'"><p>'.$message['msg'].'</p></div>';
+			$html  .= '<div class="' . $class . '"><p>' . $message['msg'] . '</p></div>';
 		}
 
 		if ($this->useFEF)

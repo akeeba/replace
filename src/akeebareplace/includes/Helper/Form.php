@@ -93,10 +93,11 @@ abstract class Form
 	 * @param   int      $total      Total amount of records
 	 * @param   int      $limitStart Initial offset
 	 * @param   int|null $limit      Records per page
+	 * @param   string   $topBottom  Suffix for the selector's ID ('top' or 'bottom')
 	 *
 	 * @return string
 	 */
-	public static function pagination($total, $limitStart, $limit = null)
+	public static function pagination($total, $limitStart, $limit = null, $topBottom = 'top')
 	{
 		// If no limit has been supplied, fetch it from user options
 		if (!$limit)
@@ -168,7 +169,7 @@ abstract class Form
 			$page_links[] = '<a class="prev-page" href="'.$click_url.'"><span>&lsaquo;</span></a>';
 		}
 
-		$html_current_page  = '<input class="current-page" id="current-page-selector" type="text" name="paged" value="'.$current_page.'" size="'.strlen( $total_pages).'"/>';
+		$html_current_page  = '<input class="current-page" id="current-page-selector-' . $topBottom . '" type="text" value="'.$current_page.'" size="'.strlen( $total_pages).'"/>';
 		$html_current_page .= '<span class="tablenav-paging-text">';
 
 		$html_total_pages = sprintf( "<span class='total-pages'>%s</span>", number_format_i18n( $total_pages ) );

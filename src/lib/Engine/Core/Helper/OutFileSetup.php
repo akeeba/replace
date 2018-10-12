@@ -124,30 +124,32 @@ class OutFileSetup
 	}
 
 	/**
-	 * Return the file naming variables.
+	 * Return the file naming variables for the specific point in time.
+	 *
+	 * @param   string|int  $timestamp  The date/time or UNIX timestamp of the point in time the variables will be replaced for
 	 *
 	 * @return  array
 	 */
-	public function getVariables()
+	public function getVariables($timestamp = null)
 	{
 		/**
 		 * Time components. Expressed in whatever timezone the Platform decides to use.
 		 */
 		// Raw timezone, e.g. "EEST"
-		$rawTz     = $this->getLocalTimeStamp("T");
+		$rawTz     = $this->getLocalTimeStamp("T", $timestamp);
 		// Filename-safe timezone, e.g. "eest". Note the lowercase letters.
 		$fsSafeTZ  = strtolower(str_replace(array(' ', '/', ':'), array('_', '_', '_'), $rawTz));
 
 		return [
-			'[DATE]'             => $this->getLocalTimeStamp("Ymd"),
-			'[YEAR]'             => $this->getLocalTimeStamp("Y"),
-			'[MONTH]'            => $this->getLocalTimeStamp("m"),
-			'[DAY]'              => $this->getLocalTimeStamp("d"),
-			'[TIME]'             => $this->getLocalTimeStamp("His"),
-			'[TIME_TZ]'          => $this->getLocalTimeStamp("His") . $fsSafeTZ,
-			'[WEEK]'             => $this->getLocalTimeStamp("W"),
-			'[WEEKDAY]'          => $this->getLocalTimeStamp("l"),
-			'[GMT_OFFSET]'       => $this->getLocalTimeStamp("O"),
+			'[DATE]'             => $this->getLocalTimeStamp("Ymd", $timestamp),
+			'[YEAR]'             => $this->getLocalTimeStamp("Y", $timestamp),
+			'[MONTH]'            => $this->getLocalTimeStamp("m", $timestamp),
+			'[DAY]'              => $this->getLocalTimeStamp("d", $timestamp),
+			'[TIME]'             => $this->getLocalTimeStamp("His", $timestamp),
+			'[TIME_TZ]'          => $this->getLocalTimeStamp("His", $timestamp) . $fsSafeTZ,
+			'[WEEK]'             => $this->getLocalTimeStamp("W", $timestamp),
+			'[WEEKDAY]'          => $this->getLocalTimeStamp("l", $timestamp),
+			'[GMT_OFFSET]'       => $this->getLocalTimeStamp("O", $timestamp),
 			'[TZ]'               => $fsSafeTZ,
 			'[TZ_RAW]'           => $rawTz,
 		];
@@ -156,16 +158,17 @@ class OutFileSetup
 	/**
 	 * Replace the variables in a given string.
 	 *
-	 * @param   string  $input       The string to replace variables in
-	 * @param   array   $additional  Any additional replacements to make
+	 * @param   string      $input       The string to replace variables in
+	 * @param   array       $additional  Any additional replacements to make
+	 * @param   string|int  $timestamp   The date/time or UNIX timestamp of the point in time the variables will be replaced for
 	 *
 	 * @return  string
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function replaceVariables($input, array $additional = [])
+	public function replaceVariables($input, array $additional = [], $timestamp = null)
 	{
-		$variables = $this->getVariables();
+		$variables = $this->getVariables($timestamp);
 		$variables = array_merge($variables, $additional);
 
 		return str_replace(array_keys($variables), array_values($variables), $input);

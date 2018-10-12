@@ -183,7 +183,7 @@ abstract class View implements ViewInterface
 			$messages = array();
 		}
 
-		$messages[] = array('msg' => $messages, 'type' => $type);
+		$messages[] = array('msg' => $message, 'type' => $type);
 
 		update_user_meta(get_current_user_id(), ViewInterface::MESSAGES_META_KEY, $messages);
 	}

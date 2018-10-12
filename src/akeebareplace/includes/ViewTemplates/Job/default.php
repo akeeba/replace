@@ -13,14 +13,15 @@ use Akeeba\Replace\WordPress\Helper\Form;
 /** @var \Akeeba\Replace\WordPress\View\Job\Html $this */
 
 wp_enqueue_style('akeebareplace-backend', plugins_url('/css/backend.css', AKEEBA_REPLACE_SELF), ['fef'], Application::getMediaVersion());
+wp_enqueue_script('akeebareplace-jobs', plugins_url('/js/jobs.js', AKEEBA_REPLACE_SELF), ['akeebareplace-system'], Application::getMediaVersion());
 
 $subheading = __('Jobs', 'akeebareplace');
 
-function akeebaRepalceJobDefault_renderHeaderFooter($that)
+function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 {
 	?>
 	<div class="alignleft actions bulkactions">
-		<select name="task" id="bulk-action-selector-top">
+		<select id="bulk-action-selector-<?php echo $topBottom ?>">
 			<option value="-1"><?php _e('Bulk Actions') ?></option>
 			<option value="delete"><?php _e('Delete', 'akeebareplace') ?></option>
 			<option value="deleteFiles"><?php _e('Delete Files', 'akeebareplace') ?></option>
@@ -30,7 +31,7 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that)
 		</button>
 	</div>
 
-	<?php echo Form::pagination($that->total, $that->limitStart) ?>
+	<?php echo Form::pagination($that->total, $that->limitStart, null, $topBottom) ?>
 	<?php
 }
 
@@ -40,15 +41,15 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that)
 
 <span class="akeebareplace-inline-header-buttons">
 	<a class="akeeba-btn--green"
-	   href="<?php echo esc_url(admin_url('admin.php?page=akeebareplace&view=Replace&task=new')) ?>">
+	   href="<?php echo esc_url(admin_url('admin.php?page=akeebareplace&view=Replace&reset=1')) ?>">
 		<?php _e('Add New') ?>
 	</a>
 </span>
 
-<form method="post" action="<?php echo admin_url('admin.php') ?>">
+<form method="post">
 	<input type="hidden" name="page" value="akeebareplace"/>
 	<input type="hidden" name="view" value="Job"/>
-	<input type="hidden" name="task" value=""/>
+	<input type="hidden" name="task" value="browse" id="akeebareplace-task"/>
 	<input type="hidden" name="_wpnonce" value=""/>
 
 
@@ -62,7 +63,7 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that)
 	</p>
 
 	<div class="tablenav top">
-		<?php akeebaRepalceJobDefault_renderHeaderFooter($this) ?>
+		<?php akeebaRepalceJobDefault_renderHeaderFooter($this, 'top') ?>
 	</div>
 
 	<table class="akeeba-table--striped">
@@ -73,32 +74,77 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that)
 			</th>
 			<th><?php _e('ID', 'akeebarepalce') ?></th>
 			<th><?php _e('Description', 'akeebarepalce') ?></th>
-			<th><?php _e('Created On', 'akeebarepalce') ?></th>
-			<th><?php _e('Last Run', 'akeebarepalce') ?></th>
-			<th><?php _e('Actions', 'akeebarepalce') ?></th>
+			<th><?php _ex('Run On', 'Shorthand for "this job was last run on the date printed in this column"', 'akeebarepalce') ?></th>
 		</tr>
 		</thead>
 
 		<tbody>
 		<?php if (count($this->items)): ?>
-			<?php foreach ($this->items as $item): ?>
+			<?php
+			foreach ($this->items as $item):
+			$recordFiles = $this->getModel()->getFilePathsForRecord($item);
+			?>
 			<tr>
 				<td class="check-column">
 					<input id="cb-select-<?php echo $item->id ?>" type="checkbox" name="cb[]" value="<?php echo $item->id?>" />
 				</td>
 				<td><?php echo (int)$item->id ?></td>
-				<td><?php echo $this->escape($item->description) ?></td>
-				<td><?php echo $this->escape(Form::formatDate($item->created_on)) ?></td>
-				<td><?php echo $this->escape(Form::formatDate($item->run_on)) ?></td>
 				<td>
-					<!-- TODO: Per-item actions -->
+					<strong><?php echo $this->escape($item->description) ?></strong>
+					<div class="row-actions">
+						<span>
+							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Replace&id=' . $item->id) ?>">
+								<?php _e('Clone', 'akeebareplace') ?>
+							</a>
+						</span>
+						|
+						<span class="trash">
+							<a href="<?php echo wp_nonce_url(admin_url('admin.php?page=akeebareplace&view=Job&task=deleteFiles&id=' . $item->id), 'get_Job_deleteFiles') ?>" class="submitdelete">
+								<?php _e('Delete Files', 'akeebareplace') ?>
+							</a>
+						</span>
+						|
+						<span class="trash">
+							<a href="<?php echo wp_nonce_url(admin_url('admin.php?page=akeebareplace&view=Job&task=delete&id=' . $item->id), 'get_Job_delete') ?>" class="submitdelete">
+								<?php _e('Delete', 'akeebareplace') ?>
+							</a>
+						</span>
+						<?php if (!empty($recordFiles['log'])): ?>
+							|
+							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Log&id=' . $item->id) ?>">
+								<?php _e('View log' ,'akeebareplace') ?>
+							</a>
+						<?php endif; ?>
+						<?php if (!empty($recordFiles['output'])): ?>
+							|
+							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Job&task=downloadOutput&id=' . $item->id) ?>">
+								<?php _e('Download output SQL' ,'akeebareplace') ?>
+							</a>
+						<?php endif; ?>
+						<?php if (!empty($recordFiles['backup'])): ?>
+							|
+							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Job&task=downloadBackup&id=' . $item->id) ?>">
+								<?php _e('Download backup' ,'akeebareplace') ?>
+							</a>
+							|
+							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Restore&id=' . $item->id) ?>">
+								<?php _e('Restore backup' ,'akeebareplace') ?>
+							</a>
+						<?php endif; ?>
+
+					</div>
 				</td>
+				<td><?php echo $this->escape(Form::formatDate($item->run_on)) ?></td>
 			</tr>
 			<?php endforeach; ?>
 		<?php else: ?>
 			<tr>
 				<td colspan="20">
-					<?php _e('You have not run any replacement jobs yet. Click the Add New button at the top of the page to start your first replacement.', 'akeebareplace') ?>
+					<?php if (empty($this->filters['description'])): ?>
+						<?php _e('You have not run any replacement jobs yet. Click the Add New button at the top of the page to start your first replacement.', 'akeebareplace') ?>
+					<?php else: ?>
+						<?php _e('Nothing matches the filters you specified.', 'akeebareplace') ?>
+					<?php endif; ?>
 				</td>
 			</tr>
 		<?php endif; ?>
@@ -106,7 +152,7 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that)
 	</table>
 
 	<div class="tablenav bottom">
-		<?php akeebaRepalceJobDefault_renderHeaderFooter($this) ?>
+		<?php akeebaRepalceJobDefault_renderHeaderFooter($this, 'bottom') ?>
 	</div>
 
 </form>

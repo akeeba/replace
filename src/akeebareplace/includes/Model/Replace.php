@@ -150,7 +150,6 @@ class Replace extends Model
 			$engine = $this->makeEngine($this->getCachedConfiguration());
 			$engine->getLogger()->debug("===== Starting a new replacement job =====");
 
-			// TODO Record this replacement attempt in the database table ONLY if there is no job ID sent in the request, otherwise only update Last Run
 			$jobModel = DataModel::getInstance('Job');
 			$jobID = $jobModel->save([
 				'options'    => serialize($engine->getConfig()->toArray()),
