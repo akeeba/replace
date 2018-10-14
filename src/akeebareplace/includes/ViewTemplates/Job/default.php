@@ -129,10 +129,12 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Job&task=downloadBackup&id=' . $item->id) ?>">
 								<?php _e('Download backup' ,'akeebareplace') ?>
 							</a>
+							<!--
 							|
 							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Restore&id=' . $item->id) ?>">
 								<?php _e('Restore backup' ,'akeebareplace') ?>
 							</a>
+							-->
 						<?php endif; ?>
 
 					</div>

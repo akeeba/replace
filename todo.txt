@@ -1,61 +1,95 @@
-GUI
-================================================================================
-Main page (Control Panel)
-	Export -- export the configuration as JSON
-	Import -- import a JSON configuration and open the New Job page in the Replace view
+User-defined descriptions #7
+========================================================================================================================
+Right now the description of each job is hard-coded. It should be an option visible to the user.
 
-SQL Runner (used for restore backup)
-	Needs a replacement job ID and whether to apply output or backup SQL
-	Need to import the Database\Restore package from ANGIE into the library and test it
-	Will need to reuse and adapt JS code from ANGIE
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
 
-WP-CLI
-	Execute a replacement (with possibility for import)
-	Download output SQL
-	Apply output SQL
-	Download backup SQL
-	Apply backup SQL
-	Export
-	List past jobs / latest job
-	Delete files
-	Delete
+Plugin options page #6
+========================================================================================================================
+We need to be able to set up some general options
 
-Code + Tests (Library)
-================================================================================
-Add RegEx support to replacer
-    Add RegEx support -- Special worry about UTF data!
-    Test RegEx support
+Minimum execution time
+Maximum execution time
+Runtime bias
+Output path
 
-Maybe I can test the MVC classes I'll be writing?
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
 
-Maybe a database driver which is a decorator to $wpdb (can't test it, though?)
+Quick setup for site transfers #5
+========================================================================================================================
+!!! This must be part of the library (ANGIE will be using this)
 
-Interfaces
-================================================================================
-WordPress plugin
-    The replacement entry point should be a separate .php page, directly accessible, which is locked by a password.
-    The password will be based off the site's secret.
+Give me the following information for the old and new sites:
 
-    A main page to enter replacements and choose what to exclude from the process (whole tables or just some columns)
-    A quick interface to populate that based on old and new site's URL and path on the server
+Absolute filesystem path
+URL
+I will set up a replacement job just like ANGIE does.
 
-    A page to show past jobs and their output SQL file, backup SQL file, log
-    Can export to JSON and import from JSON
+I will also need a page in the plugin and a standalone script (documented) to show the URL and path to the current site.
 
-    Restore from backup page
-        I need to implement the db restoration code first!
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
 
-    Options page
-        Auto-output to SQL
-        Take automatic backups
-        Log level
-        Maximum number of jobs to keep
+Regular Expressions #4
+========================================================================================================================
+Add RegEx support to replacer. Take care of UTF data.
 
-    A page and a script to show the URL and path to the current site
-    Option to save the URL and path to the site in the database. We can use that to populate the quick changes UI.
+Test RegEx support
 
-CLI
-    Single PHAR file, maybe use Symfony console package or similar to create the interface
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
 
-Standalone
-    Single file build (with stripped comments and extraneous newlines) like we do for Kickstart
+Import / Export a job #1
+========================================================================================================================
+
+Export the Configuration as a JSON object. This should be easy, since we store it as a serialized array. We load it, create a Configuration object out of it, export to array and serialize it to JSON. Then reuse the download code from Job Controller to send the file to the browser.
+
+Import from JSON. This requires a new task in the Job Controller to upload files. See how we do it in Admin Tools. The JSON-decoded array has to be filtered by the keys derived from $prototypeConfig = (new Configuration)->toArray() and then merged with this $prototypeConfig. Then we need to use the Restore model to set them in the cache and navigate to the Restore view.
+
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+
+Backup SQL restoration #2
+========================================================================================================================
+
+Show the link in the interface, see ViewTemplates/Job/default.php
+
+First we need to import the Database\Restore package from ANGIE and convert it to use WPDB.
+
+We need to send the job ID and SQL type to apply (output or backup, defaults to backup). This lets us have a future-proof way of applying output SQL files as well.
+
+The Model will need to find all SQL file parts (see the Job Model, it has the code to do that) and step through them. Look at ANGIE for ideas.
+
+We will need a similar interface and JS code as ANGIE.
+
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+
+WP-CLI integration #3
+========================================================================================================================
+We can integrate with WP-CLI and offer the following features through the command line:
+
+akeebareplace run Execute a replacement job (with possibility for import from a JSON file)
+akeebareplace download --output Download output SQL
+akeebareplace download --backup Download backup SQL
+akeebareplace apply --backup Apply the backup SQL
+akeebareplace export Export as JSON
+akeebareplace list List all jobs
+akeebareplace last_id Get the last job ID
+akeebareplace delete --only-files Delete files
+akeebareplace delete Delete jobs
+
+
