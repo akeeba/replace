@@ -23,11 +23,13 @@ Quick setup for site transfers #5
 ========================================================================================================================
 !!! This must be part of the library (ANGIE will be using this)
 
-Give me the following information for the old and new sites:
+Give me the following information for the new site (the old site values I can fetch from the database):
 
 Absolute filesystem path
 URL
-I will set up a replacement job just like ANGIE does.
+Database prefix
+
+I will set up a replacement job just like ANGIE does. I will definitely need to see if it's a multisite.
 
 I will also need a page in the plugin and a standalone script (documented) to show the URL and path to the current site.
 

@@ -125,6 +125,13 @@ class Configuration
 	private $tableCollation = '';
 
 	/**
+	 * The human-readable description for the backup job which will be recorded in the database
+	 *
+	 * @var  string
+	 */
+	private $description = '';
+
+	/**
 	 * Configuration constructor.
 	 *
 	 * Creates a Configuration object from a configuration keyed array.
@@ -628,6 +635,26 @@ class Configuration
 
 			call_user_func_array([$this, $method], [$v]);
 		}
+	}
+
+	/**
+	 * Get the human-readable description
+	 *
+	 * @return  string
+	 */
+	public function getDescription()
+	{
+		return $this->description;
+	}
+
+	/**
+	 * Set the human-readable description
+	 *
+	 * @param   string  $description
+	 */
+	protected function setDescription($description)
+	{
+		$this->description = $description;
 	}
 
 	/**
