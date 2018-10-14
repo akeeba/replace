@@ -10,7 +10,6 @@
 namespace Akeeba\Replace\WordPress\MVC\Controller;
 
 use Akeeba\Replace\WordPress\Helper\WordPress;
-use Akeeba\Replace\WordPress\MVC\Input\Filter;
 use Akeeba\Replace\WordPress\MVC\Input\Input;
 use Akeeba\Replace\WordPress\MVC\Input\InputInterface;
 use Akeeba\Replace\WordPress\MVC\Model\DataModel;
@@ -314,43 +313,4 @@ abstract class DataController extends Controller
 
 		$this->redirect($url);
 	}
-
-	/**
-	 * Fetches the item IDs from the request
-	 *
-	 * @return  array
-	 */
-	protected function getIDsFromRequest()
-	{
-		$method = strtolower($this->input->getMethod());
-
-		// First we will look for the PK of the table
-		$pk      = $this->model->getPKName();
-		$pkValue = 0;
-
-		if (!empty($pk))
-		{
-			$pkValue = $this->input->{$method}->getInt($pk, 0);
-		}
-
-		if ($pkValue > 0)
-		{
-			return [$pkValue];
-		}
-
-		// No PK found. Let's load the "cb" array from the request.
-		$ids    = $this->input->{$method}->get('cb', [], 'array');
-		$filter = new Filter();
-
-		$ids = array_map(function ($v) use ($filter) {
-			return $filter->clean($v, 'int');
-		}, $ids);
-
-		$ids = array_filter($ids, function ($v) {
-			return !empty($v);
-		});
-
-		return $ids;
-	}
-
 }

@@ -73,6 +73,31 @@ class Job extends DataModel
 	}
 
 	/**
+	 * Post-processes the query before applying the LIMIT. This is used to set up the ORDER BY clause.
+	 *
+	 * @param   string  $query  The query to post-process
+	 *
+	 * @return  string
+	 */
+	public function onBeforeApplyLimit($query)
+	{
+		$orderBy  = $this->getState('orderBy', null, 'cmd');
+		$orderDir = $this->getState('orderDir', 'ASC', 'cmd');
+
+		if (empty($orderBy))
+		{
+			return $query;
+		}
+
+		$orderDir = trim(strtoupper($orderDir));
+		$orderDir = !in_array($orderDir, ['ASC', 'DESC']) ? 'ASC' : $orderDir;
+
+		$query .= " ORDER BY `{$orderBy}` $orderDir";
+
+		return $query;
+	}
+
+	/**
 	 * Returns the log, output and backup file paths for a job record. If the file does not exist the entry is blank
 	 * for that file.
 	 *

@@ -191,9 +191,19 @@ abstract class DataModel extends Model implements DataModelInterface
 			return array();
 		}
 
+		if (method_exists($this, 'onBeforeApplyLimit'))
+		{
+			$query = $this->onBeforeApplyLimit($query);
+		}
+
 		if (!$overrideLimits)
 		{
 			$query .= sprintf(' LIMIT %d, %d', $limitstart, $limit);
+		}
+
+		if (method_exists($this, 'onAfterApplyLimit'))
+		{
+			$query = $this->onAfterApplyLimit($query);
 		}
 
 		$rows = $this->db->get_results($query, OBJECT);
@@ -238,7 +248,24 @@ abstract class DataModel extends Model implements DataModelInterface
 	 */
 	public function buildQuery()
 	{
-		return "SELECT * FROM `{$this->tableName}`";
+		$query = '';
+
+		if (method_exists($this, 'onBeforeBuildQuery'))
+		{
+			$query = $this->onBeforeBuildQuery();
+		}
+
+		if (empty($query))
+		{
+			$query = "SELECT * FROM `{$this->tableName}`";
+		}
+
+		if (method_exists($this, 'onAfterBuildQuery'))
+		{
+			$query = $this->onBeforeBuildQuery($query);
+		}
+
+		return $query;
 	}
 
 	/**
