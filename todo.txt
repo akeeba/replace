@@ -1,29 +1,13 @@
 GUI
 ================================================================================
 Main page (Control Panel)
-	Show grid of replacement jobs
-		View log
-		Download output SQL (can be multipart)
-		Apply output SQL
-		Download backup SQL (can be multipart)
-	New -- create a new job with default values
-	Clone as new -- create a new job using the configuration of the selected job as a starting point
-	Delete Files -- only delete the output, backup and log files
-	Delete -- everything in Delete Files + delete the database record
-	Restore -- apply the Backup SQL
 	Export -- export the configuration as JSON
 	Import -- import a JSON configuration and open the New Job page in the Replace view
 
-SQL Runner
+SQL Runner (used for restore backup)
 	Needs a replacement job ID and whether to apply output or backup SQL
 	Need to import the Database\Restore package from ANGIE into the library and test it
 	Will need to reuse and adapt JS code from ANGIE
-
-View log
-	If latest=1 use the latest replacement job
-	Check *total* size of log file. If over 1MB ask whether to display it.
-	When displaying remember that it may be multipart
-	Download buttons (remember that it may be multipart)
 
 WP-CLI
 	Execute a replacement (with possibility for import)

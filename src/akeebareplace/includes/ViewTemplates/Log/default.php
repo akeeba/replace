@@ -8,7 +8,12 @@
  */
 
 /** @var \Akeeba\Replace\WordPress\View\Log\Html $this */
+
+$subheading = __('View Log', 'akeebareplace');
+
 ?>
+<?php echo $this->getRenderedTemplate('Common', 'header', '', ['subheading' => $subheading]); ?>
+
 <div style="text-align: right">
 	<a class="akeeba-btn--big"
 	   href="<?php echo admin_url('admin.php?page=akeebareplace&view=Job&task=downloadLog&id=' . $this->logId) ?>">
