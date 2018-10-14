@@ -1,13 +1,6 @@
 {
   "name": "akeeba/replace",
-  "type": "project",
   "description": "Akeeba Replace",
-  "require": {
-    "php": ">=5.4.0",
-    "ext-mysqli": "*",
-    "ext-json": "*",
-    "ext-pdo": "*"
-  },
   "keywords": [
     "database",
     "replace",
@@ -15,6 +8,7 @@
     "mysql"
   ],
   "homepage": "https://github.com/akeeba/replace",
+  "type": "project",
   "license": "GPL-3.0+",
   "authors": [
     {
@@ -24,6 +18,14 @@
       "role": "Lead Developer"
     }
   ],
+
+  "require": {
+    "php": ">=5.4.0",
+    "ext-mysqli": "*",
+    "ext-json": "*",
+    "ext-pdo": "*"
+  },
+
   "require-dev": {
     "phpunit/phpunit": "~5",
     "phpunit/dbunit": "~1.2",
@@ -31,9 +33,16 @@
     "fzaninotto/faker": "~1.8",
     "mikey179/vfsStream": "v1.6.5"
   },
+
   "autoload": {
     "psr-4": {
-      "Akeeba\\Replace\\Tests\\": "Tests"
+      "Akeeba\\Replace\\": "src/lib",
+      "Akeeba\\Replace\\WordPress\\": "src/akeebareplace/includes"
     }
+  },
+
+  "autoload-dev": {
+    "Akeeba\\Replace\\Tests\\": "Tests"
   }
+
 }
