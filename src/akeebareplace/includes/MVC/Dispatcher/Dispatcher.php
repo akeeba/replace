@@ -88,7 +88,7 @@ abstract class Dispatcher implements DispatcherInterface
 	 *
 	 * @codeCoverageIgnore
 	 */
-	protected function getInput()
+	public function getInput()
 	{
 		if (empty($this->input))
 		{

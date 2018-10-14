@@ -144,6 +144,8 @@ class Application
 			plugins_url('images/logo/replace-24.png', AKEEBA_REPLACE_SELF)
 		);
 
+		self::add_options_page();
+
 		add_action('load-' . self::$menuPage, [__CLASS__, 'add_options']);
 	}
 
@@ -290,5 +292,116 @@ class Application
 		}
 
 		return self::$mediaVersion;
+	}
+
+	private static function add_options_page()
+	{
+		// Add the page under WordPress' Options menu item
+		add_options_page('Akeeba Replace',
+			'Akeeba Replace',
+			'manage_options',
+			'akeebareplace_options',
+			function () {
+				require_once __DIR__ . '/../ViewTemplates/Options/wordpress.php';
+			}
+		);
+
+		// =============================================================================================================
+		// Section: Timing
+		// =============================================================================================================
+
+		// Add the section
+		add_settings_section('akeebareplace_timing',
+			__('Timing options', 'akeebareplace'),
+			function () {
+				echo "<p>";
+				_e('Modify how Akeeba Replace manages the time it spends on each step to avoid server time-outs and resource exhaustion.', 'akeebareplace');
+				echo "</p>";
+			},
+			'akeebareplace_options');
+
+		// -------------------------------------------------------------------------------------------------------------
+		// Option: akeebareplace_min_execution
+		// -------------------------------------------------------------------------------------------------------------
+		// Option registration & validation
+		register_setting('akeebareplace_options',
+			'akeebareplace_min_execution',
+			[
+				'sanitize_callback' => function ($v) {
+					$v = (int) $v;
+					$v = max(0, $v);
+
+					return min($v, 120);
+				},
+			]);
+
+		// Field rendering
+		add_settings_field('akeebareplace_min_execution',
+			__('Minimum time per step (seconds)', 'akeebareplace'),
+			function () {
+				$value = (int) get_option('akeebareplace_min_execution', 1);
+				echo <<< HTML
+<input type="number" min="0" max="120" value="$value" name="akeebareplace_min_execution">
+HTML;
+
+			},
+			'akeebareplace_options',
+			'akeebareplace_timing');
+
+		// -------------------------------------------------------------------------------------------------------------
+		// Option: akeebareplace_max_execution
+		// -------------------------------------------------------------------------------------------------------------
+		// Option registration & validation
+		register_setting('akeebareplace_options',
+			'akeebareplace_max_execution',
+			[
+				'sanitize_callback' => function ($v) {
+					$v = (int) $v;
+					$v = max(0, $v);
+
+					return min($v, 120);
+				},
+			]);
+
+		// Field rendering
+		add_settings_field('akeebareplace_max_execution',
+			__('Maximum time per step (seconds)', 'akeebareplace'),
+			function () {
+				$value = (int) get_option('akeebareplace_max_execution', 10);
+				echo <<< HTML
+<input type="number" min="0" max="120" value="$value" name="akeebareplace_max_execution">
+HTML;
+
+			},
+			'akeebareplace_options',
+			'akeebareplace_timing');
+
+		// -------------------------------------------------------------------------------------------------------------
+		// Option: akeebareplace_max_execution
+		// -------------------------------------------------------------------------------------------------------------
+		// Option registration & validation
+		register_setting('akeebareplace_options',
+			'akeebareplace_runtime_bias',
+			[
+				'sanitize_callback' => function ($v) {
+					$v = (int) $v;
+					$v = max(0, $v);
+
+					return min($v, 100);
+				},
+			]);
+
+		// Field rendering
+		add_settings_field('akeebareplace_runtime_bias',
+			__('Execution time bias (percent)', 'akeebareplace'),
+			function () {
+				$value = (int) get_option('akeebareplace_runtime_bias', 75);
+				echo <<< HTML
+<input type="number" min="0" max="100" value="$value" name="akeebareplace_runtime_bias">
+HTML;
+
+			},
+			'akeebareplace_options',
+			'akeebareplace_timing');
 	}
 }
