@@ -32,6 +32,24 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
         action="<?php echo $this->actionURL ?>"
         class="akeeba-form--horizontal">
 
+	<div id="akeebareplace-replace-description" class="akeeba-panel--information">
+		<header class="akeeba-block-header">
+			<h3>
+				<?php _e('Description', 'akeebareplace') ?>
+			</h3>
+		</header>
+
+		<div class="akeeba-form-group">
+			<label for="akeebareplaceDescription">
+				<?php _e('Description', 'akeebareplace') ?>
+			</label>
+			<input name="description" id="akeebareplaceDescription" type="text" value="<?php echo $this->configuration->getDescription() ?>" />
+			<p class="akeeba-help-text">
+				<?php _e('Enter a description for the replacement you are making, e.g. &ldquo;Replacing productOne with productOne&trade; in all posts&rdquo;. This will be recorded for your future reference.', 'akeebareplace') ?>
+			</p>
+		</div>
+	</div>
+
     <div id="akeebareplace-replace-main" class="akeeba-panel--primary">
         <header class="akeeba-block-header">
             <h3>
@@ -222,7 +240,7 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
             </label>
             <textarea id="akeebareplaceExcludeRows" name="excludeRows"><?php echo $this->excludedColumns ?></textarea>
             <p class="akeeba-help-text">
-		        <?php _e('Enter the name of specific table columns to exclude in the form tableName.columnName e.g. <code>wp_options.option_name</code>. Separate multiple table and column pairs with spaces, commas or new lines e.g. <code>wp_options.option_name, wp_comments.comment_author</code>.', 'akeebareplace') ?>
+		        <?php _e('Enter the name of specific table columns to exclude in the form tableName.columnName e.g. <code>wp_posts.guid</code>. Separate multiple table and column pairs with spaces, commas or new lines e.g. <code>wp_options.option_name, wp_posts.guid</code>.', 'akeebareplace') ?>
             </p>
         </div>
 

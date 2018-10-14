@@ -179,6 +179,7 @@ class Replace extends Controller
 		$rawExcludeColumns  = $this->input->post->get('excludeRows', '', 'raw');
 		$databaseCollation  = $this->input->post->getCmd('databaseCollation', '');
 		$tableCollation     = $this->input->post->getCmd('tableCollation', '');
+		$description        = $this->input->post->getCmd('description', '');
 		$hasLog             = true;
 
 		/**
@@ -245,6 +246,7 @@ class Replace extends Controller
 			'replacements'       => array_combine($from, $to),
 			'databaseCollation'  => $databaseCollation,
 			'tableCollation'     => $tableCollation,
+			'description'        => $description,
 		];
 
 		$configuration = new Configuration($newConfig);

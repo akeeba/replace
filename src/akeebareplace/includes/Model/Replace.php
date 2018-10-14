@@ -100,6 +100,8 @@ class Replace extends Model
 			'logFile'       => '[OUTPUT_PATH][YEAR][MONTH][DAY]_[TIME_TZ].log',
 			'minLogLevel'   => LoggerInterface::SEVERITY_INFO,
 			'excludeTables' => [$wpdb->prefix . 'akeebareplace_jobs'],
+			'excludeRows'   => [$wpdb->prefix . 'posts' => ['guid']],
+			'description'   => sprintf(__('Replacement job created on %s', 'akeebareplace'), Form::formatDate()),
 		];
 
 		$config = array_merge_recursive($config, $overrides);
@@ -148,19 +150,28 @@ class Replace extends Model
 		if ($startNew)
 		{
 			// Create a new engine
-			$engine = $this->makeEngine($this->getCachedConfiguration());
+			$configuration = $this->getCachedConfiguration();
+			$engine        = $this->makeEngine($configuration);
 			$engine->getLogger()->debug("===== Starting a new replacement job =====");
 
-			$jobModel = DataModel::getInstance('Job');
+			$jobModel    = DataModel::getInstance('Job');
+			$description = $configuration->getDescription();
+
+			if (empty($description))
+			{
+				$description = sprintf(__('Replacement job created on %s', 'akeebareplace'), Form::formatDate());
+			}
+
 			$jobID = $jobModel->save([
-				'options'    => serialize($engine->getConfig()->toArray()),
-				// TODO Only use the default description if there is no description sent in the request
-				'description' => sprintf(__('Replacement job started on %s', 'akeebareplace'), Form::formatDate()),
-				'created_on' => gmdate('Y-m-d H:i:s'),
-				'run_on'     => gmdate('Y-m-d H:i:s'),
+				'options'     => serialize($engine->getConfig()->toArray()),
+				'description' => $description,
+				'created_on'  => gmdate('Y-m-d H:i:s'),
+				'run_on'      => gmdate('Y-m-d H:i:s'),
 			]);
 
-			$engine->getLogger()->info(sprintf('The new job ID is %u in the database (%s table).', $jobID, $jobModel->getTableName()));
+			$engine->getLogger()
+			       ->info(sprintf('The new job ID is %u in the database (%s table).', $jobID, $jobModel->getTableName()))
+			;
 		}
 		else
 		{
