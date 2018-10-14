@@ -46,7 +46,7 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 					'elements' => array('my_table_name'),
 					'glue' => ','
 				),
-				PHP_EOL . 'SELECT ' . PHP_EOL . 'FROM my_table_name',
+				"\n" . 'SELECT ' . "\n" . 'FROM my_table_name',
 			),
 			'non-array-element' => array(
 				array(
@@ -64,7 +64,7 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 					'elements' => array('my_table_name'),
 					'glue' => ','
 				),
-				PHP_EOL . 'SELECT ' . PHP_EOL . 'FROM my_table_name',
+				"\n" . 'SELECT ' . "\n" . 'FROM my_table_name',
 			)
 		);
 	}
@@ -123,25 +123,25 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 				'FROM',
 				'table1',
 				',',
-				PHP_EOL . "FROM table1"
+				"\n" . "FROM table1"
 			),
 			array(
 				'SELECT',
 				array('column1', 'column2'),
 				',',
-				PHP_EOL . "SELECT column1,column2"
+				"\n" . "SELECT column1,column2"
 			),
 			array(
 				'()',
 				array('column1', 'column2'),
 				',',
-				PHP_EOL . "(column1,column2)"
+				"\n" . "(column1,column2)"
 			),
 			array(
 				'CONCAT()',
 				array('column1', 'column2'),
 				',',
-				PHP_EOL . "CONCAT(column1,column2)"
+				"\n" . "CONCAT(column1,column2)"
 			),
 		);
 	}

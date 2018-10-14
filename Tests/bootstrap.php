@@ -46,7 +46,7 @@ if (function_exists('date_default_timezone_get') && function_exists('date_defaul
 // Include the library autoloader
 if (false == include __DIR__ . '/../src/lib/Autoloader/Autoloader.php')
 {
-	echo 'ERROR: The Autoloader was not found' . PHP_EOL;
+	echo 'ERROR: The Autoloader was not found' . "\n";
 
 	exit(1);
 }

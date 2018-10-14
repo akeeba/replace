@@ -1181,7 +1181,7 @@ abstract class Query
 		if (is_null($this->set))
 		{
 			$glue = strtoupper($glue);
-			$eol = PHP_EOL;
+			$eol = "\n";
 			$this->set = new QueryElement('SET', $conditions, "{$eol}\t$glue ");
 		}
 		else
@@ -1344,11 +1344,11 @@ abstract class Query
 		if ($distinct)
 		{
 			$name = 'UNION DISTINCT ()';
-			$glue = ')' . PHP_EOL . 'UNION DISTINCT (';
+			$glue = ')' . "\n" . 'UNION DISTINCT (';
 		}
 		else
 		{
-			$glue = ')' . PHP_EOL . 'UNION (';
+			$glue = ')' . "\n" . 'UNION (';
 			$name = 'UNION ()';
 		}
 		// Get the QueryElement if it does not exist

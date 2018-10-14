@@ -53,13 +53,13 @@ interface WriterInterface
 	 * Write a line to the file
 	 *
 	 * @param   string  $line  The line contents
-	 * @param   string  $eol   The end-of-line character, defaults to PHP_EOL
+	 * @param   string  $eol   The end-of-line character, defaults to "\n"
 	 *
 	 * @return  void
 	 *
 	 * @throws  RuntimeException  When it's impossible to write to a file no matter what we try to do.
 	 */
-	public function writeLine($line, $eol = PHP_EOL);
+	public function writeLine($line, $eol = "\n");
 
 	/**
 	 * How many parts have been created so far?

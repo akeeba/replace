@@ -34,7 +34,7 @@ class NullWriter implements WriterInterface
 		return 0;
 	}
 
-	public function writeLine($line, $eol = PHP_EOL)
+	public function writeLine($line, $eol = "\n")
 	{
 	}
 

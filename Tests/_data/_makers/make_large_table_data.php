@@ -10,14 +10,14 @@
 // Include the library autoloader
 if (false == include __DIR__ . '/../../../vendor/autoload.php')
 {
-	echo 'ERROR: The Composer autoloader was not found' . PHP_EOL;
+	echo 'ERROR: The Composer autoloader was not found' . "\n";
 
 	exit(1);
 }
 
 if (false == include __DIR__ . '/../../../vendor/fzaninotto/faker/src/autoload.php')
 {
-	echo 'ERROR: The Faker autoloader was not found' . PHP_EOL;
+	echo 'ERROR: The Faker autoloader was not found' . "\n";
 
 	exit(1);
 }
