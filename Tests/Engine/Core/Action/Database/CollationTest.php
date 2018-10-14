@@ -50,22 +50,22 @@ class CollationTest extends \PHPUnit_Framework_TestCase
 
 		if (is_null($expectedAction))
 		{
-			$this->assertCount(0, $actionQueries);
+			self::assertCount(0, $actionQueries);
 		}
 		else
 		{
-			$this->assertCount(1, $actionQueries);
-			$this->assertEquals($expectedAction, $actionQueries[0]);
+			self::assertCount(1, $actionQueries);
+			self::assertEquals($expectedAction, $actionQueries[0]);
 		}
 
 		if (is_null($expectedAction))
 		{
-			$this->assertCount(0, $backupQueries);
+			self::assertCount(0, $backupQueries);
 		}
 		else
 		{
-			$this->assertCount(1, $backupQueries);
-			$this->assertEquals($expectedBackup, $backupQueries[0]);
+			self::assertCount(1, $backupQueries);
+			self::assertEquals($expectedBackup, $backupQueries[0]);
 		}
 	}
 

@@ -33,13 +33,13 @@ class MysqliTest extends DriverTestCase
 		$q = new Mysqli($driver);
 		$q->setLimit('5', '10');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($q, 'limit')),
 			$this->equalTo('5'),
 			'Tests limit was set correctly.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($q, 'offset')),
 			$this->equalTo('10'),
 			'Tests offset was set correctly.'
@@ -58,7 +58,7 @@ class MysqliTest extends DriverTestCase
 		$driver = static::getDriver();
 		$q      = new Mysqli($driver);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($q->processLimit('SELECT foo FROM bar', 5, 10)),
 			$this->equalTo('SELECT foo FROM bar LIMIT 10, 5'),
 			'Tests rendered value.'
@@ -75,13 +75,13 @@ class MysqliTest extends DriverTestCase
 		$driver = static::getDriver();
 		$q      = new Mysqli($driver);
 
-		$this->assertThat(
+		self::assertThat(
 			$q->concatenate(array('foo', 'bar')),
 			$this->equalTo('CONCAT(foo,bar)'),
 			'Tests without separator.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$q->concatenate(array('foo', 'bar'), ' and '),
 			$this->equalTo("CONCAT_WS(' and ', foo, bar)"),
 			'Tests without separator.'

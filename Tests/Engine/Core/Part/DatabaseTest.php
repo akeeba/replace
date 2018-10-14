@@ -139,10 +139,10 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
 		{
 			$status = $part->tick();
 
-			$this->assertNull($status->getError(), "We should not get any errors!");
+			self::assertNull($status->getError(), "We should not get any errors!");
 
 			$run++;
-			$this->assertLessThanOrEqual($maxRuns, $run, "Running the Engine Part should not exceed $maxRuns ticks.");
+			self::assertLessThanOrEqual($maxRuns, $run, "Running the Engine Part should not exceed $maxRuns ticks.");
 
 			if ($status->isDone())
 			{
@@ -153,7 +153,7 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
 		}
 
 		// Make sure we have the right number of tables
-		$this->assertCount(count($expectedTables), TableSpy::$instanceParams);
+		self::assertCount(count($expectedTables), TableSpy::$instanceParams);
 
 		// Get the names of the tables processed by our part
 		$actualNames = [];
@@ -168,7 +168,7 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
 		asort($actualNames);
 		asort($expectedTables);
 
-		$this->assertEquals($expectedTables, $actualNames);
+		self::assertEquals($expectedTables, $actualNames);
 	}
 
 	public static function providerEnginePart()

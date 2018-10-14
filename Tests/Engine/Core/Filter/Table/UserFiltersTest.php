@@ -48,9 +48,9 @@ class UserFiltersTest extends \PHPUnit_Framework_TestCase
 
 		$actual = $filter->filter($tables);
 
-		$this->assertCount(4, $actual);
-		$this->assertNotContains('test_foo', $actual);
-		$this->assertNotContains('tests_bar', $actual);
+		self::assertCount(4, $actual);
+		self::assertNotContains('test_foo', $actual);
+		self::assertNotContains('tests_bar', $actual);
 
 	}
 }

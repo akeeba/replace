@@ -22,12 +22,12 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 		$emptyParams = [];
 		$dummy = new PartStatus($emptyParams);
 
-		$this->assertSame(false, $this->getObjectAttribute($dummy, 'done'), 'Default "done" must be false');
-		$this->assertSame('', $this->getObjectAttribute($dummy, 'domain'), 'Default "domain" must be an empty string');
-		$this->assertSame('', $this->getObjectAttribute($dummy, 'step'), 'Default "step" must be an empty string');
-		$this->assertSame('', $this->getObjectAttribute($dummy, 'substep'), 'Default "substep" must be an empty string');
-		$this->assertSame(null, $this->getObjectAttribute($dummy, 'error'), 'Default "error" must be null');
-		$this->assertSame([], $this->getObjectAttribute($dummy, 'warnings'), 'Default "warnings" must be null');
+		self::assertSame(false, $this->getObjectAttribute($dummy, 'done'), 'Default "done" must be false');
+		self::assertSame('', $this->getObjectAttribute($dummy, 'domain'), 'Default "domain" must be an empty string');
+		self::assertSame('', $this->getObjectAttribute($dummy, 'step'), 'Default "step" must be an empty string');
+		self::assertSame('', $this->getObjectAttribute($dummy, 'substep'), 'Default "substep" must be an empty string');
+		self::assertSame(null, $this->getObjectAttribute($dummy, 'error'), 'Default "error" must be null');
+		self::assertSame([], $this->getObjectAttribute($dummy, 'warnings'), 'Default "warnings" must be null');
 	}
 
 	/**
@@ -45,7 +45,7 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 		];
 
 		$dummy = new PartStatus($parameters);
-		$this->assertSame($expected, $this->getObjectAttribute($dummy, 'done'), $message);
+		self::assertSame($expected, $this->getObjectAttribute($dummy, 'done'), $message);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 		];
 
 		$dummy = new PartStatus($parameters);
-		$this->assertSame(!$expected, $this->getObjectAttribute($dummy, 'done'), $message);
+		self::assertSame(!$expected, $this->getObjectAttribute($dummy, 'done'), $message);
 	}
 
 	/**
@@ -84,7 +84,7 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 		];
 
 		$dummy = new PartStatus($parameters);
-		$this->assertEquals($expected, $this->getObjectAttribute($dummy, 'error'));
+		self::assertEquals($expected, $this->getObjectAttribute($dummy, 'error'));
 	}
 
 	/**
@@ -103,7 +103,7 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 		];
 
 		$dummy = new PartStatus($parameters);
-		$this->assertEquals($expected, $this->getObjectAttribute($dummy, 'warnings'));
+		self::assertEquals($expected, $this->getObjectAttribute($dummy, 'warnings'));
 	}
 
 
@@ -112,12 +112,12 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 		$part   = $this->makeDummyPart();
 		$status = PartStatus::fromPart($part);
 
-		$this->assertFalse($status->isDone());
-		$this->assertEquals($status->getDomain(), 'foo');
-		$this->assertEquals($status->getStep(), 'bar');
-		$this->assertEquals($status->getSubstep(), 'bat');
-		$this->assertSame($status->getError(), $part->getError());
-		$this->assertSame($status->getWarnings(), $part->getWarnings());
+		self::assertFalse($status->isDone());
+		self::assertEquals($status->getDomain(), 'foo');
+		self::assertEquals($status->getStep(), 'bar');
+		self::assertEquals($status->getSubstep(), 'bat');
+		self::assertSame($status->getError(), $part->getError());
+		self::assertSame($status->getWarnings(), $part->getWarnings());
 	}
 
 	public function testToArray()
@@ -141,7 +141,7 @@ class PartStatusTest extends \PHPUnit_Framework_TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	private function callObjectMethod($object, $method, $params)

@@ -31,7 +31,7 @@ class AbstractLoggerTest extends \PHPUnit_Framework_TestCase
 		$logger->setMinimumSeverity($setTo);
 
 		$actual = $this->getObjectAttribute($logger, 'minimumSeverity');
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	public function setMinimumSeverityProvider()

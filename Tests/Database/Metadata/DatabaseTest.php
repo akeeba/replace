@@ -25,10 +25,10 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 	{
 		$actual = Database::fromDatabaseResult($input);
 
-		$this->assertInstanceOf(Database::class, $actual);
-		$this->assertEquals($name, $actual->getName());
-		$this->assertEquals($charset, $actual->getCharacterSet());
-		$this->assertEquals($collation, $actual->getCollation());
+		self::assertInstanceOf(Database::class, $actual);
+		self::assertEquals($name, $actual->getName());
+		self::assertEquals($charset, $actual->getCharacterSet());
+		self::assertEquals($collation, $actual->getCollation());
 	}
 
 	public static function fromDatabaseResultProvider()

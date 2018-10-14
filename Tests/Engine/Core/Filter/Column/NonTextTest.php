@@ -37,8 +37,8 @@ class NonTextTest extends \PHPUnit_Framework_TestCase
 
 		$actual = $dummy->filter($table, $columns);
 
-		$this->assertCount(5, $actual);
-		$this->assertArrayNotHasKey('test6', $actual);
+		self::assertCount(5, $actual);
+		self::assertArrayNotHasKey('test6', $actual);
 	}
 
 	protected static function giveMeSomeColumns()

@@ -24,7 +24,7 @@ class MemoryInfoTest extends \PHPUnit_Framework_TestCase
 		$dummy = new MemoryInfo();
 		$actual = $dummy->humanToIntegerBytes($input);
 
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	public static function humanToIntegerBytesProvider()
@@ -53,7 +53,7 @@ class MemoryInfoTest extends \PHPUnit_Framework_TestCase
 		$dummy = new MemoryInfo();
 		$actual = $dummy->integerBytesToHuman($value, $precision);
 
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	public static function integerBytesToHumanProvider()
@@ -77,7 +77,7 @@ class MemoryInfoTest extends \PHPUnit_Framework_TestCase
 		$dummy    = new MemoryInfo();
 		$actual   = $dummy->getMemoryLimit();
 		$expected = max(0, $dummy->humanToIntegerBytes(ini_get('memory_limit')));
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 

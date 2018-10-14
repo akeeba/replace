@@ -34,17 +34,17 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 		]);
 
 		// Make sure we got the correct object type
-		$this->assertInstanceOf('Akeeba\Replace\Engine\AbstractPart', $dummy, 'TEST ERROR: We do not have the correct class.');
+		self::assertInstanceOf('Akeeba\Replace\Engine\AbstractPart', $dummy, 'TEST ERROR: We do not have the correct class.');
 
 		$actualTimer    = $this->getObjectAttribute($dummy, 'timer');
 		$actualState    = $this->getObjectAttribute($dummy, 'state');
 		$actualConfig   = $this->getObjectAttribute($dummy, 'config');
 		$expectedConfig = new Configuration($params);
 
-		$this->assertInstanceOf('Akeeba\Replace\Timer\TimerInterface', $actualTimer, 'The Timer must be set by the constructor');
-		$this->assertSame($timer, $actualTimer, 'The actual Timer object must be set by the constructor');
-		$this->assertEquals(PartInterface::STATE_INIT, $actualState, 'The initial state must be STATE_INIT');
-		$this->assertEquals($expectedConfig, $actualConfig, 'The parameters must be set by the constructor');
+		self::assertInstanceOf('Akeeba\Replace\Timer\TimerInterface', $actualTimer, 'The Timer must be set by the constructor');
+		self::assertSame($timer, $actualTimer, 'The actual Timer object must be set by the constructor');
+		self::assertEquals(PartInterface::STATE_INIT, $actualState, 'The initial state must be STATE_INIT');
+		self::assertEquals($expectedConfig, $actualConfig, 'The parameters must be set by the constructor');
 	}
 
 	public function testPropagateFromObjectInvalid()
@@ -57,7 +57,7 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 
 		$dummy->propagateFromObject($invalid);
 
-		$this->assertNull($dummy->getError());
+		self::assertNull($dummy->getError());
 	}
 
 	/**
@@ -83,8 +83,8 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 
 		$dummy->propagateFromObject($errorAware);
 
-		$this->assertSame($error, $this->getObjectAttribute($dummy, 'error'), 'propagateFromObject must pull in the error from the other object');
-		$this->assertNull($errorAware->getError(), 'propagateFromObject must clear errors on the other object');
+		self::assertSame($error, $this->getObjectAttribute($dummy, 'error'), 'propagateFromObject must pull in the error from the other object');
+		self::assertNull($errorAware->getError(), 'propagateFromObject must clear errors on the other object');
 	}
 
 	/**
@@ -106,8 +106,8 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 
 		$actualWarnings = $dummy->getWarnings();
 
-		$this->assertNotContains($mustNotExist, $actualWarnings, 'propagateFromObject must replace our warnings');
-		$this->assertEquals($warnings, $actualWarnings, 'propagateFromObject must replace our warnings with the other object\'s warnings');
+		self::assertNotContains($mustNotExist, $actualWarnings, 'propagateFromObject must replace our warnings');
+		self::assertEquals($warnings, $actualWarnings, 'propagateFromObject must replace our warnings with the other object\'s warnings');
 	}
 
 	/**
@@ -139,11 +139,11 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 		 * __sleep().
 		 */
 
-		$this->assertEquals('Foo', $dummy->getStep(), 'propagateFromObject must pull the step from the other object');
-		$this->assertNotEmpty($stepAware->getStep(), 'propagateFromObject must NOT reset the step on the other object');
+		self::assertEquals('Foo', $dummy->getStep(), 'propagateFromObject must pull the step from the other object');
+		self::assertNotEmpty($stepAware->getStep(), 'propagateFromObject must NOT reset the step on the other object');
 
-		$this->assertEquals('Bar', $dummy->getSubstep(), 'propagateFromObject must pull the substep from the other object');
-		$this->assertNotEmpty($stepAware->getSubstep(), 'propagateFromObject must NOT reset the substep on the other object');
+		self::assertEquals('Bar', $dummy->getSubstep(), 'propagateFromObject must pull the substep from the other object');
+		self::assertNotEmpty($stepAware->getSubstep(), 'propagateFromObject must NOT reset the substep on the other object');
 	}
 
 	public function testTick()
@@ -182,7 +182,7 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 
 			foreach ($currentExpectation as $prop => $expected)
 			{
-				$this->assertEquals($expected, $this->getObjectAttribute($dummy, $prop), sprintf("Run %d: Property %s does not match expected value", $run, $prop));
+				self::assertEquals($expected, $this->getObjectAttribute($dummy, $prop), sprintf("Run %d: Property %s does not match expected value", $run, $prop));
 			}
 
 			if ($status->isDone())
@@ -200,7 +200,7 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 			}
 		} while (true);
 
-		$this->assertEmpty($expectations, "tick() ran fewer times than expected!");
+		self::assertEmpty($expectations, "tick() ran fewer times than expected!");
 	}
 
 	/**

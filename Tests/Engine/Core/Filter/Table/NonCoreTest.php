@@ -52,14 +52,14 @@ class NonCoreTest extends \PHPUnit_Framework_TestCase
 
 		if ($allTables)
 		{
-			$this->assertEquals($actual, $tables);
+			self::assertEquals($actual, $tables);
 
 			return;
 		}
 
-		$this->assertCount(2, $actual);
-		$this->assertContains('test_foo', $actual);
-		$this->assertContains('test_bar', $actual);
+		self::assertCount(2, $actual);
+		self::assertContains('test_foo', $actual);
+		self::assertContains('test_bar', $actual);
 	}
 
 	public static function providerBinary()

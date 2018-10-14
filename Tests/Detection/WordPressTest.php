@@ -21,7 +21,7 @@ class WordPressTest extends \PHPUnit_Framework_TestCase
 	{
 		$detection = new WordPress($path);
 
-		$this->assertEquals($expected, $detection->isRecognised());
+		self::assertEquals($expected, $detection->isRecognised());
 	}
 
 	/**
@@ -31,6 +31,6 @@ class WordPressTest extends \PHPUnit_Framework_TestCase
 	{
 		$detection = new WordPress($path, $configFile);
 
-		$this->assertEquals($expected, $detection->getDbInformation($useTokenizer));
+		self::assertEquals($expected, $detection->getDbInformation($useTokenizer));
 	}
 }

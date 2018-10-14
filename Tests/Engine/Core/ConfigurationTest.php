@@ -11,7 +11,6 @@ namespace Akeeba\Replace\Tests\Engine\Core;
 
 use Akeeba\Replace\Engine\Core\Configuration;
 use Akeeba\Replace\Logger\LoggerInterface;
-use Prophecy\Prophet;
 
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +34,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
 		$actual = $dummy->getExcludeRows();
 
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	/**
@@ -57,7 +56,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
 		$actual = $dummy->getExcludeTables();
 
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 
@@ -86,23 +85,25 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 			],
 			'databaseCollation'  => 'utf8mb4_unicode_520_ci',
 			'tableCollation'     => 'utf8mb4_unicode_520_ci',
+			'description'        => 'Foo bar baz bat',
 		];
 
 		$config = new Configuration($input);
 
-		$this->assertEquals($input['outputSQLFile'], $config->getOutputSQLFile());
-		$this->assertEquals($input['backupSQLFile'], $config->getBackupSQLFile());
-		$this->assertEquals($input['logFile'], $config->getLogFile());
-		$this->assertEquals($input['minLogLevel'], $config->getMinLogLevel());
-		$this->assertEquals($input['liveMode'], $config->isLiveMode());
-		$this->assertEquals($input['allTables'], $config->isAllTables());
-		$this->assertEquals($input['maxBatchSize'], $config->getMaxBatchSize());
-		$this->assertEquals($input['excludeTables'], $config->getExcludeTables());
-		$this->assertEquals($input['excludeRows'], $config->getExcludeRows());
-		$this->assertEquals($input['regularExpressions'], $config->isRegularExpressions());
-		$this->assertEquals($input['replacements'], $config->getReplacements());
-		$this->assertEquals($input['databaseCollation'], $config->getDatabaseCollation());
-		$this->assertEquals($input['tableCollation'], $config->getTableCollation());
+		self::assertEquals($input['outputSQLFile'], $config->getOutputSQLFile());
+		self::assertEquals($input['backupSQLFile'], $config->getBackupSQLFile());
+		self::assertEquals($input['logFile'], $config->getLogFile());
+		self::assertEquals($input['minLogLevel'], $config->getMinLogLevel());
+		self::assertEquals($input['liveMode'], $config->isLiveMode());
+		self::assertEquals($input['allTables'], $config->isAllTables());
+		self::assertEquals($input['maxBatchSize'], $config->getMaxBatchSize());
+		self::assertEquals($input['excludeTables'], $config->getExcludeTables());
+		self::assertEquals($input['excludeRows'], $config->getExcludeRows());
+		self::assertEquals($input['regularExpressions'], $config->isRegularExpressions());
+		self::assertEquals($input['replacements'], $config->getReplacements());
+		self::assertEquals($input['databaseCollation'], $config->getDatabaseCollation());
+		self::assertEquals($input['tableCollation'], $config->getTableCollation());
+		self::assertEquals($input['description'], $config->getDescription());
 
 		/** @var Configuration $config */
 		$refObj    = new \ReflectionObject($config);
@@ -136,11 +137,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 			],
 			'databaseCollation'  => 'utf8mb4_unicode_520_ci',
 			'tableCollation'     => 'utf8mb4_unicode_520_ci',
+			'description'        => 'Foo bar baz bat',
 		];
 
 		$config = new Configuration($input);
 		$actual = $config->toArray();
 
-		$this->assertEquals($input, $actual);
+		self::assertEquals($input, $actual);
 	}
 }

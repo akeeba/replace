@@ -27,7 +27,7 @@ class ErrorAwareTest extends \PHPUnit_Framework_TestCase
 
 		$dummyObject->setError($expected);
 		$actual = $this->getObjectAttribute($dummyObject, 'error');
-		$this->assertSame($expected, $actual, "Setting an error must assign the error object");
+		self::assertSame($expected, $actual, "Setting an error must assign the error object");
 	}
 
 	/**
@@ -54,12 +54,12 @@ class ErrorAwareTest extends \PHPUnit_Framework_TestCase
 
 		$message = 'Foo bar baz';
 		$actual  = $dummyObject->setErrorMessage($message);
-		$this->assertInternalType('object', $actual, 'setErrorMessage must return an object when a non-empty string is passed');
-		$this->assertEquals('Akeeba\Replace\Engine\ErrorHandling\ErrorException', get_class($actual), 'setErrorMessage must return an ExceptionException object when a non-empty string is passed');
-		$this->assertEquals($message, $actual->getMessage(), 'setErrorMessage must return an ExceptionException object with the correct message');
-		$this->assertEquals(0, $actual->getCode(), 'setErrorMessage must return an ExceptionException object with the correct code (zero)');
+		self::assertInternalType('object', $actual, 'setErrorMessage must return an object when a non-empty string is passed');
+		self::assertEquals('Akeeba\Replace\Engine\ErrorHandling\ErrorException', get_class($actual), 'setErrorMessage must return an ExceptionException object when a non-empty string is passed');
+		self::assertEquals($message, $actual->getMessage(), 'setErrorMessage must return an ExceptionException object with the correct message');
+		self::assertEquals(0, $actual->getCode(), 'setErrorMessage must return an ExceptionException object with the correct code (zero)');
 		$internal = $this->getObjectAttribute($dummyObject, 'error');
-		$this->assertSame($actual, $internal, "The returned object must be a reference to the internal object");
+		self::assertSame($actual, $internal, "The returned object must be a reference to the internal object");
 	}
 
 	/**
@@ -72,9 +72,9 @@ class ErrorAwareTest extends \PHPUnit_Framework_TestCase
 
 		$message = '';
 		$actual  = $dummyObject->setErrorMessage($message);
-		$this->assertInternalType('null', $actual, 'setErrorMessage must return null when a non-empty string is passed');
+		self::assertInternalType('null', $actual, 'setErrorMessage must return null when a non-empty string is passed');
 		$internal = $this->getObjectAttribute($dummyObject, 'error');
-		$this->assertNull($internal, "The internal error object must be cleared when setting an empty error message");
+		self::assertNull($internal, "The internal error object must be cleared when setting an empty error message");
 	}
 
 	/**
@@ -86,13 +86,13 @@ class ErrorAwareTest extends \PHPUnit_Framework_TestCase
 		$dummyObject = $this->getObjectForTrait('\\Akeeba\\Replace\\Engine\\ErrorHandling\\ErrorAware');
 
 		$actual = $dummyObject->getError();
-		$this->assertNull($actual, "getError must return null when there is no error");
+		self::assertNull($actual, "getError must return null when there is no error");
 
 		$exception = new ErrorException('Foo bar baz');
 		$dummyObject->setError($exception);
 
 		$actual = $dummyObject->getError();
-		$this->assertSame($exception, $actual, "getError must return the assigned object");
+		self::assertSame($exception, $actual, "getError must return the assigned object");
 
 	}
 
@@ -113,7 +113,7 @@ class ErrorAwareTest extends \PHPUnit_Framework_TestCase
 
 		$dummyObject->resetError();
 		$actual = $dummyObject->getError();
-		$this->assertNull($actual, "reset() failed to reset the error object");
+		self::assertNull($actual, "reset() failed to reset the error object");
 	}
 
 	public function testInheritErrorFrom()
@@ -142,15 +142,15 @@ class ErrorAwareTest extends \PHPUnit_Framework_TestCase
 		$parentObject->setError($exception);
 
 		$actual = $childObject->getError();
-		$this->assertNull($actual, "No error must be set in the child object before we inherit from our parent.");
+		self::assertNull($actual, "No error must be set in the child object before we inherit from our parent.");
 
 		$childObject->inheritErrorFrom($parentObject);
 
 		$actual = $childObject->getError();
-		$this->assertSame($exception, $actual, "Inheriting an error must set a reference to the original error exception");
+		self::assertSame($exception, $actual, "Inheriting an error must set a reference to the original error exception");
 
 		$actual = $parentObject->getError();
-		$this->assertNull($actual, "After inheriting from the parent, the parent's error must be cleared.");
+		self::assertNull($actual, "After inheriting from the parent, the parent's error must be cleared.");
 
 	}
 }

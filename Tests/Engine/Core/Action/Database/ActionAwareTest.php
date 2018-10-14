@@ -44,11 +44,11 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 		/** @var ActionAwareDummy $dummy */
 		list($numQueries, $dummy) = $this->doRunAction($class);
 
-		$this->assertEquals(0, $numQueries);
+		self::assertEquals(0, $numQueries);
 
 		$warnings = $dummy->getWarnings();
-		$this->assertCount(1, $warnings);
-		$this->assertEquals('Action class “ThisClassDoesNotExist” does not exist', $warnings[0]->getMessage());
+		self::assertCount(1, $warnings);
+		self::assertEquals('Action class “ThisClassDoesNotExist” does not exist', $warnings[0]->getMessage());
 	}
 
 	public function testRunPerDatabaseAction_Invalid_class()
@@ -57,11 +57,11 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 		/** @var ActionAwareDummy $dummy */
 		list($numQueries, $dummy) = $this->doRunAction($class);
 
-		$this->assertEquals(0, $numQueries);
+		self::assertEquals(0, $numQueries);
 
 		$warnings = $dummy->getWarnings();
-		$this->assertCount(1, $warnings);
-		$this->assertEquals('Action class “' . __CLASS__ . '” is not a valid per-database action', $warnings[0]->getMessage());
+		self::assertCount(1, $warnings);
+		self::assertEquals('Action class “' . __CLASS__ . '” is not a valid per-database action', $warnings[0]->getMessage());
 	}
 
 	public function testRunPerDatabaseAction_With_action()
@@ -103,7 +103,7 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 
 		$numQueries = $refMethod->invoke($dummy, $class, $databaseMeta, $logger, $backupWriter, $outputWriter, $db, $config);
 
-		$this->assertEquals(1, $numQueries);
+		self::assertEquals(1, $numQueries);
 	}
 
 	/**

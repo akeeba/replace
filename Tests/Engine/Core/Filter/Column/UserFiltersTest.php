@@ -48,7 +48,7 @@ class UserFiltersTest extends \PHPUnit_Framework_TestCase
 
 		$actual = $dummy->filter($table, $columns);
 
-		$this->assertCount($expectedCount, $actual);
+		self::assertCount($expectedCount, $actual);
 
 		if (empty($expectedKeys))
 		{
@@ -57,7 +57,7 @@ class UserFiltersTest extends \PHPUnit_Framework_TestCase
 
 		$actualKeys = array_keys($actual);
 
-		$this->assertEquals($expectedKeys, $actualKeys);
+		self::assertEquals($expectedKeys, $actualKeys);
 	}
 
 	public static function providerFilter()

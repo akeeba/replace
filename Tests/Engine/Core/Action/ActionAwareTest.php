@@ -52,7 +52,7 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 
 		$contents = file_get_contents($filePath);
 
-		$this->assertEquals($expected, $contents);
+		self::assertEquals($expected, $contents);
 	}
 
 	public static function providerApplyBackupQueries()
@@ -110,16 +110,16 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 				throw new $e;
 			}
 
-			$this->assertInstanceOf(get_class($expectedException), $e);
-			$this->assertEquals($expectedException->getMessage(), $e->getMessage());
+			self::assertInstanceOf(get_class($expectedException), $e);
+			self::assertEquals($expectedException->getMessage(), $e->getMessage());
 		}
 
 		$actualContent = file_get_contents($filePath);
-		$this->assertEquals($expectedContent, $actualContent);
+		self::assertEquals($expectedContent, $actualContent);
 
 		if (empty($expectedException))
 		{
-			$this->assertEmpty($dummy->getWarnings());
+			self::assertEmpty($dummy->getWarnings());
 
 			return;
 		}
@@ -127,8 +127,8 @@ class ActionAwareTest extends \PHPUnit_Framework_TestCase
 		if (!$failOnError)
 		{
 			$warnings = $dummy->getWarnings();
-			$this->assertCount(1, $warnings);
-			$this->assertEquals($expectedException, $warnings[0]);
+			self::assertCount(1, $warnings);
+			self::assertEquals($expectedException, $warnings[0]);
 		}
 	}
 

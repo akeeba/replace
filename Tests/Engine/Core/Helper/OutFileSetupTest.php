@@ -42,8 +42,8 @@ class OutFileSetupTest extends \PHPUnit_Framework_TestCase
 	{
 		$dummy = new OutFileSetup($dateTime, $timeZone);
 
-		$this->assertEquals($expectedDate, $this->getObjectAttribute($dummy, 'dateTime'));
-		$this->assertEquals($expectedTimezone, $this->getObjectAttribute($dummy, 'timeZone'));
+		self::assertEquals($expectedDate, $this->getObjectAttribute($dummy, 'dateTime'));
+		self::assertEquals($expectedTimezone, $this->getObjectAttribute($dummy, 'timeZone'));
 	}
 
 	/**
@@ -60,7 +60,7 @@ class OutFileSetupTest extends \PHPUnit_Framework_TestCase
 		$format = 'Y-m-d H:i:s T';
 		$actual = $dummy->getLocalTimeStamp($format, $dateTimeParam);
 
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	public function testGetVariables()
@@ -80,7 +80,7 @@ class OutFileSetupTest extends \PHPUnit_Framework_TestCase
 			'[TZ]'         => 'eet',
 			'[TZ_RAW]'     => 'EET',
 		];
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	/**
@@ -101,18 +101,18 @@ class OutFileSetupTest extends \PHPUnit_Framework_TestCase
 
 		if (!$expectFile)
 		{
-			$this->assertInstanceOf(WriterInterface::class, $actual);
-			$this->assertInstanceOf(NullWriter::class, $actual);
-			$this->assertEquals('', $actual->getFilePath());
-			$this->assertFalse($this->root->hasChild($expectName));
+			self::assertInstanceOf(WriterInterface::class, $actual);
+			self::assertInstanceOf(NullWriter::class, $actual);
+			self::assertEquals('', $actual->getFilePath());
+			self::assertFalse($this->root->hasChild($expectName));
 
 			return;
 		}
 
-		$this->assertInstanceOf(WriterInterface::class, $actual);
-		$this->assertInstanceOf(FileWriter::class, $actual);
-		$this->assertEquals($this->root->url() . '/' . $expectName, $actual->getFilePath());
-		$this->assertTrue($this->root->hasChild($expectName));
+		self::assertInstanceOf(WriterInterface::class, $actual);
+		self::assertInstanceOf(FileWriter::class, $actual);
+		self::assertEquals($this->root->url() . '/' . $expectName, $actual->getFilePath());
+		self::assertTrue($this->root->hasChild($expectName));
 	}
 
 	/**
@@ -133,18 +133,18 @@ class OutFileSetupTest extends \PHPUnit_Framework_TestCase
 
 		if (!$expectFile)
 		{
-			$this->assertInstanceOf(WriterInterface::class, $actual);
-			$this->assertInstanceOf(NullWriter::class, $actual);
-			$this->assertEquals('', $actual->getFilePath());
-			$this->assertFalse($this->root->hasChild($expectName));
+			self::assertInstanceOf(WriterInterface::class, $actual);
+			self::assertInstanceOf(NullWriter::class, $actual);
+			self::assertEquals('', $actual->getFilePath());
+			self::assertFalse($this->root->hasChild($expectName));
 
 			return;
 		}
 
-		$this->assertInstanceOf(WriterInterface::class, $actual);
-		$this->assertInstanceOf(FileWriter::class, $actual);
-		$this->assertEquals($this->root->url() . '/' . $expectName, $actual->getFilePath());
-		$this->assertTrue($this->root->hasChild($expectName));
+		self::assertInstanceOf(WriterInterface::class, $actual);
+		self::assertInstanceOf(FileWriter::class, $actual);
+		self::assertEquals($this->root->url() . '/' . $expectName, $actual->getFilePath());
+		self::assertTrue($this->root->hasChild($expectName));
 	}
 
 	/**
@@ -165,16 +165,16 @@ class OutFileSetupTest extends \PHPUnit_Framework_TestCase
 
 		if (!$expectFile)
 		{
-			$this->assertInstanceOf(LoggerInterface::class, $actual);
-			$this->assertInstanceOf(NullLogger::class, $actual);
-			$this->assertFalse($this->root->hasChild($expectName));
+			self::assertInstanceOf(LoggerInterface::class, $actual);
+			self::assertInstanceOf(NullLogger::class, $actual);
+			self::assertFalse($this->root->hasChild($expectName));
 
 			return;
 		}
 
-		$this->assertInstanceOf(LoggerInterface::class, $actual);
-		$this->assertInstanceOf(FileLogger::class, $actual);
-		$this->assertTrue($this->root->hasChild($expectName));
+		self::assertInstanceOf(LoggerInterface::class, $actual);
+		self::assertInstanceOf(FileLogger::class, $actual);
+		self::assertTrue($this->root->hasChild($expectName));
 	}
 
 	public static function providerBinary()

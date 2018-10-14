@@ -26,11 +26,11 @@ class TableTest extends \PHPUnit_Framework_TestCase
 	{
 		$actual = Table::fromDatabaseResult($input);
 
-		$this->assertInstanceOf(Table::class, $actual);
-		$this->assertEquals($name, $actual->getName());
-		$this->assertEquals($collation, $actual->getCollation());
-		$this->assertEquals($engine, $actual->getEngine());
-		$this->assertEquals($avgRowLen, $actual->getAverageRowLength());
+		self::assertInstanceOf(Table::class, $actual);
+		self::assertEquals($name, $actual->getName());
+		self::assertEquals($collation, $actual->getCollation());
+		self::assertEquals($engine, $actual->getEngine());
+		self::assertEquals($avgRowLen, $actual->getAverageRowLength());
 	}
 
 	public static function fromDatabaseResultProvider()

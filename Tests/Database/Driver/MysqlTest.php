@@ -25,7 +25,7 @@ class MysqlTest extends MysqliTest
 	 */
 	public function testIsSupported()
 	{
-		$this->assertThat(\Akeeba\Replace\Database\Driver\Mysql::isSupported(), $this->isTrue(), __LINE__);
+		self::assertThat(\Akeeba\Replace\Database\Driver\Mysql::isSupported(), $this->isTrue(), __LINE__);
 	}
 
 }

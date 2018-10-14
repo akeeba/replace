@@ -29,15 +29,15 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 	{
 		$actual = Column::fromDatabaseResult($input);
 
-		$this->assertInstanceOf(Column::class, $actual);
-		$this->assertEquals($name, $actual->getColumnName());
-		$this->assertEquals($collation, $actual->getCollation());
-		$this->assertEquals($keyName, $actual->getKeyName());
-		$this->assertEquals($type, $actual->getType());
-		$this->assertEquals($isPK, $actual->isPK());
-		$this->assertEquals($isText, $actual->isText());
-		$this->assertEquals($isAutoIncrement, $actual->isAutoIncrement());
-		$this->assertEquals($default, $actual->getDefault());
+		self::assertInstanceOf(Column::class, $actual);
+		self::assertEquals($name, $actual->getColumnName());
+		self::assertEquals($collation, $actual->getCollation());
+		self::assertEquals($keyName, $actual->getKeyName());
+		self::assertEquals($type, $actual->getType());
+		self::assertEquals($isPK, $actual->isPK());
+		self::assertEquals($isText, $actual->isText());
+		self::assertEquals($isAutoIncrement, $actual->isAutoIncrement());
+		self::assertEquals($default, $actual->getDefault());
 	}
 
 	public static function fromDatabaseResultProvider()

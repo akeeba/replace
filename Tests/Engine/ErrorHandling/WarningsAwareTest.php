@@ -20,21 +20,21 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		/** @var WarningsAware $dummyObject */
 		$dummyObject = $this->getObjectForTrait('Akeeba\Replace\Engine\ErrorHandling\WarningsAware');
 
-		$this->assertEquals(array(), $this->getObjectAttribute($dummyObject, 'warnings'), 'No warnings must be present initially');
+		self::assertEquals(array(), $this->getObjectAttribute($dummyObject, 'warnings'), 'No warnings must be present initially');
 
 		$warnings = [
 			new WarningException('Foo')
 		];
 		$dummyObject->addWarning($warnings[0]);
-		$this->assertEquals($warnings, $this->getObjectAttribute($dummyObject, 'warnings'), 'Adding first warning');
+		self::assertEquals($warnings, $this->getObjectAttribute($dummyObject, 'warnings'), 'Adding first warning');
 
 		$warnings[] = new WarningException('Bar');
 		$dummyObject->addWarning($warnings[1]);
-		$this->assertEquals($warnings, $this->getObjectAttribute($dummyObject, 'warnings'), 'Adding second warning');
+		self::assertEquals($warnings, $this->getObjectAttribute($dummyObject, 'warnings'), 'Adding second warning');
 
 		$warnings[] = new WarningException('Baz');
 		$dummyObject->addWarning($warnings[2]);
-		$this->assertEquals($warnings, $this->getObjectAttribute($dummyObject, 'warnings'), 'Adding third warning');
+		self::assertEquals($warnings, $this->getObjectAttribute($dummyObject, 'warnings'), 'Adding third warning');
 	}
 
 	public function testSetWarningsQueueLengthZero()
@@ -48,10 +48,10 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		list($dummyObject, $manyWarnings) = $this->makeDummyObjectWithTwelveWarnings();
 
 		$dummyObject->setWarningsQueueLength(0);
-		$this->assertCount(12, $this->getObjectAttribute($dummyObject, 'warnings'), 'Setting the queue length to zero must allow for all twelve objects already present');
+		self::assertCount(12, $this->getObjectAttribute($dummyObject, 'warnings'), 'Setting the queue length to zero must allow for all twelve objects already present');
 
 		$dummyObject->addWarning(new WarningException('Lucky thirteen'));
-		$this->assertCount(13, $this->getObjectAttribute($dummyObject, 'warnings'), 'Adding a warning to an object with zero length queue adds it without complaining (i.e. there is no queue length control).');
+		self::assertCount(13, $this->getObjectAttribute($dummyObject, 'warnings'), 'Adding a warning to an object with zero length queue adds it without complaining (i.e. there is no queue length control).');
 	}
 
 	public function testSetWarningsQueueLengthWithEnoughSpace()
@@ -65,14 +65,14 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		list($dummyObject, $manyWarnings) = $this->makeDummyObjectWithTwelveWarnings();
 
 		$dummyObject->setWarningsQueueLength(13);
-		$this->assertCount(12, $this->getObjectAttribute($dummyObject, 'warnings'), 'Setting the queue length to 13 must allow for all twelve objects already present');
+		self::assertCount(12, $this->getObjectAttribute($dummyObject, 'warnings'), 'Setting the queue length to 13 must allow for all twelve objects already present');
 
 		$thirteen = new WarningException('Lucky thirteen');
 		$manyWarnings[] = $thirteen;
 		$dummyObject->addWarning($thirteen);
 		$actual = $this->getObjectAttribute($dummyObject, 'warnings');
-		$this->assertCount(13, $actual, 'Adding thirteenth warning to an object with queue length 13 must succeed');
-		$this->assertEquals($manyWarnings, $actual, 'The first 13 warnings must match up');
+		self::assertCount(13, $actual, 'Adding thirteenth warning to an object with queue length 13 must succeed');
+		self::assertEquals($manyWarnings, $actual, 'The first 13 warnings must match up');
 	}
 
 	public function testSetWarningsQueueLengthWithTruncate()
@@ -89,8 +89,8 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 
 		$dummyObject->setWarningsQueueLength(1);
 		$actual = $this->getObjectAttribute($dummyObject, 'warnings');
-		$this->assertCount(1, $actual, 'Setting the queue length to 1 must remove all elements except the last one');
-		$this->assertEquals($expected, $actual, 'The leftover element after queue resize to length 1 must be the last one in the queue');
+		self::assertCount(1, $actual, 'Setting the queue length to 1 must remove all elements except the last one');
+		self::assertEquals($expected, $actual, 'The leftover element after queue resize to length 1 must be the last one in the queue');
 	}
 
 	public function testAddWarningWithOverflow()
@@ -110,8 +110,8 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		array_shift($manyWarnings);
 		$dummyObject->addWarning($thirteen);
 		$actual = $this->getObjectAttribute($dummyObject, 'warnings');
-		$this->assertCount(12, $actual, 'Adding thirteenth warning to an object with queue length 12 must result in 12 items being present afterwards');
-		$this->assertEquals($manyWarnings, $actual, 'Adding 13th warning to a queue with length 12 must bump the first element off the queue');
+		self::assertCount(12, $actual, 'Adding thirteenth warning to an object with queue length 12 must result in 12 items being present afterwards');
+		self::assertEquals($manyWarnings, $actual, 'Adding 13th warning to a queue with length 12 must bump the first element off the queue');
 	}
 
 	public function testGetWarnings()
@@ -126,7 +126,7 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 
 		$actual = $dummyObject->getWarnings();
 
-		$this->assertEquals($manyWarnings, $actual, 'getWarnings must return the correct queue contents');
+		self::assertEquals($manyWarnings, $actual, 'getWarnings must return the correct queue contents');
 	}
 
 	public function testAddWarningMessageWithObject()
@@ -145,17 +145,17 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		/** @var WarningsAware $dummyObject */
 		$dummyObject = $this->getObjectForTrait('Akeeba\Replace\Engine\ErrorHandling\WarningsAware');
 
-		$this->assertEmpty($this->getObjectAttribute($dummyObject, 'warnings'), 'Initial queue must be empty');
+		self::assertEmpty($this->getObjectAttribute($dummyObject, 'warnings'), 'Initial queue must be empty');
 
 		$message = 'Foo bar';
 		$actual  = $dummyObject->addWarningMessage($message);
 
-		$this->assertInternalType('object', $actual, 'addWarningMessage must return an object when a non-empty string is passed');
-		$this->assertEquals('Akeeba\Replace\Engine\ErrorHandling\WarningException', get_class($actual), 'setErrorMessage must return a WarningException object when a non-empty string is passed');
-		$this->assertEquals($message, $actual->getMessage(), 'addWarningMessage must return a WarningException object with the correct message');
-		$this->assertEquals(0, $actual->getCode(), 'addWarningMessage must return a WarningException object with the correct code (zero)');
+		self::assertInternalType('object', $actual, 'addWarningMessage must return an object when a non-empty string is passed');
+		self::assertEquals('Akeeba\Replace\Engine\ErrorHandling\WarningException', get_class($actual), 'setErrorMessage must return a WarningException object when a non-empty string is passed');
+		self::assertEquals($message, $actual->getMessage(), 'addWarningMessage must return a WarningException object with the correct message');
+		self::assertEquals(0, $actual->getCode(), 'addWarningMessage must return a WarningException object with the correct code (zero)');
 		$internal = $this->getObjectAttribute($dummyObject, 'warnings');
-		$this->assertSame($actual, $internal[0], "The returned object must be a reference to the internal object");
+		self::assertSame($actual, $internal[0], "The returned object must be a reference to the internal object");
 
 	}
 
@@ -164,22 +164,22 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		/** @var WarningsAware $dummyObject */
 		$dummyObject = $this->getObjectForTrait('Akeeba\Replace\Engine\ErrorHandling\WarningsAware');
 
-		$this->assertEmpty($this->getObjectAttribute($dummyObject, 'warnings'), 'Initial queue must be empty');
+		self::assertEmpty($this->getObjectAttribute($dummyObject, 'warnings'), 'Initial queue must be empty');
 
 		$message = '';
 		$actual  = $dummyObject->addWarningMessage($message);
 
-		$this->assertNull($actual, 'addWarningMessage with an empty string must return null');
+		self::assertNull($actual, 'addWarningMessage with an empty string must return null');
 		$internal = $this->getObjectAttribute($dummyObject, 'warnings');
-		$this->assertCount(0, $internal, "addWarningMessage with an empty string must not add to the queue (testing with an empty queue)");
+		self::assertCount(0, $internal, "addWarningMessage with an empty string must not add to the queue (testing with an empty queue)");
 
 		$dummyObject->addWarningMessage('Foo');
 		$internal = $this->getObjectAttribute($dummyObject, 'warnings');
-		$this->assertCount(1, $internal, "addWarningMessage with a non-empty string must add to the queue");
+		self::assertCount(1, $internal, "addWarningMessage with a non-empty string must add to the queue");
 
 		$dummyObject->addWarningMessage('');
 		$internal = $this->getObjectAttribute($dummyObject, 'warnings');
-		$this->assertCount(1, $internal, "addWarningMessage with an empty string must not add to the queue (testing with a primed queue)");
+		self::assertCount(1, $internal, "addWarningMessage with an empty string must not add to the queue (testing with a primed queue)");
 	}
 
 	public function testResetWarnings()
@@ -192,11 +192,11 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		 */
 		list($dummyObject, $manyWarnings) = $this->makeDummyObjectWithTwelveWarnings();
 
-		$this->assertCount(12, $dummyObject->getWarnings());
+		self::assertCount(12, $dummyObject->getWarnings());
 
 		$dummyObject->resetWarnings();
 
-		$this->assertCount(0, $dummyObject->getWarnings());
+		self::assertCount(0, $dummyObject->getWarnings());
 	}
 
 	public function testInheritWarningsFrom()
@@ -229,15 +229,15 @@ class WarningsAwareTest extends \PHPUnit_Framework_TestCase
 		}
 
 		$actual = $childObject->getWarnings();
-		$this->assertEmpty($actual, "No warning must be set in the child object before we inherit from our parent.");
+		self::assertEmpty($actual, "No warning must be set in the child object before we inherit from our parent.");
 
 		$childObject->inheritWarningsFrom($parentObject);
 
 		$actual = $childObject->getWarnings();
-		$this->assertSame($manyWarnings, $actual, "Inheriting warnings must set a reference to the original warnigns");
+		self::assertSame($manyWarnings, $actual, "Inheriting warnings must set a reference to the original warnigns");
 
 		$actual = $parentObject->getWarnings();
-		$this->assertEmpty($actual, "After inheriting from the parent, the parent's warnings must be cleared.");
+		self::assertEmpty($actual, "After inheriting from the parent, the parent's warnings must be cleared.");
 
 	}
 

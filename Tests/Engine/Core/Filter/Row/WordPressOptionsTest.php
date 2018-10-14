@@ -78,6 +78,6 @@ class WordPressOptionsTest extends \PHPUnit_Framework_TestCase
 
 		$actual = $dummy->filter($tableName, $row);
 
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 }

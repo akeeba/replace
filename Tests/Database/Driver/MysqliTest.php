@@ -28,10 +28,10 @@ class MysqliTest extends DriverTestCase
 		$driver = static::getDriver();
 
 		$driver->connect();
-		$this->assertTrue($driver->connected(), 'Driver must report itself connected after successful connection');
+		self::assertTrue($driver->connected(), 'Driver must report itself connected after successful connection');
 
 		$driver->disconnect();
-		$this->assertFalse($driver->connected(), 'Driver must report itself disconnected after successful disconnection');
+		self::assertFalse($driver->connected(), 'Driver must report itself disconnected after successful disconnection');
 	}
 
 	/**
@@ -44,7 +44,7 @@ class MysqliTest extends DriverTestCase
 		$driver = static::getDriver();
 
 		// Make sure dropping a table (if it exists) works
-		$this->assertThat(
+		self::assertThat(
 			$driver->dropTable('#__bar', true),
 			$this->isInstanceOf(get_class($driver)),
 			'The table is dropped if present.'
@@ -70,7 +70,7 @@ class MysqliTest extends DriverTestCase
 	{
 		$driver = static::getDriver();
 
-		$this->assertEquals($expected, $driver->escape($text, $extra));
+		self::assertEquals($expected, $driver->escape($text, $extra));
 	}
 
 	/**
@@ -89,7 +89,7 @@ class MysqliTest extends DriverTestCase
 		$driver->setQuery($query);
 		$driver->execute();
 
-		$this->assertEquals(4, $driver->getAffectedRows());
+		self::assertEquals(4, $driver->getAffectedRows());
 	}
 
 	/**
@@ -101,7 +101,7 @@ class MysqliTest extends DriverTestCase
 	{
 		$driver = static::getDriver();
 
-		$this->assertEquals('utf8mb4_unicode_520_ci', $driver->getCollation(), 'The getCollation method should return the collation of the database, not the first created table.');
+		self::assertEquals('utf8mb4_unicode_520_ci', $driver->getCollation(), 'The getCollation method should return the collation of the database, not the first created table.');
 	}
 
 	/**
@@ -121,7 +121,7 @@ class MysqliTest extends DriverTestCase
 
 		$res = $driver->execute();
 
-		$this->assertEquals(2, $driver->getNumRows($res));
+		self::assertEquals(2, $driver->getNumRows($res));
 	}
 
 	/**
@@ -134,10 +134,10 @@ class MysqliTest extends DriverTestCase
 		$driver = static::getDriver();
 		$create = $driver->getTableCreate('#__dbtest');
 
-		$this->assertInternalType('array', $create, 'The statement to create the table is returned in an array.');
-		$this->assertCount(1, $create, 'Only one element must be present in the CREATE TABLE results array');
-		$this->assertArrayHasKey('#__dbtest', $create, 'The CREATE TABLE array must be keyed against the table name.');
-		$this->assertContains('CREATE TABLE `akr_dbtest`', $create['#__dbtest'], 'The CREATE TABLE result must contain DDL for the requested table.');
+		self::assertInternalType('array', $create, 'The statement to create the table is returned in an array.');
+		self::assertCount(1, $create, 'Only one element must be present in the CREATE TABLE results array');
+		self::assertArrayHasKey('#__dbtest', $create, 'The CREATE TABLE array must be keyed against the table name.');
+		self::assertContains('CREATE TABLE `akr_dbtest`', $create['#__dbtest'], 'The CREATE TABLE result must contain DDL for the requested table.');
 	}
 
 	/**
@@ -150,7 +150,7 @@ class MysqliTest extends DriverTestCase
 		$driver = static::getDriver();
 		$tableCol = array('id' => 'int unsigned', 'title' => 'varchar', 'start_date' => 'datetime', 'description' => 'varchar');
 
-		$this->assertEquals(
+		self::assertEquals(
 			$tableCol,
 			$driver->getTableColumns('#__dbtest'),
 			'The columns list must be accurate'
@@ -201,7 +201,7 @@ class MysqliTest extends DriverTestCase
 		$description->Privileges = 'select,insert,update,references';
 		$description->Comment = '';
 
-		$this->assertEquals(				array(
+		self::assertEquals(				array(
 				'id'          => $id,
 				'title'       => $title,
 				'start_date'  => $start_date,
@@ -241,9 +241,9 @@ class MysqliTest extends DriverTestCase
 				),
 		);
 
-		$this->assertInternalType('array', $tableKeys, 'The list of table keys for the table is returned in an array.');
-		$this->assertCount(1, $tableKeys, 'The number of table keys returned must be accurate.');
-		$this->assertEquals($expected, $tableKeys, 'The metadata of table keys returned must be accurate.');
+		self::assertInternalType('array', $tableKeys, 'The list of table keys for the table is returned in an array.');
+		self::assertCount(1, $tableKeys, 'The number of table keys returned must be accurate.');
+		self::assertEquals($expected, $tableKeys, 'The metadata of table keys returned must be accurate.');
 	}
 
 	/**
@@ -256,7 +256,7 @@ class MysqliTest extends DriverTestCase
 		$driver = static::getDriver();
 		$tableList  = $driver->getTableList();
 
-		$this->assertInternalType('array', $tableList, 'The list of tables for the database is returned in an array.');
+		self::assertInternalType('array', $tableList, 'The list of tables for the database is returned in an array.');
 
 		/**
 		 * Why not use assertArraySubset?
@@ -268,8 +268,8 @@ class MysqliTest extends DriverTestCase
 		 * guaranteed they'd be in a specific order or without anything else between them. So, I'm back to using the
 		 * good, old assertContains with one element at a time.
 		 */
-		$this->assertContains('akr_dbtest', $tableList);
-		$this->assertContains('akr_dbtest_innodb', $tableList);
+		self::assertContains('akr_dbtest', $tableList);
+		self::assertContains('akr_dbtest_innodb', $tableList);
 	}
 
 	/**
@@ -281,12 +281,12 @@ class MysqliTest extends DriverTestCase
 	{
 		$driver = static::getDriver();
 		$version = $driver->getVersion();
-		$this->assertGreaterThan(
+		self::assertGreaterThan(
 			0,
 			strlen($version),
 			'The getVersion method should return something without error.'
 		);
-		$this->assertTrue(version_compare($version, '5.0.0', 'ge'), 'The returned version must look like a MySQL / MariaDB version number of a supported MySQL-class database server.');
+		self::assertTrue(version_compare($version, '5.0.0', 'ge'), 'The returned version must look like a MySQL / MariaDB version number of a supported MySQL-class database server.');
 	}
 
 	/**
@@ -307,7 +307,7 @@ class MysqliTest extends DriverTestCase
 
 		$insertId = $driver->insertid();
 
-		$this->assertEquals(1, $insertId);
+		self::assertEquals(1, $insertId);
 	}
 
 	/**
@@ -324,7 +324,7 @@ class MysqliTest extends DriverTestCase
 		$driver->setQuery($query);
 		$result = $driver->loadAssoc();
 
-		$this->assertEquals(array('title' => 'Testing'), $result);
+		self::assertEquals(array('title' => 'Testing'), $result);
 	}
 
 	/**
@@ -341,7 +341,7 @@ class MysqliTest extends DriverTestCase
 		$driver->setQuery($query);
 		$result = $driver->loadAssocList();
 
-		$this->assertEquals(
+		self::assertEquals(
 			array(
 				array('title' => 'Testing'),
 				array('title' => 'Testing2'),
@@ -366,7 +366,7 @@ class MysqliTest extends DriverTestCase
 		$driver->setQuery($query);
 		$result = $driver->loadColumn();
 
-		$this->assertEquals(array('Testing', 'Testing2', 'Testing3', 'Testing4'), $result);
+		self::assertEquals(array('Testing', 'Testing2', 'Testing3', 'Testing4'), $result);
 	}
 
 	/**
@@ -390,7 +390,7 @@ class MysqliTest extends DriverTestCase
 		$objCompare->start_date = '1980-04-18 00:00:00';
 		$objCompare->description = 'three';
 
-		$this->assertEquals($objCompare, $result);
+		self::assertEquals($objCompare, $result);
 	}
 
 	/**
@@ -442,7 +442,7 @@ class MysqliTest extends DriverTestCase
 
 		$expected[] = clone $objCompare;
 
-		$this->assertEquals($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
 	/**
@@ -461,7 +461,7 @@ class MysqliTest extends DriverTestCase
 		$driver->setQuery($query);
 		$result = $driver->loadResult();
 
-		$this->assertEquals(2, $result);
+		self::assertEquals(2, $result);
 	}
 
 	/**
@@ -481,7 +481,7 @@ class MysqliTest extends DriverTestCase
 
 		$expected = array(3, 'Testing3', '1980-04-18 00:00:00', 'three');
 
-		$this->assertEquals($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
 	/**
@@ -501,7 +501,7 @@ class MysqliTest extends DriverTestCase
 
 		$expected = array(array(1, 'Testing', '1980-04-18 00:00:00', 'one'), array(2, 'Testing2', '1980-04-18 00:00:00', 'one'));
 
-		$this->assertThat($result, $this->equalTo($expected), __LINE__);
+		self::assertThat($result, $this->equalTo($expected), __LINE__);
 	}
 
 	/**
@@ -529,7 +529,7 @@ class MysqliTest extends DriverTestCase
 
 		// Check name change
 		$tableList = $driver->getTableList();
-		$this->assertThat(in_array($newTableName, $tableList), $this->isTrue());
+		self::assertThat(in_array($newTableName, $tableList), $this->isTrue());
 
 		// Restore initial state
 		$driver->dropTable($newTableName, true);
@@ -545,9 +545,9 @@ class MysqliTest extends DriverTestCase
 		$driver = static::getDriver();
 		$driver->setQuery("REPLACE INTO `#__dbtest` SET `id` = 5, `title` = 'testTitle', `start_date` = '2018-09-12 00:00:00', `description` = 'Test'");
 
-		$this->assertTrue($driver->execute());
+		self::assertTrue($driver->execute());
 
-		$this->assertEquals(5, $driver->insertid());
+		self::assertEquals(5, $driver->insertid());
 	}
 
 	/**
@@ -576,7 +576,7 @@ class MysqliTest extends DriverTestCase
 		$query = "show variables like 'character_set_client'";
 		$currentCharset = $driver->setQuery($query)->loadColumn(1);
 
-		$this->assertEquals('utf8', $currentCharset[0]);
+		self::assertEquals('utf8', $currentCharset[0]);
 	}
 
 	/**
@@ -607,7 +607,7 @@ class MysqliTest extends DriverTestCase
 
 		$expected = array('6', 'testTitle', '1970-01-01 00:00:00', 'testDescription');
 
-		$this->assertEquals($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
 	/**
@@ -664,7 +664,7 @@ class MysqliTest extends DriverTestCase
 		$driver->setQuery($queryCheck);
 		$result = $driver->loadRowList();
 
-		$this->assertThat(count($result), $this->equalTo($tupleCount), __LINE__);
+		self::assertThat(count($result), $this->equalTo($tupleCount), __LINE__);
 	}
 
 	/**
@@ -677,7 +677,7 @@ class MysqliTest extends DriverTestCase
 	public function testIsSupported()
 	{
 		$driver = static::getDriver();
-		$this->assertThat(\Akeeba\Replace\Database\Driver\Mysqli::isSupported(), $this->isTrue(), __LINE__);
+		self::assertThat(\Akeeba\Replace\Database\Driver\Mysqli::isSupported(), $this->isTrue(), __LINE__);
 	}
 
 	/**
@@ -702,41 +702,41 @@ class MysqliTest extends DriverTestCase
 		// Inserting really adds to database
 		$db->truncateTable($table);
 		$result = $db->insertObject($table, $sampleData);
-		$this->assertTrue($result);
+		self::assertTrue($result);
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
 			->from($table)
 			->where('title = ' . $db->q($sampleData->title));
-		$this->assertNotEmpty($db->setQuery($query)->loadResult());
-		$this->assertNull($sampleData->id);
+		self::assertNotEmpty($db->setQuery($query)->loadResult());
+		self::assertNull($sampleData->id);
 
 		// Inserting and specifying key updates the object
 		$db->truncateTable($table);
 		$result = $db->insertObject($table, $sampleData, 'id');
-		$this->assertTrue($result);
-		$this->assertNotNull($sampleData->id);
+		self::assertTrue($result);
+		self::assertNotNull($sampleData->id);
 
 		// Bad keys are ignored
 		$newSampleData = array_merge((array)$sampleData, array('doesnotexist' => 1234));
 		$db->truncateTable($table);
 		$result = $db->insertObject($table, $sampleData);
-		$this->assertTrue($result);
+		self::assertTrue($result);
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
 			->from($table)
 			->where('title = ' . $db->q($sampleData->title));
-		$this->assertNotEmpty($db->setQuery($query)->loadResult());
+		self::assertNotEmpty($db->setQuery($query)->loadResult());
 
 		// "Internal" keys (starting with underscore) and non-scalars are ignored
 		$newSampleData = array_merge((array)$sampleData, array('_internal' => 1234, 'baz' => array(1, 2, 3), 'whatever' => (object)array('foo' => 'bar')));
 		$db->truncateTable($table);
 		$result = $db->insertObject($table, $sampleData);
-		$this->assertTrue($result);
+		self::assertTrue($result);
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
 			->from($table)
 			->where('title = ' . $db->q($sampleData->title));
-		$this->assertNotEmpty($db->setQuery($query)->loadResult());
+		self::assertNotEmpty($db->setQuery($query)->loadResult());
 
 		// Failures result in exception
 		$this->setExpectedException('\RuntimeException');
@@ -772,17 +772,17 @@ class MysqliTest extends DriverTestCase
 			'description' => 'Updated record'
 		);
 		$result = $db->updateObject($table, $newObject, 'id');
-		$this->assertTrue($result);
+		self::assertTrue($result);
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
 			->from($table)
 			->where('title = ' . $db->q($sampleData->title));
-		$this->assertEmpty($db->setQuery($query)->loadResult());
+		self::assertEmpty($db->setQuery($query)->loadResult());
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
 			->from($table)
 			->where('title = ' . $db->q($newObject->title));
-		$this->assertNotEmpty($db->setQuery($query)->loadResult());
+		self::assertNotEmpty($db->setQuery($query)->loadResult());
 
 		// Ignoring nulls does not modify data already in the database
 		$db->truncateTable($table);
@@ -794,12 +794,12 @@ class MysqliTest extends DriverTestCase
 			'description' => 'Updated again record'
 		);
 		$result = $db->updateObject($table, $newObject, 'id', false);
-		$this->assertTrue($result);
+		self::assertTrue($result);
 		$query = $db->getQuery(true)
 			->select('title')
 			->from($table)
 			->where('id = ' . $db->q($sampleData->id));
-		$this->assertEquals($sampleData->title, $db->setQuery($query)->loadResult());
+		self::assertEquals($sampleData->title, $db->setQuery($query)->loadResult());
 
 		// "Internal" keys (starting with underscore) and non-scalars are ignored
 		$db->truncateTable($table);
@@ -811,7 +811,7 @@ class MysqliTest extends DriverTestCase
 		));
 		$newObject = (object)$newObject;
 		$result = $db->updateObject($table, $newObject, 'id', false);
-		$this->assertTrue($result);
+		self::assertTrue($result);
 
 		// Wrong ID does not throw error (as no SQL error is raised by the database: it's a valid query with 0 affeced rows)
 		$db->truncateTable($table);
@@ -823,12 +823,12 @@ class MysqliTest extends DriverTestCase
 			'description' => 'Updated again record'
 		);
 		$result = $db->updateObject($table, $newObject, 'id');
-		$this->assertTrue($result);
+		self::assertTrue($result);
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
 			->from($table)
 			->where('title = ' . $db->q($newObject->title));
-		$this->assertEmpty($db->setQuery($query)->loadResult());
+		self::assertEmpty($db->setQuery($query)->loadResult());
 
 		// Nonexistent fields result in exception
 		$db->truncateTable($table);

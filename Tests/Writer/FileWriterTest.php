@@ -40,8 +40,8 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 		$filePath = $this->root->url() . '/foobar.txt';
 		$dummy    = new FileWriter($filePath, false);
 
-		$this->assertEquals($filePath, $this->getObjectAttribute($dummy, 'filePath'));
-		$this->assertEquals(0, $this->getObjectAttribute($dummy, 'numParts'));
+		self::assertEquals($filePath, $this->getObjectAttribute($dummy, 'filePath'));
+		self::assertEquals(0, $this->getObjectAttribute($dummy, 'numParts'));
 	}
 
 	/**
@@ -102,12 +102,12 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 
 		$dummy    = new FileWriter($filePath, true);
 
-		$this->assertTrue($this->root->hasChild('foobar.txt'), 'Part #0 must exist.');
-		$this->assertEquals(0, $this->root->getChild('foobar.txt')->size(), 'Part #0 must be truncated on reset');
-		$this->assertFalse($this->root->hasChild('foobar.t01'), 'Part #1 must be deleted on reset.');
-		$this->assertFalse($this->root->hasChild('foobar.t02'), 'Part #2 must be deleted on reset.');
-		$this->assertTrue($this->root->hasChild('foobar.t99'), 'Non sequential part must not be deleted on reset.');
-		$this->assertNotEquals(0, $this->root->getChild('foobar.t99')->size(), 'Non sequential part must not be truncated on reset');
+		self::assertTrue($this->root->hasChild('foobar.txt'), 'Part #0 must exist.');
+		self::assertEquals(0, $this->root->getChild('foobar.txt')->size(), 'Part #0 must be truncated on reset');
+		self::assertFalse($this->root->hasChild('foobar.t01'), 'Part #1 must be deleted on reset.');
+		self::assertFalse($this->root->hasChild('foobar.t02'), 'Part #2 must be deleted on reset.');
+		self::assertTrue($this->root->hasChild('foobar.t99'), 'Non sequential part must not be deleted on reset.');
+		self::assertNotEquals(0, $this->root->getChild('foobar.t99')->size(), 'Non sequential part must not be truncated on reset');
 	}
 
 	/**
@@ -130,19 +130,19 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 
 		$dummy    = new FileWriter($filePath, false);
 
-		$this->assertEquals(2, $this->getObjectAttribute($dummy, 'numParts'));
+		self::assertEquals(2, $this->getObjectAttribute($dummy, 'numParts'));
 
-		$this->assertTrue($this->root->hasChild('foobar.txt'), 'Part #0 must exist.');
-		$this->assertNotEquals(0, $this->root->getChild('foobar.txt')->size(), 'Part #0 must not be truncated');
+		self::assertTrue($this->root->hasChild('foobar.txt'), 'Part #0 must exist.');
+		self::assertNotEquals(0, $this->root->getChild('foobar.txt')->size(), 'Part #0 must not be truncated');
 
-		$this->assertTrue($this->root->hasChild('foobar.t01'), 'Part #1 must exist.');
-		$this->assertNotEquals(0, $this->root->getChild('foobar.t01')->size(), 'Part #1 must not be truncated');
+		self::assertTrue($this->root->hasChild('foobar.t01'), 'Part #1 must exist.');
+		self::assertNotEquals(0, $this->root->getChild('foobar.t01')->size(), 'Part #1 must not be truncated');
 
-		$this->assertTrue($this->root->hasChild('foobar.t02'), 'Part #2 must exist.');
-		$this->assertNotEquals(0, $this->root->getChild('foobar.t02')->size(), 'Part #2 must not be truncated');
+		self::assertTrue($this->root->hasChild('foobar.t02'), 'Part #2 must exist.');
+		self::assertNotEquals(0, $this->root->getChild('foobar.t02')->size(), 'Part #2 must not be truncated');
 
-		$this->assertTrue($this->root->hasChild('foobar.t99'), 'Non-sequential part must exist.');
-		$this->assertNotEquals(0, $this->root->getChild('foobar.t99')->size(), 'Non-sequential part must not be truncated');
+		self::assertTrue($this->root->hasChild('foobar.t99'), 'Non-sequential part must exist.');
+		self::assertNotEquals(0, $this->root->getChild('foobar.t99')->size(), 'Non-sequential part must not be truncated');
 	}
 
 	public function testGetListOfParts()
@@ -160,7 +160,7 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 
 		$dummy    = new FileWriter($filePath, false);
 
-		$this->assertEquals(2, $this->getObjectAttribute($dummy, 'numParts'));
+		self::assertEquals(2, $this->getObjectAttribute($dummy, 'numParts'));
 
 		$partsList = $dummy->getListOfParts();
 		$expected = [
@@ -169,7 +169,7 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 			$this->root->url() . '/foobar.t02',
 		];
 
-		$this->assertEquals($expected, $partsList);
+		self::assertEquals($expected, $partsList);
 	}
 
 	public function testGetNumberOfParts()
@@ -187,9 +187,9 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 
 		$dummy    = new FileWriter($filePath, false);
 
-		$this->assertEquals(2, $this->getObjectAttribute($dummy, 'numParts'));
+		self::assertEquals(2, $this->getObjectAttribute($dummy, 'numParts'));
 
-		$this->assertEquals(3, $dummy->getNumberOfParts());
+		self::assertEquals(3, $dummy->getNumberOfParts());
 
 	}
 
@@ -199,13 +199,13 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 		$dummy    = new FileWriter($filePath, false);
 
 		$dummy->setMaxFileSize(-1);
-		$this->assertEquals(0, $this->getObjectAttribute($dummy,'maxFileSize'), 'Negative part sizes must be squashed to zero');
+		self::assertEquals(0, $this->getObjectAttribute($dummy,'maxFileSize'), 'Negative part sizes must be squashed to zero');
 
 		$dummy->setMaxFileSize(123);
-		$this->assertEquals(123, $this->getObjectAttribute($dummy,'maxFileSize'), 'Positive part sizes must be accepted');
+		self::assertEquals(123, $this->getObjectAttribute($dummy,'maxFileSize'), 'Positive part sizes must be accepted');
 
 		$dummy->setMaxFileSize(0);
-		$this->assertEquals(0, $this->getObjectAttribute($dummy,'maxFileSize'), 'Zero part size must be accepted');
+		self::assertEquals(0, $this->getObjectAttribute($dummy,'maxFileSize'), 'Zero part size must be accepted');
 	}
 
 	/**
@@ -223,7 +223,7 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 
 		unset($dummy);
 
-		$this->assertEquals($line . "\n", file_get_contents($filePath));
+		self::assertEquals($line . "\n", file_get_contents($filePath));
 	}
 
 	/**
@@ -243,7 +243,7 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 
 		unset($dummy);
 
-		$this->assertEquals($preamble . "\n" . $line . "\n", file_get_contents($filePath));
+		self::assertEquals($preamble . "\n" . $line . "\n", file_get_contents($filePath));
 	}
 
 	/**
@@ -264,9 +264,9 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 
 		unset($dummy);
 
-		$this->assertTrue($this->root->hasChild('foobar.t01'), 'Part #1 must exist.');
-		$this->assertEquals($line . "\n", file_get_contents($filePath), 'Part #0 must have the first line.');
-		$this->assertEquals($line . "\n", file_get_contents($filePart2), 'Part #1 must have the second line');
+		self::assertTrue($this->root->hasChild('foobar.t01'), 'Part #1 must exist.');
+		self::assertEquals($line . "\n", file_get_contents($filePath), 'Part #0 must have the first line.');
+		self::assertEquals($line . "\n", file_get_contents($filePart2), 'Part #1 must have the second line');
 
 	}
 
@@ -290,9 +290,9 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 
 		unset($dummy);
 
-		$this->assertTrue($this->root->hasChild('foobar.01.php'), 'Part #1 must exist.');
-		$this->assertEquals($preamble . "\n" . $line . "\n", file_get_contents($filePath), 'Part #0 must have the first line.');
-		$this->assertEquals($preamble . "\n" . $line . "\n", file_get_contents($filePart2), 'Part #1 must have the second line');
+		self::assertTrue($this->root->hasChild('foobar.01.php'), 'Part #1 must exist.');
+		self::assertEquals($preamble . "\n" . $line . "\n", file_get_contents($filePath), 'Part #0 must have the first line.');
+		self::assertEquals($preamble . "\n" . $line . "\n", file_get_contents($filePart2), 'Part #1 must have the second line');
 
 	}
 
@@ -314,9 +314,9 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
 
 		unset($dummy);
 
-		$this->assertTrue($this->root->hasChild('foobar.t01'), 'Part #1 must exist.');
-		$this->assertEquals($line . "\n", file_get_contents($filePath), 'Part #0 must have the first line.');
-		$this->assertEquals($line . "\n", file_get_contents($filePart2), 'Part #1 must have the second line');
+		self::assertTrue($this->root->hasChild('foobar.t01'), 'Part #1 must exist.');
+		self::assertEquals($line . "\n", file_get_contents($filePath), 'Part #0 must have the first line.');
+		self::assertEquals($line . "\n", file_get_contents($filePart2), 'Part #1 must have the second line');
 	}
 
 

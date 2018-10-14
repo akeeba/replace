@@ -159,15 +159,15 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 	{
 		$baseElement = new QueryElement($element['name'], $element['elements'], $element['glue']);
 
-		$this->assertAttributeEquals(
+		self::assertAttributeEquals(
 			$expected['name'], 'name', $baseElement, 'Line ' . __LINE__ . ' name should be set'
 		);
 
-		$this->assertAttributeEquals(
+		self::assertAttributeEquals(
 			$expected['elements'], 'elements', $baseElement, 'Line ' . __LINE__ . ' elements should be set'
 		);
 
-		$this->assertAttributeEquals(
+		self::assertAttributeEquals(
 			$expected['glue'], 'glue', $baseElement, 'Line ' . __LINE__ . ' glue should be set'
 		);
 	}
@@ -187,7 +187,7 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 	{
 		$e = new QueryElement($name, $elements, $glue);
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $e,
 			$this->equalTo($expected)
 		);
@@ -211,7 +211,7 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 		$appendElement = new QueryElement($append['name'], $append['elements'], $append['glue']);
 		$expectedElement = new QueryElement($expected['name'], $expected['elements'], $expected['glue']);
 		$baseElement->append($appendElement);
-		$this->assertAttributeEquals(array($expectedElement), 'elements', $baseElement);
+		self::assertAttributeEquals(array($expectedElement), 'elements', $baseElement);
 	}
 
 	/**
@@ -229,8 +229,8 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 
 		$baseElement->testArray[] = 'a';
 
-		$this->assertFalse($baseElement === $cloneElement);
-		$this->assertEquals(count($cloneElement->testArray), 0);
+		self::assertFalse($baseElement === $cloneElement);
+		self::assertEquals(count($cloneElement->testArray), 0);
 	}
 
 	/**
@@ -246,8 +246,8 @@ class QueryElementTest extends \PHPUnit_Framework_TestCase
 
 		$cloneElement = clone($baseElement);
 
-		$this->assertFalse($baseElement === $cloneElement);
-		$this->assertFalse($baseElement->testObject === $cloneElement->testObject);
+		self::assertFalse($baseElement === $cloneElement);
+		self::assertFalse($baseElement->testObject === $cloneElement->testObject);
 	}
 
 }

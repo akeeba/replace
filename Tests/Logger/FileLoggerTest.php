@@ -37,7 +37,7 @@ class FileLoggerTest extends \PHPUnit_Framework_TestCase
 		$filePath = $this->root->url() . '/log.txt';
 		$logger = FileLogger::fromFile($filePath, true);
 
-		$this->assertTrue($this->root->hasChild('log.txt'), 'Log file must be created');
+		self::assertTrue($this->root->hasChild('log.txt'), 'Log file must be created');
 	}
 
 	/**
@@ -69,7 +69,7 @@ class FileLoggerTest extends \PHPUnit_Framework_TestCase
 		// Reset the timezone
 		@date_default_timezone_set($serverTimezone);
 
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	public function formatMessageProvider()

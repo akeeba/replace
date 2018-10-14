@@ -23,14 +23,14 @@ class TimerTest extends \PHPUnit_Framework_TestCase
 		 * execution time recorded in the object properties is their multiple. So 10 seconds times 10% equals 1 second.
 		 * Hence the test for 1 below.
 		 */
-		$this->assertEquals(
+		self::assertEquals(
 			1,
 			$this->getObjectAttribute($timer, 'max_exec_time'),
 			'Execution time is not set correctly (runtime bias is ignored)'
 		);
 
 		$now = microtime(true);
-		$this->assertEquals(
+		self::assertEquals(
 			$now, $this->getObjectAttribute($timer, 'start_time'),
 			'Start time is different than the current time (max allowed deviation: 0.1 seconds)', 0.1);
 	}
@@ -44,14 +44,14 @@ class TimerTest extends \PHPUnit_Framework_TestCase
 		unset($timer);
 		$newTimer = unserialize($serialised);
 
-		$this->assertNotEquals(
+		self::assertNotEquals(
 			12345,
 			$this->getObjectAttribute($newTimer, 'start_time'),
 			'Start time must not survive unserialization.'
 		);
 
 		$now = microtime(true);
-		$this->assertEquals(
+		self::assertEquals(
 			$now, $this->getObjectAttribute($newTimer, 'start_time'),
 			'Start time is different than the current time (max allowed deviation: 0.1 seconds)', 0.1);
 	}
@@ -61,14 +61,14 @@ class TimerTest extends \PHPUnit_Framework_TestCase
 		$timer = new Timer(1, 100);
 
 		$runningTime = $timer->getRunningTime();
-		$this->assertEquals(0, $runningTime,
+		self::assertEquals(0, $runningTime,
 			'Running time on a new timer is not zero (max deviation: 0.1 seconds)', 0.1);
 
 		$originalMicrotime = $this->getObjectAttribute($timer, 'start_time');
 		$this->setObjectAttribute($timer, 'start_time', $originalMicrotime - 1);
 
 		$runningTime = $timer->getRunningTime();
-		$this->assertEquals(
+		self::assertEquals(
 			1, $runningTime,
 			'Running time is not calculated correctly (max deviation: 0.1 seconds)', 0.1
 		);
@@ -79,7 +79,7 @@ class TimerTest extends \PHPUnit_Framework_TestCase
 		$timer = new Timer(1, 100);
 		$this->setObjectAttribute($timer, 'start_time', 12345);
 
-		$this->assertEquals(
+		self::assertEquals(
 			12345,
 			$this->getObjectAttribute($timer, 'start_time'),
 			'THE TEST IS WRONG. We failed to set a custom start time.'
@@ -88,7 +88,7 @@ class TimerTest extends \PHPUnit_Framework_TestCase
 		$timer->resetTime();
 
 		$now = microtime(true);
-		$this->assertEquals(
+		self::assertEquals(
 			$now, $this->getObjectAttribute($timer, 'start_time'),
 			'Start time is different than the current time after reset (max allowed deviation: 0.1 seconds)', 0.1);
 	}
@@ -98,7 +98,7 @@ class TimerTest extends \PHPUnit_Framework_TestCase
 		$timer = new Timer(1, 100);
 		$this->setObjectAttribute($timer, 'start_time', microtime(true) - 0.3);
 
-		$this->assertLessThanOrEqual(
+		self::assertLessThanOrEqual(
 			0.7,
 			$timer->getTimeLeft(),
 			'Time left must be calculated based on the start_time and the current microtime'

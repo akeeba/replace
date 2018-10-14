@@ -37,12 +37,12 @@ class ReplacementTest extends \PHPUnit_Framework_TestCase
 
 		if (!$expected)
 		{
-			$this->assertFalse($actual);
+			self::assertFalse($actual);
 
 			return;
 		}
 
-		$this->assertTrue($actual);
+		self::assertTrue($actual);
 	}
 
 	/**
@@ -62,31 +62,31 @@ class ReplacementTest extends \PHPUnit_Framework_TestCase
 		// If no replacements are expected make sure that the two strings are identical
 		if ($identical)
 		{
-			$this->assertEquals($serialized, $new, 'No replacements expected but strings differ');
+			self::assertEquals($serialized, $new, 'No replacements expected but strings differ');
 
 			return;
 		}
 
 		// Replacements expected: make sure the two strings are not the same
-		$this->assertNotEquals($serialized, $new, 'Replacements expected bur strings are identical');
+		self::assertNotEquals($serialized, $new, 'Replacements expected bur strings are identical');
 
 		// Ensure full replacement (the $from string is no longer present in the new string)
-		$this->assertNotContains($from, $new, 'The search string is still present after replacement');
+		self::assertNotContains($from, $new, 'The search string is still present after replacement');
 
 		// Ensure correct replacement (the $to string is present in the new string)
-		$this->assertContains($to, $new, 'The replacement string is not present after replacement');
+		self::assertContains($to, $new, 'The replacement string is not present after replacement');
 
 		$result = @unserialize($new);
 
 		if (!$isSerialized)
 		{
-			$this->assertFalse($result, 'We managed to unserialize non-serialized data. WTF?!');
+			self::assertFalse($result, 'We managed to unserialize non-serialized data. WTF?!');
 
 			return;
 		}
 
 		// Make sure the serialized data *can* be unserialized correctly
-		$this->assertNotFalse($result, 'Replaced data cannot be unserialized');
+		self::assertNotFalse($result, 'Replaced data cannot be unserialized');
 
 		/**
 		 * Note: we do not test for partial object because it takes forever to walk through the unserialized objects in

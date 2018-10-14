@@ -25,7 +25,7 @@ class PdomysqlTest extends MysqliTest
 	 */
 	public function testIsSupported()
 	{
-		$this->assertThat(\Akeeba\Replace\Database\Driver\Pdomysql::isSupported(), $this->isTrue(), __LINE__);
+		self::assertThat(\Akeeba\Replace\Database\Driver\Pdomysql::isSupported(), $this->isTrue(), __LINE__);
 	}
 
 	/**
@@ -38,7 +38,7 @@ class PdomysqlTest extends MysqliTest
 		$driver = static::getDriver();
 
 		// Make sure dropping a table (if it exists) works
-		$this->assertThat(
+		self::assertThat(
 			$driver->dropTable('#__bar', true),
 			$this->isInstanceOf(get_class($driver)),
 			'The table is dropped if present.'

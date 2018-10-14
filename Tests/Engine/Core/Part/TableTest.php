@@ -127,19 +127,19 @@ class TableTest extends \PHPUnit_Extensions_Database_TestCase
 		{
 			$status = $part->tick();
 
-			$this->assertNull($status->getError(), "We should not get any errors!");
+			self::assertNull($status->getError(), "We should not get any errors!");
 
 			if ($part->getState() == PartInterface::STATE_PREPARED)
 			{
-				$this->assertEquals($expectedColumns, $this->getObjectAttribute($part, 'replaceableColumns'), 'Unexpected columns with replaceable data');
-				$this->assertEquals($expectedPKColumns, $this->getObjectAttribute($part, 'pkColumns'), 'Unexpected primary key column(s)');
-				$this->assertEquals($expectedAutoIncrementColumn, $this->getObjectAttribute($part, 'autoIncrementColumn'), 'Unexpected primary key column');
-				$this->assertLessThanOrEqual($expectedMaxBatch, $this->getObjectAttribute($part, 'batch'), 'Unexpected batch size');
-				$this->assertEquals(0, $this->getObjectAttribute($part, 'offset'), 'After running prepare() the next query offset MUST be zero');
+				self::assertEquals($expectedColumns, $this->getObjectAttribute($part, 'replaceableColumns'), 'Unexpected columns with replaceable data');
+				self::assertEquals($expectedPKColumns, $this->getObjectAttribute($part, 'pkColumns'), 'Unexpected primary key column(s)');
+				self::assertEquals($expectedAutoIncrementColumn, $this->getObjectAttribute($part, 'autoIncrementColumn'), 'Unexpected primary key column');
+				self::assertLessThanOrEqual($expectedMaxBatch, $this->getObjectAttribute($part, 'batch'), 'Unexpected batch size');
+				self::assertEquals(0, $this->getObjectAttribute($part, 'offset'), 'After running prepare() the next query offset MUST be zero');
 			}
 
 			$run++;
-			$this->assertLessThanOrEqual($maxRuns, $run, "Running the Engine Part should not exceed $maxRuns ticks.");
+			self::assertLessThanOrEqual($maxRuns, $run, "Running the Engine Part should not exceed $maxRuns ticks.");
 
 			if ($status->isDone())
 			{
@@ -155,8 +155,8 @@ class TableTest extends \PHPUnit_Extensions_Database_TestCase
 
 		// echo var_export($outSQL, true) . ",\n" . var_export($backupSQL, true) . ",\n\n";
 
-		$this->assertEquals($expectedOutSQL, $outSQL);
-		$this->assertEquals($expectedBackupSQL, $backupSQL);
+		self::assertEquals($expectedOutSQL, $outSQL);
+		self::assertEquals($expectedBackupSQL, $backupSQL);
 	}
 
 	public static function providerEnginePart()

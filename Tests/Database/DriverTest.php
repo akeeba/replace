@@ -63,11 +63,11 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function test__call()
 	{
-		$this->assertEquals($this->instance->q('foo'), $this->instance->quote('foo'), 'q() is an alias of quote()');
+		self::assertEquals($this->instance->q('foo'), $this->instance->quote('foo'), 'q() is an alias of quote()');
 
-		$this->assertEquals($this->instance->qn('foo'), $this->instance->quoteName('foo'), 'qn() is an alias of quoteName()');
+		self::assertEquals($this->instance->qn('foo'), $this->instance->quoteName('foo'), 'qn() is an alias of quoteName()');
 
-		$this->assertNull($this->instance->foobar('foo'), 'Unknown aliases return null');
+		self::assertNull($this->instance->foobar('foo'), 'Unknown aliases return null');
 	}
 
 	public function test__construct()
@@ -81,11 +81,11 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 		$actualOptions = $this->getObjectAttribute($dummy, 'options');
 
-		$this->assertArrayHasKey('database', $actualOptions);
-		$this->assertEquals('mightymouse', $actualOptions['database']);
+		self::assertArrayHasKey('database', $actualOptions);
+		self::assertEquals('mightymouse', $actualOptions['database']);
 
-		$this->assertArrayHasKey('prefix', $actualOptions);
-		$this->assertEquals('kot_', $actualOptions['prefix']);
+		self::assertArrayHasKey('prefix', $actualOptions);
+		self::assertEquals('kot_', $actualOptions['prefix']);
 	}
 
 	public function testGetInstance()
@@ -105,30 +105,30 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 		$driverOne = Driver::getInstance($optionsOne);
 		$driverTwo = Driver::getInstance($optionsTwo);
 
-		$this->assertInstanceOf('\\Akeeba\\Replace\\Database\\Driver\\Fake', $driverOne, 'Driver::getInstance() must return correct subclass (test #1)');
-		$this->assertInstanceOf('\\Akeeba\\Replace\\Database\\Driver\\Fake', $driverTwo, 'Driver::getInstance() must return correct subclass (test #2)');
+		self::assertInstanceOf('\\Akeeba\\Replace\\Database\\Driver\\Fake', $driverOne, 'Driver::getInstance() must return correct subclass (test #1)');
+		self::assertInstanceOf('\\Akeeba\\Replace\\Database\\Driver\\Fake', $driverTwo, 'Driver::getInstance() must return correct subclass (test #2)');
 
-		$this->assertNotSame($driverOne, $driverTwo, 'Using different options must return different driver objects');
+		self::assertNotSame($driverOne, $driverTwo, 'Using different options must return different driver objects');
 
 		$driverThree = Driver::getInstance($optionsTwo);
-		$this->assertSame($driverTwo, $driverThree, 'Using the same options must always return the same object');
+		self::assertSame($driverTwo, $driverThree, 'Using the same options must always return the same object');
 
 		$actualOptions = $this->getObjectAttribute($driverOne, 'options');
-		$this->assertEquals('mightymouse', $actualOptions['database'], 'Driver options must be passed correctly to each constructor (test #1)');
+		self::assertEquals('mightymouse', $actualOptions['database'], 'Driver options must be passed correctly to each constructor (test #1)');
 
 		$actualOptions = $this->getObjectAttribute($driverTwo, 'options');
-		$this->assertEquals('dangermouse', $actualOptions['database'], 'Driver options must be passed correctly to each constructor (test #2)');
+		self::assertEquals('dangermouse', $actualOptions['database'], 'Driver options must be passed correctly to each constructor (test #2)');
 	}
 
 	public function testGetConnection()
 	{
-		$this->assertNull($this->instance->getConnection());
+		self::assertNull($this->instance->getConnection());
 	}
 
 	public function testGetConnectors()
 	{
 		$connectors = $this->instance->getConnectors();
-		$this->assertContains(
+		self::assertContains(
 			'Mysqli',
 			$connectors,
 			'The getConnectors method should return an array with Mysqli as an available option.'
@@ -137,12 +137,12 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetCount()
 	{
-		$this->assertEquals(0, $this->instance->getCount());
+		self::assertEquals(0, $this->instance->getCount());
 	}
 
 	public function testGetDatabase()
 	{
-		$this->assertEquals('mightymouse', $this->instance->getDatabase());
+		self::assertEquals('mightymouse', $this->instance->getDatabase());
 	}
 
 	public function testGetDatabaseFromOptions()
@@ -152,8 +152,8 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 		$refProp->setAccessible(true);
 		$refProp->setValue($this->instance, '');
 
-		$this->assertEquals('mightymouse', $this->instance->getDatabase());
-		$this->assertEquals('mightymouse', $this->getObjectAttribute($this->instance, '_database'));
+		self::assertEquals('mightymouse', $this->instance->getDatabase());
+		self::assertEquals('mightymouse', $this->getObjectAttribute($this->instance, '_database'));
 	}
 
 	public function testGetDatabaseFromConnection()
@@ -175,16 +175,16 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 		unset($options['database']);
 		$refOptions->setValue($db, $options);
 
-		$this->assertEquals($_ENV['DB_NAME'], $db->getDatabase());
-		$this->assertEquals($_ENV['DB_NAME'], $this->getObjectAttribute($db, '_database'));
+		self::assertEquals($_ENV['DB_NAME'], $db->getDatabase());
+		self::assertEquals($_ENV['DB_NAME'], $this->getObjectAttribute($db, '_database'));
 		$actualOptions = $this->getObjectAttribute($db, 'options');
-		$this->assertEquals($_ENV['DB_NAME'], $actualOptions['database']);
+		self::assertEquals($_ENV['DB_NAME'], $actualOptions['database']);
 	}
 
 
 	public function testGetDateFormat()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->getDateFormat(),
 			$this->equalTo('Y-m-d H:i:s')
 		);
@@ -192,7 +192,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testSplitSql()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->splitSql('SELECT * FROM #__foo;SELECT * FROM #__bar;'),
 			$this->equalTo(
 				[
@@ -206,7 +206,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetPrefix()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->getPrefix(),
 			$this->equalTo('kot_')
 		);
@@ -214,7 +214,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetNullDate()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->getNullDate(),
 			$this->equalTo('1BC')
 		);
@@ -222,7 +222,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetMinimum()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->getMinimum(),
 			$this->equalTo('12.1'),
 			'getMinimum should return a string with the minimum supported database version number'
@@ -231,7 +231,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testIsMinimumVersion()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->isMinimumVersion(),
 			$this->isTrue(),
 			'isMinimumVersion should return a boolean true if the database version is supported by the driver'
@@ -240,7 +240,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testSetDebug()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->setDebug(true),
 			$this->isType('boolean'),
 			'setDebug should return a boolean value containing the previous debug state.'
@@ -249,7 +249,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testSetQuery()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->setQuery('SELECT * FROM #__dbtest'),
 			$this->isInstanceOf('Akeeba\Replace\Database\Driver'),
 			'setQuery method should return an instance of Akeeba\Replace\Database\Driver.'
@@ -258,7 +258,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testReplacePrefix()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->replacePrefix('SELECT * FROM #__dbtest'),
 			$this->equalTo('SELECT * FROM kot_dbtest'),
 			'replacePrefix method should return the query string with the #__ prefix replaced by the actual table prefix.'
@@ -267,19 +267,19 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testQuote()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quote('test', false),
 			$this->equalTo("'test'"),
 			'Tests the without escaping.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quote('test'),
 			$this->equalTo("'_test_'"),
 			'Tests the with escaping (default).'
 		);
 
-		$this->assertEquals(
+		self::assertEquals(
 			["'_test1_'", "'_test2_'"],
 			$this->instance->quote(['test1', 'test2']),
 			'Check that the array is quoted.'
@@ -288,31 +288,31 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testQuoteBoolean()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quote(true),
 			$this->equalTo("'_1_'"),
 			'Tests handling of boolean true with escaping (default).'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quote(false),
 			$this->equalTo("'__'"),
 			'Tests handling of boolean false with escaping (default).'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quote(null),
 			$this->equalTo("'__'"),
 			'Tests handling of null with escaping (default).'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quote(42),
 			$this->equalTo("'_42_'"),
 			'Tests handling of integer with escaping (default).'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quote(3.14),
 			$this->equalTo("'_3.14_'"),
 			'Tests handling of float with escaping (default).'
@@ -321,43 +321,43 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testQuoteName()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quoteName('test'),
 			$this->equalTo('[test]'),
 			'Tests the left-right quotes on a string.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quoteName('a.test'),
 			$this->equalTo('[a].[test]'),
 			'Tests the left-right quotes on a dotted string.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quoteName(['a', 'test']),
 			$this->equalTo(['[a]', '[test]']),
 			'Tests the left-right quotes on an array.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quoteName(['a.b', 'test.quote']),
 			$this->equalTo(['[a].[b]', '[test].[quote]']),
 			'Tests the left-right quotes on an array.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quoteName(['a.b', 'test.quote'], [null, 'alias']),
 			$this->equalTo(['[a].[b]', '[test].[quote] AS [alias]']),
 			'Tests the left-right quotes on an array.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quoteName(['a.b', 'test.quote'], ['alias1', 'alias2']),
 			$this->equalTo(['[a].[b] AS [alias1]', '[test].[quote] AS [alias2]']),
 			'Tests the left-right quotes on an array.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quoteName((object) ['a', 'test']),
 			$this->equalTo(['[a]', '[test]']),
 			'Tests the left-right quotes on an object.'
@@ -368,7 +368,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 		$property->setAccessible(true);
 		$property->setValue($this->instance, '/');
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quoteName('test'),
 			$this->equalTo('/test/'),
 			'Tests the uni-quotes on a string.'
@@ -377,7 +377,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 	public function testTruncateTable()
 	{
-		$this->assertNull(
+		self::assertNull(
 			$this->instance->truncateTable('#__dbtest'),
 			'truncateTable should not return anything if successful.'
 		);
@@ -389,7 +389,7 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 
 		$actual   = $db->getDatabaseNameFromConnection();
 		$expected = $_ENV['DB_NAME'];
-		$this->assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual);
 	}
 
 	public function testGetDatabaseMeta()
@@ -397,10 +397,10 @@ class DriverTest extends \PHPUnit_Framework_TestCase
 		$db     = $this->getRealDatabaseConnection();
 		$actual = $db->getDatabaseMeta();
 
-		$this->assertInstanceOf(Database::class, $actual);
-		$this->assertEquals($_ENV['DB_NAME'], $actual->getName());
-		$this->assertContains('utf8', $actual->getCollation());
-		$this->assertContains('utf8', $actual->getCharacterSet());
+		self::assertInstanceOf(Database::class, $actual);
+		self::assertEquals($_ENV['DB_NAME'], $actual->getName());
+		self::assertContains('utf8', $actual->getCollation());
+		self::assertContains('utf8', $actual->getCharacterSet());
 	}
 
 	public function testGetDatabaseMetaNotExists()
@@ -433,10 +433,10 @@ MYSQL;
 
 		$actual = $db->getTableMeta('#__dbtest_formeta');
 
-		$this->assertInstanceOf(Table::class, $actual);
-		$this->assertEquals('akr_dbtest_formeta', $actual->getName());
-		$this->assertEquals('utf8_general_ci', $actual->getCollation());
-		$this->assertEquals('MEMORY', $actual->getEngine());
+		self::assertInstanceOf(Table::class, $actual);
+		self::assertEquals('akr_dbtest_formeta', $actual->getName());
+		self::assertEquals('utf8_general_ci', $actual->getCollation());
+		self::assertEquals('MEMORY', $actual->getEngine());
 	}
 
 	public function testGetTableMetaNotExists()
@@ -469,15 +469,15 @@ MYSQL;
 
 		$actual = $db->getColumnsMeta('#__dbtest_formeta');
 
-		$this->assertCount(4, $actual);
-		$this->assertArrayHasKey('id', $actual);
-		$this->assertArrayHasKey('title', $actual);
-		$this->assertArrayHasKey('start_date', $actual);
-		$this->assertArrayHasKey('description', $actual);
-		$this->assertFalse($actual['id']->isText());
-		$this->assertTrue($actual['id']->isPK());
-		$this->assertTrue($actual['title']->isText());
-		$this->assertFalse($actual['title']->isPK());
+		self::assertCount(4, $actual);
+		self::assertArrayHasKey('id', $actual);
+		self::assertArrayHasKey('title', $actual);
+		self::assertArrayHasKey('start_date', $actual);
+		self::assertArrayHasKey('description', $actual);
+		self::assertFalse($actual['id']->isText());
+		self::assertTrue($actual['id']->isPK());
+		self::assertTrue($actual['title']->isText());
+		self::assertFalse($actual['title']->isPK());
 	}
 
 	public function testGetColumnsMetaNotExists()

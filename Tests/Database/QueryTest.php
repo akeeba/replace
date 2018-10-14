@@ -89,25 +89,25 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__call()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->e('foo'),
 			$this->equalTo($this->instance->escape('foo')),
 			'Tests the e alias of escape.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->q('foo'),
 			$this->equalTo($this->instance->quote('foo')),
 			'Tests the q alias of quote.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->qn('foo'),
 			$this->equalTo($this->instance->quoteName('foo')),
 			'Tests the qn alias of quoteName.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->foo(),
 			$this->isNull(),
 			'Tests for an unknown method.'
@@ -124,7 +124,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	public function test__get()
 	{
 		$this->instance->select('*');
-		$this->assertEquals('select', $this->getObjectAttribute($this->instance, 'type'));
+		self::assertEquals('select', $this->getObjectAttribute($this->instance, 'type'));
 	}
 
 	/**
@@ -139,7 +139,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$this->instance->select('col')->from($subq, 'alias');
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(
 				PHP_EOL . "SELECT col" . PHP_EOL .
@@ -160,14 +160,14 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$this->instance->insert('table')->columns('col')->values($subq);
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(PHP_EOL . "INSERT INTO table" . PHP_EOL . "(col)" . PHP_EOL . "(" . PHP_EOL . "SELECT col2" . PHP_EOL . "WHERE a=1)")
 		);
 
 		$this->instance->clear();
 		$this->instance->insert('table')->columns('col')->values('3');
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(PHP_EOL . "INSERT INTO table" . PHP_EOL . "(col) VALUES " . PHP_EOL . "(3)")
 		);
@@ -182,7 +182,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->select($this->instance->year($this->instance->quoteName('col')))->from('table');
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(PHP_EOL . "SELECT YEAR(`col`)" . PHP_EOL . "FROM table")
 		);
@@ -197,7 +197,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->select($this->instance->month($this->instance->quoteName('col')))->from('table');
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(PHP_EOL . "SELECT MONTH(`col`)" . PHP_EOL . "FROM table")
 		);
@@ -212,7 +212,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->select($this->instance->day($this->instance->quoteName('col')))->from('table');
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(PHP_EOL . "SELECT DAY(`col`)" . PHP_EOL . "FROM table")
 		);
@@ -227,7 +227,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->select($this->instance->hour($this->instance->quoteName('col')))->from('table');
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(PHP_EOL . "SELECT HOUR(`col`)" . PHP_EOL . "FROM table")
 		);
@@ -242,7 +242,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->select($this->instance->minute($this->instance->quoteName('col')))->from('table');
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(PHP_EOL . "SELECT MINUTE(`col`)" . PHP_EOL . "FROM table")
 		);
@@ -257,7 +257,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->instance->select($this->instance->second($this->instance->quoteName('col')))->from('table');
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(PHP_EOL . "SELECT SECOND(`col`)" . PHP_EOL . "FROM table")
 		);
@@ -278,7 +278,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->having('COUNT(a.id) > 3')
 			->order('a.id');
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(
 				PHP_EOL . "SELECT a.id" .
@@ -305,7 +305,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->set('a.id = 2')
 			->where('b.id = 1');
 
-		$this->assertThat(
+		self::assertThat(
 			(string) $this->instance,
 			$this->equalTo(
 				PHP_EOL . "UPDATE #__foo AS a" .
@@ -330,7 +330,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->union('SELECT id FROM a');
 
 		$eol = PHP_EOL;
-		$this->assertEquals("SELECT *{$eol}UNION (SELECT id FROM a)", trim($this->instance));
+		self::assertEquals("SELECT *{$eol}UNION (SELECT id FROM a)", trim($this->instance));
 	}
 
 	/**
@@ -342,9 +342,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCall()
 	{
-		$this->assertSame($this->instance, $this->instance->call('foo'), 'Checks chaining');
+		self::assertSame($this->instance, $this->instance->call('foo'), 'Checks chaining');
 		$this->instance->call('bar');
-		$this->assertEquals('CALL foo,bar', trim($this->getObjectAttribute($this->instance, 'call')), 'Checks method by rendering.');
+		self::assertEquals('CALL foo,bar', trim($this->getObjectAttribute($this->instance, 'call')), 'Checks method by rendering.');
 	}
 
 	/**
@@ -356,7 +356,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCall__toString()
 	{
-		$this->assertEquals('CALL foo', trim($this->instance->call('foo')), 'Checks method by rendering.');
+		self::assertEquals('CALL foo', trim($this->instance->call('foo')), 'Checks method by rendering.');
 	}
 
 	/**
@@ -368,7 +368,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCastAsChar()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->castAsChar('123'),
 			$this->equalTo('123'),
 			'The default castAsChar behaviour is to return the input.'
@@ -384,17 +384,17 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCharLength()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->charLength('a.title'),
 			$this->equalTo('CHAR_LENGTH(a.title)')
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->charLength('a.title', '!=', '0'),
 			$this->equalTo('CHAR_LENGTH(a.title) != 0')
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->charLength('a.title', 'IS', 'NOT NULL'),
 			$this->equalTo('CHAR_LENGTH(a.title) IS NOT NULL')
 		);
@@ -440,14 +440,14 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		// Check that all properties have been cleared
 		foreach ($properties as $property)
 		{
-			$this->assertThat(
+			self::assertThat(
 				$this->getObjectAttribute($this->instance, $property),
 				$this->equalTo(null)
 			);
 		}
 
 		// And check that the type has been cleared.
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($this->instance, 'type'),
 			$this->equalTo(null)
 		);
@@ -492,7 +492,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			$q->clear($clause);
 
 			// Check that clause was cleared.
-			$this->assertThat(
+			self::assertThat(
 				$this->getObjectAttribute($q, $clause),
 				$this->equalTo(null)
 			);
@@ -502,7 +502,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			{
 				if ($clause != $clause2)
 				{
-					$this->assertThat(
+					self::assertThat(
 						$this->getObjectAttribute($q, $clause2),
 						$this->equalTo($clause2),
 						"Clearing $clause resulted in $clause2 having a value of " . $this->getObjectAttribute($q, $clause2) . '.'
@@ -557,12 +557,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			$this->instance->clear($type);
 
 			// Check the type has been cleared.
-			$this->assertThat(
+			self::assertThat(
 				$this->getObjectAttribute($this->instance, 'type'),
 				$this->equalTo(null)
 			);
 
-			$this->assertThat(
+			self::assertThat(
 				$this->getObjectAttribute($this->instance, $type),
 				$this->equalTo(null)
 			);
@@ -570,7 +570,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			// Now check the claues have not been affected.
 			foreach ($clauses as $clause)
 			{
-				$this->assertThat(
+				self::assertThat(
 					$this->getObjectAttribute($this->instance, $clause),
 					$this->equalTo($clause)
 				);
@@ -587,13 +587,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testColumns()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->columns('foo'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'columns')),
 			$this->equalTo('(foo)'),
 			'Tests rendered value.'
@@ -602,7 +602,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		// Add another column.
 		$this->instance->columns('bar');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'columns')),
 			$this->equalTo('(foo,bar)'),
 			'Tests rendered value after second use.'
@@ -618,13 +618,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testConcatenate()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->concatenate(['foo', 'bar']),
 			$this->equalTo('CONCATENATE(foo || bar)'),
 			'Tests without separator.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->concatenate(['foo', 'bar'], ' and '),
 			$this->equalTo("CONCATENATE(foo || '_ and _' || bar)"),
 			'Tests with separator.'
@@ -640,7 +640,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCurrentTimestamp()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->currentTimestamp(),
 			$this->equalTo('CURRENT_TIMESTAMP()')
 		);
@@ -655,7 +655,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDateFormat()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->dateFormat(),
 			$this->equalTo('Y-m-d H:i:s')
 		);
@@ -686,25 +686,25 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDelete()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->delete('#__foo'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($this->instance, 'type'),
 			$this->equalTo('delete'),
 			'Tests the type property is set correctly.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'delete')),
 			$this->equalTo('DELETE'),
 			'Tests the delete element is set correctly.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'from')),
 			$this->equalTo('FROM #__foo'),
 			'Tests the from element is set correctly.'
@@ -724,7 +724,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			->innerJoin('join')
 			->where('bar=1');
 
-		$this->assertEquals(
+		self::assertEquals(
 			implode(PHP_EOL, ['DELETE ', 'FROM #__foo', 'INNER JOIN join', 'WHERE bar=1']),
 			trim($this->instance)
 		);
@@ -742,7 +742,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->instance->select('*')
 			->from('#__foo');
 
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->dump(),
 			$this->equalTo(
 				'<pre class="Query">' .
@@ -762,7 +762,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testEscape()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->escape('foo'),
 			$this->equalTo('_foo_')
 		);
@@ -793,9 +793,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExec()
 	{
-		$this->assertSame($this->instance, $this->instance->exec('a.*'), 'Checks chaining');
+		self::assertSame($this->instance, $this->instance->exec('a.*'), 'Checks chaining');
 		$this->instance->exec('b.*');
-		$this->assertEquals('EXEC a.*,b.*', trim($this->getObjectAttribute($this->instance, 'exec')), 'Checks method by rendering.');
+		self::assertEquals('EXEC a.*,b.*', trim($this->getObjectAttribute($this->instance, 'exec')), 'Checks method by rendering.');
 	}
 
 	/**
@@ -807,7 +807,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExec__toString()
 	{
-		$this->assertEquals('EXEC a.*', trim($this->instance->exec('a.*')));
+		self::assertEquals('EXEC a.*', trim($this->instance->exec('a.*')));
 	}
 
 	/**
@@ -819,13 +819,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFrom()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->from('#__foo'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'from')),
 			$this->equalTo('FROM #__foo'),
 			'Tests rendered value.'
@@ -834,7 +834,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		// Add another column.
 		$this->instance->from('#__bar');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'from')),
 			$this->equalTo('FROM #__foo,#__bar'),
 			'Tests rendered value after second use.'
@@ -850,13 +850,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGroup()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->group('foo'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'group')),
 			$this->equalTo('GROUP BY foo'),
 			'Tests rendered value.'
@@ -865,7 +865,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		// Add another column.
 		$this->instance->group('bar');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'group')),
 			$this->equalTo('GROUP BY foo,bar'),
 			'Tests rendered value after second use.'
@@ -881,13 +881,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testHaving()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->having('COUNT(foo) > 1'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'having')),
 			$this->equalTo('HAVING COUNT(foo) > 1'),
 			'Tests rendered value.'
@@ -896,7 +896,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		// Add another column.
 		$this->instance->having('COUNT(bar) > 2');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'having')),
 			$this->equalTo('HAVING COUNT(foo) > 1 AND COUNT(bar) > 2'),
 			'Tests rendered value after second use.'
@@ -907,7 +907,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->instance->having('COUNT(foo) > 1', 'OR');
 		$this->instance->having('COUNT(bar) > 2');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'having')),
 			$this->equalTo('HAVING COUNT(foo) > 1 OR COUNT(bar) > 2'),
 			'Tests rendered value with OR glue.'
@@ -927,7 +927,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$q2        = $this->dbo->getQuery(true);
 		$condition = 'foo ON foo.id = bar.id';
 
-		$this->assertThat(
+		self::assertThat(
 			$q1->innerJoin($condition),
 			$this->identicalTo($q1),
 			'Tests chaining.'
@@ -935,7 +935,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$q2->join('INNER', $condition);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($q1, 'join'),
 			$this->equalTo($this->getObjectAttribute($q2, 'join')),
 			'Tests that innerJoin is an alias for join.'
@@ -951,19 +951,19 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testInsert()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->insert('#__foo'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($this->instance, 'type'),
 			$this->equalTo('insert'),
 			'Tests the type property is set correctly.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'insert')),
 			$this->equalTo('INSERT INTO #__foo'),
 			'Tests the delete element is set correctly.'
@@ -979,7 +979,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testJoin()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->join('INNER', 'foo ON foo.id = bar.id'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
@@ -987,7 +987,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$join = $this->getObjectAttribute($this->instance, 'join');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($join[0]),
 			$this->equalTo('INNER JOIN foo ON foo.id = bar.id'),
 			'Tests that first join renders correctly.'
@@ -997,7 +997,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$join = $this->getObjectAttribute($this->instance, 'join');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($join[1]),
 			$this->equalTo('OUTER JOIN goo ON goo.id = car.id'),
 			'Tests that second join renders correctly.'
@@ -1017,7 +1017,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$q2        = $this->dbo->getQuery(true);
 		$condition = 'foo ON foo.id = bar.id';
 
-		$this->assertThat(
+		self::assertThat(
 			$q1->leftJoin($condition),
 			$this->identicalTo($q1),
 			'Tests chaining.'
@@ -1025,7 +1025,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$q2->join('LEFT', $condition);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($q1, 'join'),
 			$this->equalTo($this->getObjectAttribute($q2, 'join')),
 			'Tests that leftJoin is an alias for join.'
@@ -1041,7 +1041,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testLength()
 	{
-		$this->assertThat(
+		self::assertThat(
 			trim($this->instance->length('foo')),
 			$this->equalTo('LENGTH(foo)'),
 			'Tests method renders correctly.'
@@ -1061,7 +1061,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testNullDate($quoted, $expected)
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->nullDate($quoted),
 			$this->equalTo($expected),
 			'The nullDate method should be a proxy for the Driver::getNullDate method.'
@@ -1093,13 +1093,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testOrder()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->order('foo'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'order')),
 			$this->equalTo('ORDER BY foo'),
 			'Tests rendered value.'
@@ -1108,7 +1108,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		// Add another column.
 		$this->instance->order('bar');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'order')),
 			$this->equalTo('ORDER BY foo,bar'),
 			'Tests rendered value after second use.'
@@ -1120,7 +1120,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'order')),
 			$this->equalTo('ORDER BY foo,bar,goo,car'),
 			'Tests array input.'
@@ -1140,7 +1140,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$q2        = $this->dbo->getQuery(true);
 		$condition = 'foo ON foo.id = bar.id';
 
-		$this->assertThat(
+		self::assertThat(
 			$q1->outerJoin($condition),
 			$this->identicalTo($q1),
 			'Tests chaining.'
@@ -1148,7 +1148,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$q2->join('OUTER', $condition);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($q1, 'join'),
 			$this->equalTo($this->getObjectAttribute($q2, 'join')),
 			'Tests that outerJoin is an alias for join.'
@@ -1169,7 +1169,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testQuote($text, $escape, $expected)
 	{
-		$this->assertEquals($expected, $this->instance->quote($text, $escape));
+		self::assertEquals($expected, $this->instance->quote($text, $escape));
 	}
 
 	/**
@@ -1197,7 +1197,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testQuoteName()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->quoteName("test"),
 			$this->equalTo("`test`"),
 			'The quoteName method should be a proxy for the JDatabase::escape method.'
@@ -1233,7 +1233,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$q2        = $this->dbo->getQuery(true);
 		$condition = 'foo ON foo.id = bar.id';
 
-		$this->assertThat(
+		self::assertThat(
 			$q1->rightJoin($condition),
 			$this->identicalTo($q1),
 			'Tests chaining.'
@@ -1241,7 +1241,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$q2->join('RIGHT', $condition);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($q1, 'join'),
 			$this->equalTo($this->getObjectAttribute($q2, 'join')),
 			'Tests that rightJoin is an alias for join.'
@@ -1257,19 +1257,19 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSelect()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->select('foo'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($this->instance, 'type'),
 			$this->equalTo('select'),
 			'Tests the type property is set correctly.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'select')),
 			$this->equalTo('SELECT foo'),
 			'Tests the select element is set correctly.'
@@ -1277,7 +1277,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$this->instance->select('bar');
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'select')),
 			$this->equalTo('SELECT foo,bar'),
 			'Tests the second use appends correctly.'
@@ -1289,7 +1289,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'select')),
 			$this->equalTo('SELECT foo,bar,goo,car'),
 			'Tests the second use appends correctly.'
@@ -1305,20 +1305,20 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSet()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->set('foo = 1'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'set')),
 			$this->identicalTo('SET foo = 1'),
 			'Tests set with a string.'
 		);
 
 		$this->instance->set('bar = 2');
-		$this->assertEquals("SET foo = 1" . PHP_EOL . "\t, bar = 2", trim($this->getObjectAttribute($this->instance, 'set')), 'Tests appending with set().');
+		self::assertEquals("SET foo = 1" . PHP_EOL . "\t, bar = 2", trim($this->getObjectAttribute($this->instance, 'set')), 'Tests appending with set().');
 
 		// Clear the set.
 		$this->setObjectAttribute($this->instance, 'set', null);
@@ -1329,7 +1329,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'set')),
 			$this->identicalTo("SET foo = 1" . PHP_EOL . "\t, bar = 2"),
 			'Tests set with an array.'
@@ -1345,7 +1345,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			';'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'set')),
 			$this->identicalTo("SET foo = 1" . PHP_EOL . "\t; bar = 2"),
 			'Tests set with an array and glue.'
@@ -1361,9 +1361,9 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetQuery()
 	{
-		$this->assertSame($this->instance, $this->instance->setQuery('Some SQL'), 'Check chaining.');
-		$this->assertAttributeEquals('Some SQL', 'sql', $this->instance, 'Checks the property was set correctly.');
-		$this->assertEquals('Some SQL', (string) $this->instance, 'Checks the rendering of the raw SQL.');
+		self::assertSame($this->instance, $this->instance->setQuery('Some SQL'), 'Check chaining.');
+		self::assertAttributeEquals('Some SQL', 'sql', $this->instance, 'Checks the property was set correctly.');
+		self::assertEquals('Some SQL', (string) $this->instance, 'Checks the rendering of the raw SQL.');
 	}
 
 	/**
@@ -1375,7 +1375,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetQuery__toString()
 	{
-		$this->assertEquals('Some SQL', trim($this->instance->setQuery('Some SQL')));
+		self::assertEquals('Some SQL', trim($this->instance->setQuery('Some SQL')));
 	}
 
 	/**
@@ -1387,19 +1387,19 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testUpdate()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->update('#__foo'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($this->instance, 'type'),
 			$this->equalTo('update'),
 			'Tests the type property is set correctly.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'update')),
 			$this->equalTo('UPDATE #__foo'),
 			'Tests the update element is set correctly.'
@@ -1415,13 +1415,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testValues()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->values('1,2,3'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'values')),
 			$this->equalTo('(1,2,3)'),
 			'Tests rendered value.'
@@ -1435,7 +1435,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'values')),
 			$this->equalTo('(1,2,3),(4,5,6),(7,8,9)'),
 			'Tests rendered value after second use and array input.'
@@ -1451,13 +1451,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testWhere()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->where('foo = 1'),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'where')),
 			$this->equalTo('WHERE foo = 1'),
 			'Tests rendered value.'
@@ -1471,7 +1471,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'where')),
 			$this->equalTo('WHERE foo = 1 AND bar = 2 AND goo = 3'),
 			'Tests rendered value after second use and array input.'
@@ -1487,7 +1487,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 			'OR'
 		);
 
-		$this->assertThat(
+		self::assertThat(
 			trim($this->getObjectAttribute($this->instance, 'where')),
 			$this->equalTo('WHERE bar = 2 OR goo = 3'),
 			'Tests rendered value with glue.'
@@ -1510,14 +1510,14 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$baseElement->testArray[] = 'test';
 
-		$this->assertSame(
+		self::assertSame(
 			$this->getObjectAttribute($baseElement, 'db'),
 			$this->getObjectAttribute($cloneElement, 'db'),
 			'The cloned $db variable should be identical after cloning.'
 		);
 
-		$this->assertFalse($baseElement === $cloneElement);
-		$this->assertTrue(count($cloneElement->testArray) == 0);
+		self::assertFalse($baseElement === $cloneElement);
+		self::assertTrue(count($cloneElement->testArray) == 0);
 	}
 
 	/**
@@ -1534,14 +1534,14 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
 		$cloneElement = clone($baseElement);
 
-		$this->assertSame(
+		self::assertSame(
 			$this->getObjectAttribute($baseElement, 'db'),
 			$this->getObjectAttribute($cloneElement, 'db'),
 			'The cloned $db variable should be identical after cloning.'
 		);
 
-		$this->assertFalse($baseElement === $cloneElement);
-		$this->assertFalse($baseElement->testObject === $cloneElement->testObject);
+		self::assertFalse($baseElement === $cloneElement);
+		self::assertFalse($baseElement->testObject === $cloneElement->testObject);
 	}
 
 	/**
@@ -1553,7 +1553,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testUnionChain()
 	{
-		$this->assertThat(
+		self::assertThat(
 			$this->instance->union($this->instance),
 			$this->identicalTo($this->instance),
 			'Tests chaining.'
@@ -1573,7 +1573,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->setObjectAttribute($this->instance, 'order', null);
 		$this->instance->order('bar');
 		$this->instance->union('SELECT name FROM foo');
-		$this->assertThat(
+		self::assertThat(
 			$this->getObjectAttribute($this->instance, 'order'),
 			$this->equalTo(null),
 			'Tests that ORDER BY is cleared with union.'
@@ -1592,7 +1592,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->setObjectAttribute($this->instance, 'union', null);
 		$this->instance->union('SELECT name FROM foo');
 		$teststring = (string) $this->getObjectAttribute($this->instance, 'union');
-		$this->assertThat(
+		self::assertThat(
 			$teststring,
 			$this->equalTo(PHP_EOL . "UNION (SELECT name FROM foo)"),
 			'Tests rendered query with union.'
@@ -1611,7 +1611,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->setObjectAttribute($this->instance, 'union', null);
 		$this->instance->union('SELECT name FROM foo', 'distinct');
 		$teststring = (string) $this->getObjectAttribute($this->instance, 'union');
-		$this->assertThat(
+		self::assertThat(
 			$teststring,
 			$this->equalTo(PHP_EOL . "UNION DISTINCT (SELECT name FROM foo)"),
 			'Tests rendered query with union distinct as a string.'
@@ -1630,7 +1630,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->setObjectAttribute($this->instance, 'union', null);
 		$this->instance->union('SELECT name FROM foo', true);
 		$teststring = (string) $this->getObjectAttribute($this->instance, 'union');
-		$this->assertThat(
+		self::assertThat(
 			$teststring,
 			$this->equalTo(PHP_EOL . "UNION DISTINCT (SELECT name FROM foo)"),
 			'Tests rendered query with union distinct true.'
@@ -1649,7 +1649,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->setObjectAttribute($this->instance, 'union', null);
 		$this->instance->union('SELECT name FROM foo', false);
 		$teststring = (string) $this->getObjectAttribute($this->instance, 'union');
-		$this->assertThat(
+		self::assertThat(
 			$teststring,
 			$this->equalTo(PHP_EOL . "UNION (SELECT name FROM foo)"),
 			'Tests rendered query with union distinct false.'
@@ -1668,7 +1668,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->setObjectAttribute($this->instance, 'union', null);
 		$this->instance->union(['SELECT name FROM foo', 'SELECT name FROM bar']);
 		$teststring = (string) $this->getObjectAttribute($this->instance, 'union');
-		$this->assertThat(
+		self::assertThat(
 			$teststring,
 			$this->equalTo(PHP_EOL . "UNION (SELECT name FROM foo)" . PHP_EOL . "UNION (SELECT name FROM bar)"),
 			'Tests rendered query with two unions as an array.'
@@ -1688,7 +1688,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->instance->union('SELECT name FROM foo');
 		$this->instance->union('SELECT name FROM bar');
 		$teststring = (string) $this->getObjectAttribute($this->instance, 'union');
-		$this->assertThat(
+		self::assertThat(
 			$teststring,
 			$this->equalTo(PHP_EOL . "UNION (SELECT name FROM foo)" . PHP_EOL . "UNION (SELECT name FROM bar)"),
 			'Tests rendered query with two unions sequentially.'
@@ -1707,7 +1707,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->setObjectAttribute($this->instance, 'union', null);
 		$this->instance->unionDistinct('SELECT name FROM foo');
 		$teststring = (string) $this->getObjectAttribute($this->instance, 'union');
-		$this->assertThat(
+		self::assertThat(
 			trim($teststring),
 			$this->equalTo("UNION DISTINCT (SELECT name FROM foo)"),
 			'Tests rendered query with unionDistinct.'
@@ -1726,7 +1726,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$this->setObjectAttribute($this->instance, 'union', null);
 		$this->instance->unionDistinct(['SELECT name FROM foo', 'SELECT name FROM bar']);
 		$teststring = (string) $this->getObjectAttribute($this->instance, 'union');
-		$this->assertThat(
+		self::assertThat(
 			$teststring,
 			$this->equalTo(PHP_EOL . "UNION DISTINCT (SELECT name FROM foo)" . PHP_EOL . "UNION DISTINCT (SELECT name FROM bar)"),
 			'Tests rendered query with two unions distinct.'
@@ -1745,7 +1745,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$result   = $this->instance->format('SELECT %n FROM %n WHERE %n = %a', 'foo', '#__bar', 'id', 10);
 		$expected = 'SELECT ' . $this->instance->qn('foo') . ' FROM ' . $this->instance->qn('#__bar') .
 			' WHERE ' . $this->instance->qn('id') . ' = 10';
-		$this->assertThat(
+		self::assertThat(
 			$result,
 			$this->equalTo($expected),
 			'Line: ' . __LINE__ . '.'
@@ -1755,7 +1755,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 		$expected = 'SELECT ' . $this->instance->qn('id') . ' FROM ' . $this->instance->qn('#__foo') .
 			' WHERE ' . $this->instance->qn('date') . ' = ' . $this->instance->currentTimestamp() .
 			' OR ' . $this->instance->qn('date') . ' = ' . $this->instance->nullDate(true);
-		$this->assertThat(
+		self::assertThat(
 			$result,
 			$this->equalTo($expected),
 			'Line: ' . __LINE__ . '.'
