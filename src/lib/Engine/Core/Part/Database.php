@@ -118,8 +118,7 @@ class Database extends AbstractPart implements
 
 		$this->memoryInfo = $memoryInfo;
 
-		$databaseMeta = $this->getDbo()->getDatabaseMeta();
-		$this->setDomain($databaseMeta->getName());
+		$this->setDomain($this->getDbo()->getDatabase());
 
 		parent::__construct($timer, $config);
 	}
@@ -146,9 +145,22 @@ class Database extends AbstractPart implements
 
 		// Run once-per-database callbacks.
 		$this->getLogger()->debug("Retrieving database metadata");
-		$databaseMeta = $this->getDbo()->getDatabaseMeta();
-		$this->runPerDatabaseActions($this->perDatabaseActionClasses, $databaseMeta, $this->getLogger(),
-			$this->getOutputWriter(), $this->getBackupWriter(), $this->getDbo(), $this->getConfig());
+
+		try
+		{
+			$databaseMeta = $this->getDbo()->getDatabaseMeta();
+			$this->runPerDatabaseActions($this->perDatabaseActionClasses, $databaseMeta, $this->getLogger(),
+				$this->getOutputWriter(), $this->getBackupWriter(), $this->getDbo(), $this->getConfig());
+		}
+		catch (\RuntimeException $e)
+		{
+			if (strpos($e->getMessage(), 'does not have access to INFORMATION_SCHEMA'))
+			{
+				throw $e;
+			}
+
+			$this->getLogger()->warning($e->getMessage());
+		}
 
 		// Get and filter the list of tables.
 		$this->getLogger()->debug('Getting the list of database tables');
