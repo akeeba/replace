@@ -12,6 +12,16 @@
  */
 h2.akeebareplace-title-inline {
     display: inline !important;
+    margin-right: 0.25em;
+}
+
+img.akeebareplace-header-logo {
+    width: 1.728em;
+    height: 1.728em;
+    float: left;
+    position: relative;
+    top: -0.085em;
+    margin-right: 0.25em;
 }
 
 /**

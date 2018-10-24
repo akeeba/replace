@@ -141,7 +141,7 @@ class Application
 			'manage_options',
 			'akeebareplace',
 			[__CLASS__, 'entryPoint'],
-			plugins_url('images/logo/replace-24.png', AKEEBA_REPLACE_SELF)
+			plugins_url('images/logo/akeeba-replace-24-white.png', AKEEBA_REPLACE_SELF)
 		);
 
 		self::add_options_page();

@@ -10,7 +10,8 @@
 $hasSubheading = isset($subheading);
 ?>
 <h2 class="akeebareplace-title<?php echo $hasSubheading ? '-inline' : '' ?>">
-	<span class="aklogo-akeebareplace-wp-small"></span>
+	<img src="<?php echo plugins_url('images/logo/akeeba-replace-128-black.png', AKEEBA_REPLACE_SELF) ?>"
+    class="akeebareplace-header-logo">
 	Akeeba Replace
 	<?php if ($hasSubheading): ?>
 	<small>:: <?php echo $subheading?></small>
