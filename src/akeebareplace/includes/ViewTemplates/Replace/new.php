@@ -43,7 +43,7 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
 			<label for="akeebareplaceDescription">
 				<?php _e('Description', 'akeebareplace') ?>
 			</label>
-			<input name="description" id="akeebareplaceDescription" type="text" value="<?php echo $this->configuration->getDescription() ?>" />
+			<input name="description" id="akeebareplaceDescription" type="text" value="<?php echo htmlentities($this->configuration->getDescription()) ?>" />
 			<p class="akeeba-help-text">
 				<?php _e('Enter a description for the replacement you are making, e.g. &ldquo;Replacing productOne with productOne&trade; in all posts&rdquo;. This will be recorded for your future reference.', 'akeebareplace') ?>
 			</p>

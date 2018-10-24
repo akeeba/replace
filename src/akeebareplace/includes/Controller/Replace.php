@@ -179,7 +179,7 @@ class Replace extends Controller
 		$rawExcludeColumns  = $this->input->post->get('excludeRows', '', 'raw');
 		$databaseCollation  = $this->input->post->getCmd('databaseCollation', '');
 		$tableCollation     = $this->input->post->getCmd('tableCollation', '');
-		$description        = $this->input->post->getCmd('description', '');
+		$description        = $this->input->post->getString('description', '');
 		$hasLog             = true;
 
 		/**
