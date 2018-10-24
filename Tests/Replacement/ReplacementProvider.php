@@ -232,4 +232,35 @@ class ReplacementProvider
 			],
 		];
 	}
+
+	public static function testRegExReplaceProvider()
+	{
+		return [
+			// $source, $from, $to, $target
+			'Simple replacement' => [
+				'The quick brown fox jumped over the lazy dog',
+				'/quick/',
+				'fast',
+				'The fast brown fox jumped over the lazy dog',
+			],
+			'Case-ignored replacement' => [
+				'The quick brown fox jumped over the lazy dog',
+				'/QUICK/i',
+				'fast',
+				'The fast brown fox jumped over the lazy dog',
+			],
+			'Mixed charsets' => [
+				'Νίψον ανομήματα μη μόναν όψιν',
+				'/ανομήματα/',
+				'🐈',
+				'Νίψον 🐈 μη μόναν όψιν',
+			],
+			'Positional arguments' => [
+				'42 13 64',
+				'/(\d{2,})\s(\d{2,})/',
+				'${2} 🐈 ${1} 🐈',
+				'13 🐈 42 🐈 64',
+			],
+		];
+	}
 }

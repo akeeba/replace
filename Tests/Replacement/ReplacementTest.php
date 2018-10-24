@@ -93,4 +93,20 @@ class ReplacementTest extends \PHPUnit_Framework_TestCase
 		 * the complex test cases :(
 		 */
 	}
+
+	/**
+	 * @param $source
+	 * @param $from
+	 * @param $to
+	 * @param $target
+	 *
+	 * @dataProvider \Akeeba\Replace\Tests\Replacement\ReplacementProvider::testRegExReplaceProvider()
+	 */
+	public function testRegExReplace($source, $from, $to, $target)
+	{
+		// Perform the replacement
+		$new = Replacement::replace($source, $from, $to, true);
+
+		self::assertEquals($target, $new);
+	}
 }

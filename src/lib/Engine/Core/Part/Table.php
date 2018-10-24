@@ -637,8 +637,7 @@ class Table extends AbstractPart implements
 		{
 			foreach ($replacements as $from => $to)
 			{
-				// TODO Take into account $isRegularExpressions
-				$newRow[$column] = Replacement::replace($newRow[$column], $from, $to);
+				$newRow[$column] = Replacement::replace($newRow[$column], $from, $to, $isRegularExpressions);
 
 				$changed = $changed || ($newRow[$column] != $row[$column]);
 			}

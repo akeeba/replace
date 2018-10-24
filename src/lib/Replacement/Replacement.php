@@ -20,17 +20,18 @@ class Replacement
 	 * @param   string  $original  The data to replace into
 	 * @param   string  $from      The string to search for
 	 * @param   string  $to        The string to replace with
+	 * @param   bool    $regEx     Treat $from as Regular Expression
 	 *
 	 * @return  string
 	 */
-	public static function replace($original, $from, $to)
+	public static function replace($original, $from, $to, $regEx = false)
 	{
 		if (self::isSerialised($original))
 		{
-			return self::replaceSerialized($original, $from, $to);
+			return self::replaceSerialized($original, $from, $to, $regEx);
 		}
 
-		return self::replacePlainText($original, $from, $to);
+		return self::replacePlainText($original, $from, $to, $regEx);
 	}
 
 	/**
@@ -39,16 +40,18 @@ class Replacement
 	 * @param   string  $original  The data to replace into
 	 * @param   string  $from      The string to search for
 	 * @param   string  $to        The string to replace with
+	 * @param   bool    $regEx     Treat $from as Regular Expression
 	 *
 	 * @return  string
 	 */
-	protected static function replacePlainText($original, $from, $to)
+	protected static function replacePlainText($original, $from, $to, $regEx = false)
 	{
-		// TODO Maybe handle multibyte strings with mb_split?
+		if (!$regEx)
+		{
+			return str_replace($from, $to, $original);
+		}
 
-		// TODO Maybe handle RegEx replacements as an option?
-
-		return str_replace($from, $to, $original);
+		return preg_replace($from, $to, $original);
 	}
 
 	/**
@@ -60,17 +63,18 @@ class Replacement
 	 * @param   string  $serialized  The serialized data to replace into
 	 * @param   string  $from        The string to search for
 	 * @param   string  $to          The string to replace with
+	 * @param   bool    $regEx     Treat $from as Regular Expression
 	 *
 	 * @return  string
 	 */
-	protected static function replaceSerialized($serialized, $from, $to)
+	protected static function replaceSerialized($serialized, $from, $to, $regEx = false)
 	{
 		$pattern  = '/s:(\d{1,}):\"/iU';
 		$exploded = preg_split($pattern, $serialized, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		$lastLen = null;
 
-		$exploded = array_map(function ($piece) use (&$lastLen, $from, $to) {
+		$exploded = array_map(function ($piece) use (&$lastLen, $from, $to, $regEx) {
 			// Numeric pieces are the string lengths
 			if (is_numeric($piece))
 			{
@@ -97,7 +101,7 @@ class Replacement
 			 * dream-world-inside-a-dream-world depicted in the movie Inception) is something that reeks of horrid
 			 * architecture bit it's not uncommon in the WordPress world.
 			 */
-			$toReplace = self::replace($toReplace, $from, $to);
+			$toReplace = self::replace($toReplace, $from, $to, $regEx);
 			$newLength = function_exists('mb_strlen') ? mb_strlen($toReplace, 'ASCII') : strlen($toReplace);
 
 			// New piece is s:newLength:"replacedString"TheRestOfIt
