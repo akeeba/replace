@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Akeeba Replace
+Plugin Name: ##PLUGINNAME##
 Plugin URI: https://www.akeebabackup.com
 Description: Database mass content replace
-Version: rev4CD8304
+Version: ##VERSION##
 Author: Akeeba Ltd
 Author URI: https://www.akeebabackup.com
 Network: true

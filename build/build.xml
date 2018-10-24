@@ -2,8 +2,31 @@
 <project name="replace" description="Akeeba Replace" default="all" >
 	<import file="${phing.dir}/../../buildfiles/phing/common.xml" />
 
+	<taskdef name="wpreadme" classname="scripts.WpreadmeTask"/>
+
 	<property name="dirs.kickstart" value="../source" />
 	<property name="dirs.translations" value="../translations" />
+
+	<!--
+====================================================================================================
+File sets
+====================================================================================================
+-->
+	<fileset dir="${dirs.root}/src/akeebareplace" id="plugin" expandsymboliclinks="true">
+		<include name="**" />
+
+		<!-- Output files -->
+		<exclude name="output/*.s*" />
+		<exclude name="output/*.l*" />
+
+        <!--Optional FEF assets-->
+        <exclude name="fef/css/*.css.map" />
+        <exclude name="fef/css/*.min.css" />
+        <exclude name="fef/fonts/Open_Sans/**" />
+        <exclude name="fef/fonts/Montserrat/**" />
+        <exclude name="fef/images/**" />
+        <exclude name="fef/js/**" />
+	</fileset>
 
 	<!--
 	====================================================================================================
@@ -12,7 +35,7 @@
 	-->
 
 	<target name="git" description="Makes only packages, not the documentation"
-			depends="new-release,setup-properties,plugin,standalone">
+			depends="new-release,setup-properties,plugin">
 	</target>
 	
 	<target name="documentation" description="Creates the documentation packages"
@@ -37,12 +60,39 @@
 	====================================================================================================
 	-->
 	
-	<target name="plugin" depends="setup-properties">
+	<target name="plugin" depends="setup-properties,setup-filterchains">
+		<!-- Create the readme.txt file. This file renders the WP directory page. -->
+		<wpreadme></wpreadme>
 
+		<copy file="${dirs.release}/readme.txt" tofile="${dirs.root}/src/akeebareplace/readme.txt" overwrite="true">
+			<filterchain refid="standard-tokens"/>
+		</copy>
+
+		<!-- Copy the changelog into the plugin -->
+		<!--<copy file="${dirs.root}/CHANGELOG" tofile="${dirs.root}/src/akeebareplace/CHANGELOG" overwrite="true" />-->
+
+		<!-- Create entry point file. Its header tells WP how to display it in the Plugins page -->
+		<copy file="./templates/akeebareplace.php" tofile="${dirs.root}/src/akeebareplace/akeebareplace.php" overwrite="true">
+			<filterchain refid="standard-tokens"/>
+		</copy>
+
+		<!-- Create the plugin ZIP file -->
+		<zipme basedir="${dirs.root}/src/akeebareplace" prefix="akeebareplace" destfile="${dirs.release}/akeebareplace-${version}.zip" includeemptydirs="true">
+			<fileset refid="plugin" />
+		</zipme>
+
+		<!-- Delete leftover files -->
+		<delete file="${dirs.release}/readme.txt"/>
 	</target>
 
-	<target name="standalone" depends="setup-properties">
-
+	<target name="setup-filterchains" depends="setup-properties">
+		<filterchain id="standard-tokens">
+			<replacetokens begintoken="##" endtoken="##">
+				<token key="PLUGINNAME" value="Akeeba Replace"/>
+				<token key="DATE" value="${build.date}"/>
+				<token key="VERSION" value="${version}"/>
+			</replacetokens>
+		</filterchain>
 	</target>
 
 	<!--
@@ -51,14 +101,54 @@
 	====================================================================================================
 	-->
 
-	<target name="docsdeploy" depends="docsdeploy-replace">
-		<echo>All Kickstart documentation has been uploaded</echo>
-	</target>
-	
-	<target name="docsdeploy-replace" >
-		<phingcall target="docbook-deploy">
-			<property name="docsdeploy.path.source" value="" />
-			<property name="docsdeploy.path.target" value="replace" />
-		</phingcall>
-	</target>
+    <target name="release">
+        <!-- Make sure there is a tag that's the same as the version number -->
+        <gittag gitPath="${git.binary}"
+                repository="${dirs.root}"
+                list="true" pattern="${version}"
+                outputProperty="git.tags"
+        />
+
+        <php function="trim" returnProperty="git.tags">
+            <param value="${git.tags}" />
+        </php>
+
+        <if>
+            <not>
+                <equals arg1="${git.tags}" arg2="${version}" />
+            </not>
+            <then>
+                <fail message="You must tag version ${version} before trying to release it." />
+            </then>
+        </if>
+
+        <!-- Verify the tag. If it can't verify the tag the build fails. -->
+        <gittag gitPath="${git.binary}"
+                repository="${dirs.root}"
+                verify="true"
+                object="${version}"
+                outputProperty="git.verify"
+        />
+
+        <!-- Make a draft release -->
+        <loadfile property="github.release.body" file="${dirs.root}/RELEASENOTES.md" />
+
+        <GitHubRelease token="${github.token}" organization="${github.organization}" repository="${github.repository}"
+                       tagName="${version}" releaseName="v.${version}" releaseBody="${github.release.body}" draft="1"
+                       propName="github.release.id" />
+
+        <!-- Upload the release files -->
+        <GitHubAsset token="${github.token}" organization="${github.organization}" repository="${github.repository}"
+                     file="${dirs.release}/akeebareplace-${version}.zip"
+                     releaseId="${github.release.id}" />
+
+        <!-- Publish the release -->
+        <GitHubRelease token="${github.token}" organization="${github.organization}" repository="${github.repository}"
+                       tagName="${version}" draft="0" />
+    </target>
+
+    <target name="docsdeploy">
+        <echo message="The documentation can be found in the repository's Wiki on GitHub. This task is obsolete." />
+    </target>
+
 </project>

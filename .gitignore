@@ -73,6 +73,7 @@ src/akeebareplace/fef/fonts
 src/akeebareplace/fef/images
 src/akeebareplace/fef/js
 src/akeebareplace/includes/lib
+src/akeebareplace/akeebareplace.php
 src/akeebareplace/readme.txt
 src/akeebareplace/output/*.l*
 src/akeebareplace/output/*.s*

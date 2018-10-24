@@ -1,4 +1,4 @@
-=== Akeeba Backup CORE for WordPress ===
+=== ##PLUGINNAME## ===
 Contributors: nikosdion
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=10903325
 Tags: replace, migrate, move
@@ -15,15 +15,15 @@ Easily mass replace data in your database. Make site WordPress transfer painless
 
 Akeeba Replace is an open-source, free of charge plugin for WordPress to facilitate replacing data in your database. It
 can be used for mass replacing of content in your database, as well as making it easier to transfer your WordPress site
-to a new domain and / or hosting environment. It's made by the same people who created Akeeba Backup, the popular site
-back and transfer software for WordPress, Joomla, Drupal and other PHP-based content management and e-commerce solutions.
+to a new domain and / or hosting environment. It's made by the same people who created Akeeba Backup, the full site
+backup and site transfer software for WordPress and other PHP-based content management and e-commerce solutions.
 It can handle both plain text and, most importantly, serialized data accurately and safely.
 
 *Why is this different than similar scripts*
 
 In short, it's down to the way we handle serialized data and the way we apply the database changes. First, let's talk about security.
 
-Other data replacement solutions, even the one shipped with the WP-CLI tool, use PHP's unserialize() method to decode the serialized data before replacing them. This is insecure as explained [in the PHP site itself](http://php.net/manual/en/function.unserialize.php). In fact, serialization is so broken that [PHP is no longer fixing security bugs in it](https://externals.io/message/100147). Considering that mass data replacement solutions _may_ very plausibly stumble into malicious serialized data submitted by a malicious user and inadvertently put into the database by a well meaning script data replacement could lead to a security mishap, i.e. your site could be hacked. We sidestep this security issue by using smart, partial decoding without going through unserialize() in our code.
+Other data replacement solutions, even the one shipped with the WP-CLI tool, use PHP's unserialize() method to decode the serialized data before replacing them. This is insecure as explained [in the PHP site itself](http://php.net/manual/en/function.unserialize.php). In fact, serialization is so broken that [PHP is no longer fixing security bugs in it](https://externals.io/message/100147). Considering that mass data replacement solutions _may_ very plausibly stumble into malicious serialized data submitted by a malicious user and inadvertently put into the database by a well meaning script, the action of data replacement could lead to a security mishap, i.e. your site could be hacked. We sidestep this security issue by using smart, partial decoding without going through unserialize() in our code.
 
 Other data replacement solutions try to replace everything in the database in a single go. If you have a big site with thousands of posts and hundreds of thousands of comments this may lead to a server timeout error, leaving your database in a partially replaced state, i.e. some tables or some rows of a table may not have been replaced. This could break your site. We work around this issue in two ways. First, we have experience in iterating really large databases since we first released our backup software in 2006. We know how to adaptively process the database in small chunks, using AJAX to process each step, avoiding timeout issues. Moreover, we only commit to the database the rows which have actually changed instead of every row we read. Since the majority of rows are typically not touched we can further reduce the time it takes for the operation to run.
 
@@ -31,14 +31,11 @@ Most data replacement solutions either run directly against your database ("live
 
 All data replacement solutions tell you to take backups before you run a replacement. Chances are you only realise why you needed to do that after you are in a desperate need of backups. Akeeba Replace is proactive in that regard, taking a backup _while_ it's replacing data and before it runs the actual replacement. The backup technology is rock solid, based on our long experience of maintaining a pure-PHP backup solution since 2006.
 
-Moreover, all data replacement solutions tell you to just provide the replacements you want to make. This works well when you are replacing, for example, your company name but doesn't help you any when you have moved your site to a new host! What replacements should you make? Akeeba Replace takes most of the guesswork out, building on our experience in writing backup software for WordPress designed from the get-go to move sites between different hosts.
-
-
 **Features**
 
-* WordPress plugin, standalone script and CLI tool versions of Akeeba Replace are available (you are downloading the WordPress plugin; it has links to the other tools).
 * Mass replace the contents in your database.
 * Safe replacement of serialized data.
+* Simple text search and replace for most uses and Regular Expressions for very advanced uses.
 * Do it live on your database, make a dry run or export to SQL for applying it with external tools.
 * Automatic backups of the data being replaced.
 
@@ -82,7 +79,7 @@ Yes.
 
 Our software was written with the express purpose of handling serialized data gracefully.
 
-= WordPress moved to UTF8MB4 (UTF-8 Multibyte). Do you support it? =
+= WordPress has longed moved to UTF8MB4 (UTF-8 Multibyte). Do you support it? =
 
 Yes, of course.
 
@@ -93,7 +90,7 @@ Our plugin requires PHP 5.4 or any later version. Older versions of PHP includin
 
 We are always testing against the latest released version of WordPress. It should work on earlier versions of WordPress but we cannot guarantee this.
 
-Our software does not have a hard requirement on PHP memory (memory_limit). However, ee strongly suggest 64MB or more for optimal operation on large sites with large amounts of data.
+Our software does not have a hard requirement on PHP memory (memory_limit). However, we strongly suggest 64MB or more for optimal operation on large sites with large amounts of data.
 
 Finally, you need adequate disk space to take a backup of the data which is being replaced and / or exporting the changes to a SQL file.
 
@@ -103,10 +100,6 @@ Yes, of course! Our plugin is licensed under the GNU General Public License vers
 version of the license published by the Free Software Foundation. This license gives you the same Four Freedoms as
 WordPress' license; in fact, GPLv3 is simply a newer version of the same GPLv2 license WordPress is using, one which
 protects your interests even more.
-
-= I have sites using other scripts / CMS. Can I use your software with them? =
-
-You can use the CLI or standalone version, providing the database connection information yourself.
 
 == Changelog ==
 

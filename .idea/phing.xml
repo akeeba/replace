@@ -5,8 +5,7 @@
       <buildFile options="" path="file://$PROJECT_DIR$/build/build.xml">
         <targetsToHide>
           <target value="doc-main-pdf" />
-          <target value="docsdeploy-replace" />
-          <target value="git" />
+          <target value="release" />
           <target value="setup-properties" />
           <target value="new-release" />
           <target value="composer-install" />
