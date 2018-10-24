@@ -11,7 +11,6 @@ use Akeeba\Replace\WordPress\Helper\Application;
 
 /** @var \Akeeba\Replace\WordPress\View\Replace\Html $this */
 
-wp_enqueue_style('akeebareplace-backend', plugins_url('/css/backend.css', AKEEBA_REPLACE_SELF), ['fef'], Application::getMediaVersion());
 wp_enqueue_script('akeebareplace-replace', plugins_url('/js/replace.js', AKEEBA_REPLACE_SELF), ['akeebareplace-system'], Application::getMediaVersion());
 
 $actionURL       = addcslashes(html_entity_decode($this->actionURL), "\\'");

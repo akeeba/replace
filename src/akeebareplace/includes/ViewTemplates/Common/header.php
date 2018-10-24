@@ -7,7 +7,11 @@
  *
  */
 
+use Akeeba\Replace\WordPress\Helper\Application;
+
 $hasSubheading = isset($subheading);
+wp_enqueue_style('akeebareplace-backend', plugins_url('/css/backend.css', AKEEBA_REPLACE_SELF), ['fef'], Application::getMediaVersion());
+
 ?>
 <h2 class="akeebareplace-title<?php echo $hasSubheading ? '-inline' : '' ?>">
 	<img src="<?php echo plugins_url('images/logo/akeeba-replace-128-black.png', AKEEBA_REPLACE_SELF) ?>"
