@@ -10,7 +10,6 @@
 namespace Akeeba\Replace\WordPress\Helper;
 
 
-use Akeeba\AdminTools\Admin\Helper\Wordpress;
 use Akeeba\Replace\WordPress\Model\Replace;
 use Akeeba\Replace\WordPress\MVC\Model\Model;
 use Akeeba\Replace\WordPress\MVC\Uri\Uri;
@@ -102,7 +101,7 @@ abstract class Form
 		// If no limit has been supplied, fetch it from user options
 		if (!$limit)
 		{
-			$limit = Wordpress::get_page_limit();
+			$limit = WordPress::get_page_limit();
 		}
 
 		// Avoid division by zero errors if we have no limits

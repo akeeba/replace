@@ -81,7 +81,7 @@ class Uri
 	}
 
 	/**
-	 * Returns the global \Akeeba\AdminTools\Library\Uri\Uri object, only creating it
+	 * Returns the global Uri object, only creating it
 	 * if it doesn't already exist.
 	 *
 	 * @param   string $uri The URI to parse.  [optional: if null uses script URI]
