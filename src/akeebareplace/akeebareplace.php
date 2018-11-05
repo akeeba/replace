@@ -3,7 +3,7 @@
 Plugin Name: Akeeba Replace
 Plugin URI: https://www.akeebabackup.com
 Description: Database mass content replace
-Version: revDCED728
+Version: rev4D6DD01
 Author: Akeeba Ltd
 Author URI: https://www.akeebabackup.com
 Network: true
