@@ -557,6 +557,17 @@ abstract class Driver implements DatabaseInterface
 	}
 
 	/**
+	 * Public setter for the database connection. In this way we can easily share the same connection if the object was
+	 * already built (ie wakup from serialization)
+	 *
+	 * @param	resource	$connection
+	 */
+	public function setConnection($connection)
+	{
+		$this->connection = $connection;
+	}
+
+	/**
 	 * Get the total number of SQL statements executed by the database driver.
 	 *
 	 * @return  integer
