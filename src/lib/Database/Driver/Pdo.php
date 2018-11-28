@@ -123,6 +123,12 @@ abstract class Pdo extends Driver
 			return;
 		}
 
+		// Was there an external connection originally passed to this object?
+		if (isset($this->options['connection']) && !empty($this->options['connection']))
+		{
+			return;
+		}
+
 		// Make sure the PDO extension for PHP is installed and enabled.
 		if (!static::isSupported())
 		{

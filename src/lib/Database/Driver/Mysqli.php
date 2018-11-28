@@ -100,6 +100,12 @@ class Mysqli extends Driver
 			return;
 		}
 
+		// Was there an external connection originally passed to this object?
+		if (isset($this->options['connection']) && !empty($this->options['connection']))
+		{
+			return;
+		}
+
 		/*
 		 * Unlike mysql_connect(), mysqli_connect() takes the port and socket as separate arguments. Therefore, we
 		 * have to extract them from the host string.

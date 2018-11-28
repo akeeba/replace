@@ -130,6 +130,9 @@ abstract class Driver implements DatabaseInterface
 	 */
 	protected static $dbMinimum;
 
+	/** @var bool This flag is set true when you've used $options['connection'] in __construct. */
+	protected $hasArbitraryConnection = false;
+
 	/**
 	 * Get a list of available database connectors.  The list will only be populated with connectors that both
 	 * the class exists and the static test method returns true.  This gives us the ability to have a multitude

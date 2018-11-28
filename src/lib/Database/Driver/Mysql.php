@@ -71,6 +71,12 @@ class Mysql extends Mysqli
 			return;
 		}
 
+		// Was there an external connection originally passed to this object?
+		if (isset($this->options['connection']) && !empty($this->options['connection']))
+		{
+			return;
+		}
+
 		// Make sure the MySQL extension for PHP is installed and enabled.
 		if (!function_exists('mysql_connect'))
 		{
