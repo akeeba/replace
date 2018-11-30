@@ -51,6 +51,16 @@ class Mysql extends Mysqli
 	 */
 	public function __destruct()
 	{
+		// If we are reusing another DB driver's connection we just remove the reference
+		if (isset($this->options['connection']))
+		{
+			unset($this->options['connection']);
+
+			$this->connection = null;
+
+			return;
+		}
+
 		if (is_resource($this->connection))
 		{
 			mysql_close($this->connection);

@@ -104,6 +104,17 @@ abstract class Pdo extends Driver
 	public function __destruct()
 	{
 		$this->freeResult();
+
+		// If we are reusing another DB driver's connection we just remove the reference
+		if (isset($this->options['connection']))
+		{
+			unset($this->options['connection']);
+
+			$this->connection = null;
+
+			return;
+		}
+
 		unset($this->connection);
 	}
 

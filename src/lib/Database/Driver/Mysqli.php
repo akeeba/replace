@@ -78,6 +78,16 @@ class Mysqli extends Driver
 	 */
 	public function __destruct()
 	{
+		// If we are reusing another DB driver's connection we just remove the reference
+		if (isset($this->options['connection']))
+		{
+			unset($this->options['connection']);
+
+			$this->connection = null;
+
+			return;
+		}
+
 		if (is_object($this->connection) && ($this->connection instanceof \mysqli))
 		{
 			/** @var \mysqli $connection */
