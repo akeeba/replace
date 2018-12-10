@@ -31,6 +31,7 @@ use Akeeba\Replace\Engine\Core\OutputWriterAware;
 use Akeeba\Replace\Engine\Core\OutputWriterAwareInterface;
 use Akeeba\Replace\Engine\Core\Response\SQL;
 use Akeeba\Replace\Engine\PartInterface;
+use Akeeba\Replace\Engine\StepAware;
 use Akeeba\Replace\Logger\LoggerAware;
 use Akeeba\Replace\Logger\LoggerInterface;
 use Akeeba\Replace\Replacement\Replacement;
@@ -55,6 +56,7 @@ class Table extends AbstractPart implements
 	use BackupWriterAware;
 	use TableActionAware;
 	use ActionAware;
+	use StepAware;
 
 	/**
 	 * Hard-coded list of table column filter classes. This is for my convenience.
@@ -256,6 +258,7 @@ class Table extends AbstractPart implements
 		$sql     = $this->getSelectQuery();
 		$this->enforceSQLCompatibility();
 		$queryDb->setQuery($sql, $this->offset, $this->batch);
+		$this->setSubstep($tableName . ', record ' . $this->offset);
 
 		// An error here *is* fatal, so we must NOT use a try/catch
 		$cursor = $queryDb->execute();
