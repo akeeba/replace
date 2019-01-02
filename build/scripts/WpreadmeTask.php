@@ -1,10 +1,8 @@
 <?php
 /**
  * @package   AkeebaReplace
- * @copyright Copyright (c)2018 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @copyright Copyright (c)2018-2019 Nicholas K. Dionysopoulos / Akeeba Ltd
  * @author    Nicholas K. Dionysopoulos
- * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
- *
  */
 
 define('IS_WINDOWS', substr(PHP_OS, 0, 3) == 'WIN');
