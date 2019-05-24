@@ -55,6 +55,7 @@ register_deactivation_hook(__FILE__, array('\Akeeba\Replace\WordPress\Helper\App
 if (is_admin() && !defined('AKEEBA_REPLACE_DOING_AJAX'))
 {
 	add_action('admin_menu', array('\Akeeba\Replace\WordPress\Helper\Application', 'onAdminMenu'));
+	add_action('network_admin_menu', array('\Akeeba\Replace\WordPress\Helper\Application', 'onNetworkAdminMenu'));
 	add_action('network_admin_menu', array('\Akeeba\Replace\WordPress\Helper\Application', 'onAdminMenu'));
 	add_filter('set-screen-option', array('\Akeeba\Replace\WordPress\Helper\Application', 'set_option'), 10, 3);
 	add_action('plugins_loaded', array('\Akeeba\Replace\WordPress\Helper\Application', 'storeRealRequestAll'), 1);

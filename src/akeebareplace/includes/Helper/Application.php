@@ -133,6 +133,40 @@ class Application
 	 */
 	public static function onAdminMenu()
 	{
+		if (is_multisite())
+		{
+			return;
+		}
+
+		self::$menuPage = add_menu_page(
+			'Akeeba Replace',
+			'Akeeba Replace',
+			'manage_options',
+			'akeebareplace',
+			[__CLASS__, 'entryPoint'],
+			plugins_url('images/logo/akeeba-replace-24-white.png', AKEEBA_REPLACE_SELF)
+		);
+
+		self::add_options_page();
+
+		add_action('load-' . self::$menuPage, [__CLASS__, 'add_options']);
+	}
+
+	/**
+	 * Set up the administrator menu on single and multi-site installations. Since we require maximum privileges to
+	 * display our application there's no point having separate menus.
+	 *
+	 * Used with: akeebareplace.php
+	 *
+	 * @return  void
+	 */
+	public static function onNetworkAdminMenu()
+	{
+		if (!is_multisite())
+		{
+			return;
+		}
+
 		self::$menuPage = add_menu_page(
 			'Akeeba Replace',
 			'Akeeba Replace',
