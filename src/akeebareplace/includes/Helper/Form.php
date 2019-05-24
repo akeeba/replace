@@ -108,8 +108,8 @@ abstract class Form
 
 		if ($limit)
 		{
-			$total_pages  = max(1, ceil($total / $limit));
-			$current_page = ceil(($limitStart + 1) / $limit);
+			$total_pages  = (int) max(1, ceil((float) $total / (float) $limit));
+			$current_page = (int) ceil((float) ($limitStart + 1) / (float) $limit);
 		}
 
 		if (!$current_page)
