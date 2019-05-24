@@ -160,7 +160,7 @@ abstract class DataController extends Controller
 
 		if (empty($ids) || !is_array($ids) || empty($ids[0]))
 		{
-			$url = admin_url('admin.php?page=akeebareplace&view=' . $this->name);
+			$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=' . $this->name);
 
 			$view->enqueueMessage(__('Could not load record', 'akeebareplace'), 'error');
 			$this->redirect($url);
@@ -173,7 +173,7 @@ abstract class DataController extends Controller
 
 		if (is_null($record))
 		{
-			$url = admin_url('admin.php?page=akeebareplace&view=' . $this->name);
+			$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=' . $this->name);
 
 			$view->enqueueMessage(__('Could not load record', 'akeebareplace'), 'error');
 			$this->redirect($url);
@@ -218,7 +218,7 @@ abstract class DataController extends Controller
 
 		if (empty($ids) || !is_array($ids) || empty($ids[0]))
 		{
-			$url = admin_url('admin.php?page=akeebareplace&view=' . $this->name);
+			$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=' . $this->name);
 
 			$view->enqueueMessage(__('Could not load record', 'akeebareplace'), 'error');
 			$this->redirect($url);
@@ -231,7 +231,7 @@ abstract class DataController extends Controller
 
 		if (is_null($record))
 		{
-			$url = admin_url('admin.php?page=akeebareplace&view=' . $this->name);
+			$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=' . $this->name);
 
 			$view->enqueueMessage(__('Could not load record', 'akeebareplace'), 'error');
 			$this->redirect($url);
@@ -261,7 +261,7 @@ abstract class DataController extends Controller
 			$this->onAfterSave($success);
 		}
 
-		$url = admin_url('admin.php?page=akeebareplace&view=' . $this->name);
+		$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=' . $this->name);
 
 		$this->redirect($url);
 	}
@@ -307,7 +307,7 @@ abstract class DataController extends Controller
 		$this->view->enqueueMessage($msg, $type);
 		$this->view->setTask('display');
 
-		$url = admin_url('admin.php?page=akeebareplace&view=' . $this->name);
+		$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=' . $this->name);
 
 		$this->redirect($url);
 	}

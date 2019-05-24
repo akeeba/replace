@@ -7,6 +7,7 @@
 
 use Akeeba\Replace\WordPress\Helper\Application;
 use Akeeba\Replace\WordPress\Helper\Form;
+use Akeeba\Replace\WordPress\Helper\WordPress;
 
 /** @var \Akeeba\Replace\WordPress\View\Job\Html $this */
 
@@ -38,7 +39,7 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 
 <span class="akeebareplace-inline-header-buttons">
 	<a class="akeeba-btn--green"
-	   href="<?php echo esc_url(admin_url('admin.php?page=akeebareplace&view=Replace&reset=1')) ?>">
+	   href="<?php echo esc_url(WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&reset=1')) ?>">
 		<?php _e('Add New') ?>
 	</a>
 </span>
@@ -91,44 +92,44 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 					<strong><?php echo $this->escape($item->description) ?></strong>
 					<div class="row-actions">
 						<span>
-							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Replace&id=' . $item->id) ?>">
+							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&id=' . $item->id) ?>">
 								<?php _e('Clone', 'akeebareplace') ?>
 							</a>
 						</span>
 						<?php if ($hasFiles): ?>
 						|
 						<span class="trash">
-							<a href="<?php echo wp_nonce_url(admin_url('admin.php?page=akeebareplace&view=Job&task=deleteFiles&id=' . $item->id), 'get_Job_deleteFiles') ?>" class="submitdelete">
+							<a href="<?php echo wp_nonce_url(WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=deleteFiles&id=' . $item->id), 'get_Job_deleteFiles') ?>" class="submitdelete">
 								<?php _e('Delete Files', 'akeebareplace') ?>
 							</a>
 						</span>
 						<?php endif; ?>
 						|
 						<span class="trash">
-							<a href="<?php echo wp_nonce_url(admin_url('admin.php?page=akeebareplace&view=Job&task=delete&id=' . $item->id), 'get_Job_delete') ?>" class="submitdelete">
+							<a href="<?php echo wp_nonce_url(WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=delete&id=' . $item->id), 'get_Job_delete') ?>" class="submitdelete">
 								<?php _e('Delete', 'akeebareplace') ?>
 							</a>
 						</span>
 						<?php if (!empty($recordFiles['log'])): ?>
 							|
-							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Log&id=' . $item->id) ?>">
+							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Log&id=' . $item->id) ?>">
 								<?php _e('View log' ,'akeebareplace') ?>
 							</a>
 						<?php endif; ?>
 						<?php if (!empty($recordFiles['output'])): ?>
 							|
-							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Job&task=downloadOutput&id=' . $item->id) ?>">
+							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=downloadOutput&id=' . $item->id) ?>">
 								<?php _e('Download output SQL' ,'akeebareplace') ?>
 							</a>
 						<?php endif; ?>
 						<?php if (!empty($recordFiles['backup'])): ?>
 							|
-							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Job&task=downloadBackup&id=' . $item->id) ?>">
+							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=downloadBackup&id=' . $item->id) ?>">
 								<?php _e('Download backup' ,'akeebareplace') ?>
 							</a>
 							<!--
 							|
-							<a href="<?php echo admin_url('admin.php?page=akeebareplace&view=Restore&id=' . $item->id) ?>">
+							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Restore&id=' . $item->id) ?>">
 								<?php _e('Restore backup' ,'akeebareplace') ?>
 							</a>
 							-->

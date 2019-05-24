@@ -5,6 +5,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
  */
 
+use Akeeba\Replace\WordPress\Helper\WordPress;
+
 /** @var \Akeeba\Replace\WordPress\View\Log\Html $this */
 
 $subheading = __('View Log', 'akeebareplace');
@@ -14,7 +16,7 @@ $subheading = __('View Log', 'akeebareplace');
 
 <div style="text-align: right">
 	<a class="akeeba-btn--big"
-	   href="<?php echo admin_url('admin.php?page=akeebareplace&view=Job&task=downloadLog&id=' . $this->logId) ?>">
+	   href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=downloadLog&id=' . $this->logId) ?>">
 		<span class="akion-ios-download"></span>
 		<?php _e('Download Log File', 'akeebareplace') ?>
 	</a>
@@ -30,7 +32,7 @@ $subheading = __('View Log', 'akeebareplace');
 			<?php _e('Display log anyway', 'akeebareplace') ?>
         </span>
 		<?php
-		$iFrameSrc = addcslashes(admin_url('admin.php?page=akeebareplace&view=Log&task=dump&id=' . $this->logId), "\\'");
+		$iFrameSrc = addcslashes(WordPress::adminUrl('admin.php?page=akeebareplace&view=Log&task=dump&id=' . $this->logId), "\\'");
 		$js = <<< JS
 akeeba.System.documentReady(function() {
 	akeeba.System.addEventListener(document.getElementById('akeebareplace-showlog'), 'click', function () {
@@ -52,7 +54,7 @@ JS;
 		?>
 	<?php else: ?>
 		<iframe
-				src="<?php echo admin_url('admin.php?page=akeebareplace&view=Log&task=dump&id=' . $this->logId) ?>"
+				src="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Log&task=dump&id=' . $this->logId) ?>"
 				width="99%" height="500px">
 		</iframe>
 	<?php endif; ?>

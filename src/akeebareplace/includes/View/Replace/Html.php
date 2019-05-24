@@ -8,6 +8,7 @@
 namespace Akeeba\Replace\WordPress\View\Replace;
 
 use Akeeba\Replace\Engine\Core\Configuration;
+use Akeeba\Replace\WordPress\Helper\WordPress;
 use Akeeba\Replace\WordPress\MVC\View\Html as AbstractHtml;
 
 class Html extends AbstractHtml
@@ -84,24 +85,24 @@ class Html extends AbstractHtml
 
 		if (empty($this->actionURL))
 		{
-			$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=replace');
+			$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&task=replace');
 			$this->actionURL = wp_nonce_url($url, 'post_Replace_replace');
 		}
 
 		if (empty($this->tablesURL))
 		{
-			$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=getTablesHTML');
+			$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&task=getTablesHTML');
 			$this->tablesURL = html_entity_decode(wp_nonce_url($url, 'get_Replace_getTablesHTML'));
 		}
 
 		if (empty($this->cancelURL))
 		{
-			$this->cancelURL = admin_url('admin.php?page=akeebareplace');
+			$this->cancelURL = WordPress::adminUrl('admin.php?page=akeebareplace');
 		}
 
 		if (empty($this->resetURL))
 		{
-			$this->resetURL = admin_url('admin.php?page=akeebareplace&view=Replace&reset=1');
+			$this->resetURL = WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&reset=1');
 		}
 
 		$this->excludedColumns = $this->makeExcludedColumnsText();
@@ -116,23 +117,23 @@ class Html extends AbstractHtml
 
 		if (empty($this->actionURL))
 		{
-			$url = admin_url('admin.php?page=akeebareplace&view=Replace&task=ajax');
+			$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&task=ajax');
 			$this->actionURL = wp_nonce_url($url, 'post_Replace_ajax');
 		}
 
 		if (empty($this->cancelURL))
 		{
-			$this->cancelURL = admin_url('admin.php?page=akeebareplace&view=Replace');
+			$this->cancelURL = WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace');
 		}
 
 		if (empty($this->logURL))
 		{
-			$this->logURL = admin_url('admin.php?page=akeebareplace&view=Log&latest=1');
+			$this->logURL = WordPress::adminUrl('admin.php?page=akeebareplace&view=Log&latest=1');
 		}
 
 		if (empty($this->manageURL))
 		{
-			$this->manageURL = admin_url('admin.php?page=akeebareplace');
+			$this->manageURL = WordPress::adminUrl('admin.php?page=akeebareplace');
 		}
 	}
 

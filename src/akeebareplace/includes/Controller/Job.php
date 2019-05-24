@@ -7,6 +7,7 @@
 
 namespace Akeeba\Replace\WordPress\Controller;
 
+use Akeeba\Replace\WordPress\Helper\WordPress;
 use Akeeba\Replace\WordPress\Model\Job as JobModel;
 use Akeeba\Replace\WordPress\MVC\Controller\DataController;
 
@@ -49,7 +50,7 @@ class Job extends DataController
 			$dataModel->deleteFiles($id);
 		}
 
-		$url = admin_url('admin.php?page=akeebareplace&view=' . $this->name);
+		$url = WordPress::adminUrl('admin.php?page=akeebareplace&view=' . $this->name);
 
 		$this->view->setTask('display');
 		$this->redirect($url);
