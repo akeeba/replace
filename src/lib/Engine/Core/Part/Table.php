@@ -276,7 +276,7 @@ class Table extends AbstractPart implements
 		$liveMode             = $this->getConfig()->isLiveMode();
 
 		// Iterate every row as long as we have enough time.
-		while ($timer->getTimeLeft() && ($row = $queryDb->fetchAssoc($cursor)))
+		while (($timer->getTimeLeft() > 0.01) && ($row = $queryDb->fetchAssoc($cursor)))
 		{
 			$this->offset++;
 
