@@ -34,90 +34,10 @@ class Replacement
 	}
 
 	/**
-	 * Replace data in a plain text string. Used internally.
-	 *
-	 * @param   string  $original  The data to replace into
-	 * @param   string  $from      The string to search for
-	 * @param   string  $to        The string to replace with
-	 * @param   bool    $regEx     Treat $from as Regular Expression
-	 *
-	 * @return  string
-	 */
-	protected static function replacePlainText($original, $from, $to, $regEx = false)
-	{
-		if (!$regEx)
-		{
-			return str_replace($from, $to, $original);
-		}
-
-		return preg_replace($from, $to, $original);
-	}
-
-	/**
-	 * Replace data in a serialized string. Used internally.
-	 *
-	 * The simplest and fastest approach. We use regular expressions to split the serialized data at the serialized
-	 * string boundaries, then replace the strings and adjust the length.
-	 *
-	 * @param   string  $serialized  The serialized data to replace into
-	 * @param   string  $from        The string to search for
-	 * @param   string  $to          The string to replace with
-	 * @param   bool    $regEx     Treat $from as Regular Expression
-	 *
-	 * @return  string
-	 */
-	protected static function replaceSerialized($serialized, $from, $to, $regEx = false)
-	{
-		$pattern  = '/s:(\d{1,}):\"/iU';
-		$exploded = preg_split($pattern, $serialized, -1, PREG_SPLIT_DELIM_CAPTURE);
-
-		$lastLen = null;
-
-		$exploded = array_map(function ($piece) use (&$lastLen, $from, $to, $regEx) {
-			// Numeric pieces are the string lengths
-			if (is_numeric($piece))
-			{
-				$lastLen = (int) $piece;
-
-				return '';
-			}
-
-			// If we have not encountered a string length we are processing the first chunk of the serialised data
-			if (is_null($lastLen))
-			{
-				return $piece;
-			}
-
-			// I expect $lastLen + 2 characters (double quote, string, double quote). Break the piece in two parts.
-			$toReplace   = substr($piece, 0, $lastLen);
-			$theRestOfIt = substr($piece, $lastLen + 1);
-
-			/**
-			 * Replace data in the first part.
-			 *
-			 * We go through self::replace() to catch the case where a serialized object/array contains a string which
-			 * is, in its turn, serialized data. Serialized data inside a string in serialized data (much like the
-			 * dream-world-inside-a-dream-world depicted in the movie Inception) is something that reeks of horrid
-			 * architecture bit it's not uncommon in the WordPress world.
-			 */
-			$toReplace = self::replace($toReplace, $from, $to, $regEx);
-			$newLength = function_exists('mb_strlen') ? mb_strlen($toReplace, 'ASCII') : strlen($toReplace);
-
-			// New piece is s:newLength:"replacedString"TheRestOfIt
-			$lastLen = null;
-
-			return 's:' . $newLength . ':"' . $toReplace . '"' . $theRestOfIt;
-		}, $exploded);
-
-		// Remove the empty strings
-		return implode("", $exploded);
-	}
-
-	/**
 	 * Does this string look like PHP serialised data? Please note that this is a quick pre-test. It's not 100% correct
 	 * but it should work in all significant real-world cases.
 	 *
-	 * @param   string  $string The string to test
+	 * @param   string  $string  The string to test
 	 *
 	 * @return  boolean  True if it looks like serialised data
 	 */
@@ -164,6 +84,95 @@ class Replacement
 		$length = substr($string, $semicolonPos + 1, $secondPos - $semicolonPos - 1);
 
 		return (int) $length == $length;
+	}
+
+	/**
+	 * Replace data in a plain text string. Used internally.
+	 *
+	 * @param   string  $original  The data to replace into
+	 * @param   string  $from      The string to search for
+	 * @param   string  $to        The string to replace with
+	 * @param   bool    $regEx     Treat $from as Regular Expression
+	 *
+	 * @return  string
+	 */
+	protected static function replacePlainText($original, $from, $to, $regEx = false)
+	{
+		if (!$regEx)
+		{
+			return str_replace($from, $to, $original);
+		}
+
+		return preg_replace($from, $to, $original);
+	}
+
+	/**
+	 * Replace data in a serialized string. Used internally.
+	 *
+	 * The simplest and fastest approach. We use regular expressions to split the serialized data at the serialized
+	 * string boundaries, then replace the strings and adjust the length.
+	 *
+	 * @param   string  $serialized  The serialized data to replace into
+	 * @param   string  $from        The string to search for
+	 * @param   string  $to          The string to replace with
+	 * @param   bool    $regEx       Treat $from as Regular Expression
+	 *
+	 * @return  string
+	 */
+	protected static function replaceSerialized($serialized, $from, $to, $regEx = false)
+	{
+		/**
+		 * This pattern matches a serialised string. It returns its length and everything to the right of the leading
+		 * double quote (serialised string, its closing double quote and semicolon and any data in the original string.
+		 */
+		$pattern = '/s:(\d{1,}):\"/iU';
+		$ret     = '';
+
+		while (true)
+		{
+			// If there is no more serialised data we're done.
+			if (empty($serialized))
+			{
+				break;
+			}
+
+			// Extract the useful information from the serialised string
+			$patternMatch = preg_split($pattern, $serialized, 2, PREG_SPLIT_DELIM_CAPTURE);
+
+			// Position 0: content before the pattern. If it's non empty add a verbatim chunk.
+			if (!empty($patternMatch[0]))
+			{
+				$ret .= $patternMatch[0];
+			}
+
+			// If the verbatim element was the only element found (no pattern matches) we are done.
+			if (count($patternMatch) === 1)
+			{
+				break;
+			}
+
+			// Position 1 captures the serialised string length
+			$contentLength = $patternMatch[1];
+			// Extract the serialized string data and run a recursive replacement on it.
+			$content = self::replace(substr($patternMatch[2], 0, $contentLength), $from, $to, $regEx);
+			// Calculate the new serialized data length
+			$newLength = function_exists('mb_strlen')
+				? mb_strlen($content, 'ASCII')
+				: strlen($content);
+			// Reformat and append the new serialised string to the output string.
+			$ret       .= sprintf('s:%d:"%s"', $newLength, $content) . ';';
+
+			// Treat memory kindly
+			unset($content);
+
+			/**
+			 * Skip the trailing double quote and semicolon of the original serialised string data. The rest of the
+			 * string needs to go through this loop again.
+			 */
+			$serialized = substr($patternMatch[2], $contentLength + 2);
+		}
+
+		return $ret;
 	}
 
 }

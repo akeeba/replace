@@ -228,6 +228,13 @@ class ReplacementProvider
 				'https://www.παράδειγμα.com',
 				false, true
 			],
+			// This is a **REAL WORLD** example from 27Collective's My Listing template. I have no words.
+			'Serialized data in a serialized string, no replacement' => [
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_double.txt'),
+				'http://www.nosuchplace.com',
+				'https://www.reallynosuchplace.com',
+				true, true
+			],
 		];
 	}
 
