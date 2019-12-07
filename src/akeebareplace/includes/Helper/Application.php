@@ -60,10 +60,13 @@ class Application
 		load_plugin_textdomain('akeebareplace', false, 'language');
 
 		// Catch out of date PHP versions
-		if (version_compare(PHP_VERSION, self::MINIMUM_PHP_VERSION, 'lt'))
-		{
-			include_once dirname(AKEEBA_REPLACE_SELF) . '/includes/ViewTemplates/Common/wrongphp.php';
+		define('AKEEBA_COMMON_WRONGPHP', 1);
+		$minPHPVersion         = self::MINIMUM_PHP_VERSION;
+		$recommendedPHPVersion = '7.3';
+		$softwareName          = 'Akeeba Replace';
 
+		if (!require_once (dirname(AKEEBA_REPLACE_SELF) . '/includes/ViewTemplates/Common/wrongphp.php'))
+		{
 			return;
 		}
 	}
