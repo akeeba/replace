@@ -15,7 +15,7 @@ wp_enqueue_script('akeebareplace-jobs', plugins_url('/js/jobs.js', AKEEBA_REPLAC
 
 $subheading = __('Manage', 'akeebareplace');
 
-function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
+function akeebaReplaceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 {
 	?>
 	<div class="alignleft actions bulkactions">
@@ -36,6 +36,12 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 ?>
 
 <?php echo $this->getRenderedTemplate('Common', 'header', '', ['subheading' => $subheading]); ?>
+
+<?php echo $this->getRenderedTemplate('Common', 'phpversion_warning', '', [
+	'minPHPVersion'         => Application::MINIMUM_PHP_VERSION,
+	'recommendedPHPVersion' => Application::RECOMMENDED_PHP_VERSION,
+	'softwareName'          => 'Akeeba Replace',
+]); ?>
 
 <span class="akeebareplace-inline-header-buttons">
 	<a class="akeeba-btn--green"
@@ -61,7 +67,7 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 	</p>
 
 	<div class="tablenav top">
-		<?php akeebaRepalceJobDefault_renderHeaderFooter($this, 'top') ?>
+		<?php akeebaReplaceJobDefault_renderHeaderFooter($this, 'top') ?>
 	</div>
 
 	<table class="akeeba-table--striped">
@@ -155,7 +161,7 @@ function akeebaRepalceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 	</table>
 
 	<div class="tablenav bottom">
-		<?php akeebaRepalceJobDefault_renderHeaderFooter($this, 'bottom') ?>
+		<?php akeebaReplaceJobDefault_renderHeaderFooter($this, 'bottom') ?>
 	</div>
 
 </form>
