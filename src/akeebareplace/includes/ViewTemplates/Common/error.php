@@ -5,7 +5,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
  */
 
-wp_enqueue_style('fef', plugins_url('/fef/css/style.css', AKEEBA_REPLACE_SELF), []);
+wp_enqueue_style('fef', plugins_url('/fef/css/fef-wordpress.min.css', AKEEBA_REPLACE_SELF), []);
 ?>
 <div class="akeeba-renderer-fef akeeba-wp">
 

@@ -65,7 +65,7 @@ HTML;
 	 */
 	protected function loadFEFStylesheet()
 	{
-		wp_enqueue_style('fef', plugins_url('/fef/css/style.css', AKEEBA_REPLACE_SELF), [], Application::getMediaVersion());
+		wp_enqueue_style('fef', plugins_url('/fef/css/fef-wordpress.min.css', AKEEBA_REPLACE_SELF), [], Application::getMediaVersion());
 	}
 
 	protected function loadFEFJS($script = '')
