@@ -1,4 +1,10 @@
 <?xml version="1.0"?>
+<!--
+  ~ @package   AkeebaReplace
+  ~ @copyright Copyright (c)2018-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+  ~ @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
+  -->
+
 <project name="replace" description="Akeeba Replace" default="all" >
 	<import file="${phing.dir}/../../buildfiles/phing/common.xml" />
 

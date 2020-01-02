@@ -1,3 +1,9 @@
+/*
+ * @package   AkeebaReplace
+ * @copyright Copyright (c)2018-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
+ */
+
 DROP TABLE IF EXISTS `akr_dbtest`;
 DROP TABLE IF EXISTS `akr_dbtest_innodb`;
 DROP TABLE IF EXISTS `foo_dbtest`;

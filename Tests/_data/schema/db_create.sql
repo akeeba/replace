@@ -1,3 +1,9 @@
+/*
+ * @package   AkeebaReplace
+ * @copyright Copyright (c)2018-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
+ */
+
 --
 -- Create a test database
 --
