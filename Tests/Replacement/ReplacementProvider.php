@@ -131,7 +131,7 @@ class ReplacementProvider
 			'Replace ASCII with ASCII in simple object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_simple_ascii.txt'),
 				'http://www.example.com',
-				'https://www.akeebabackup.com',
+				'https://www.akeeba.com',
 				false, true
 			],
 			'Replace ASCII with UTF8 in simple object' => [
@@ -143,7 +143,7 @@ class ReplacementProvider
 			'Replace UTF8 with ASCII in simple object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_simple_utf8.txt'),
 				'http://www.δοκιμή.com',
-				'https://www.akeebabackup.com',
+				'https://www.akeeba.com',
 				false, true
 			],
 			'Replace UTF8 with UTF8 in simple object' => [
@@ -156,7 +156,7 @@ class ReplacementProvider
 			'Replace ASCII with ASCII in complex object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_complex_ascii.txt'),
 				'http://www.example.com',
-				'https://www.akeebabackup.com',
+				'https://www.akeeba.com',
 				false, true
 			],
 			'Replace ASCII with UTF8 in complex object' => [
@@ -168,7 +168,7 @@ class ReplacementProvider
 			'Replace UTF8 with ASCII in complex object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_complex_utf8.txt'),
 				'http://www.δοκιμή.com',
-				'https://www.akeebabackup.com',
+				'https://www.akeeba.com',
 				false, true
 			],
 			'Replace UTF8 with UTF8 in complex object' => [
@@ -182,7 +182,7 @@ class ReplacementProvider
 			'Replace ASCII with ASCII in simple namespaced object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_simple_ascii.txt'),
 				'http://www.example.com',
-				'https://www.akeebabackup.com',
+				'https://www.akeeba.com',
 				false, true
 			],
 			'Replace ASCII with UTF8 in simple namespaced object' => [
@@ -194,7 +194,7 @@ class ReplacementProvider
 			'Replace UTF8 with ASCII in simple namespaced object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_simple_utf8.txt'),
 				'http://www.δοκιμή.com',
-				'https://www.akeebabackup.com',
+				'https://www.akeeba.com',
 				false, true
 			],
 			'Replace UTF8 with UTF8 in simple namespaced object' => [
@@ -207,7 +207,7 @@ class ReplacementProvider
 			'Replace ASCII with ASCII in namespaced complex object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_complex_ascii.txt'),
 				'http://www.example.com',
-				'https://www.akeebabackup.com',
+				'https://www.akeeba.com',
 				false, true
 			],
 			'Replace ASCII with UTF8 in namespaced complex object' => [
@@ -219,7 +219,7 @@ class ReplacementProvider
 			'Replace UTF8 with ASCII in namespaced complex object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_complex_utf8.txt'),
 				'http://www.δοκιμή.com',
-				'https://www.akeebabackup.com',
+				'https://www.akeeba.com',
 				false, true
 			],
 			'Replace UTF8 with UTF8 in namespaced complex object' => [

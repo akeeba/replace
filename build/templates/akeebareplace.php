@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: ##PLUGINNAME##
-Plugin URI: https://www.akeebabackup.com
+Plugin URI: https://www.akeeba.com
 Description: Database mass content replace
 Version: ##VERSION##
 Author: Akeeba Ltd
-Author URI: https://www.akeebabackup.com
+Author URI: https://www.akeeba.com
 Network: true
 License: GPLv3
 */

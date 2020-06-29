@@ -62,14 +62,14 @@ serious typo which went unnoticed.
 
 = I have spotted a bug. Now what? =
 
-Please use [our Contact Us page](https://www.akeebabackup.com/contact-us.html) to file a bug report. Make sure that you
+Please use [our Contact Us page](https://www.akeeba.com/contact-us.html) to file a bug report. Make sure that you
 indicate "Bug report" in the Category selection. We will review your bug report and work to fix it. We may contact you
 for further information if necessary. If we don't contact you be assured that if you did report a bug we are already
 working on fixing it.
 
 = I have a problem using the plugin. What should I do? =
 
-The first thing you should do is [read our extensive documentation](https://www.akeebabackup.com/documentation/akeeba-solo.html). If you'd like to receive personalised support from the developers of the plugin you can [subscribe](https://www.akeebabackup.com/subscribe/new/backupwp.html?layout=default) to our services. Due to the very specialised nature of the software and our goal of providing exceptional support we do not outsource our support. All support requests are answered by the developers who write the software. This is why we require a subscription to provide support.
+The first thing you should do is [read our extensive documentation](https://www.akeeba.com/documentation/akeeba-solo.html). If you'd like to receive personalised support from the developers of the plugin you can [subscribe](https://www.akeeba.com/subscribe/new/backupwp.html?layout=default) to our services. Due to the very specialised nature of the software and our goal of providing exceptional support we do not outsource our support. All support requests are answered by the developers who write the software. This is why we require a subscription to provide support.
 
 = Does your software support WordPress MU (multi-sites a.k.a. blog networks)? =
 
