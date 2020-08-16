@@ -60,7 +60,11 @@ class Application
 		load_plugin_textdomain('akeebareplace', false, 'language');
 
 		// Catch out of date PHP versions
-		define('AKEEBA_COMMON_WRONGPHP', 1);
+		if (!defined('AKEEBA_COMMON_WRONGPHP'))
+		{
+			define('AKEEBA_COMMON_WRONGPHP', 1);
+		}
+
 		$minPHPVersion         = self::MINIMUM_PHP_VERSION;
 		$recommendedPHPVersion = '7.3';
 		$softwareName          = 'Akeeba Replace';
