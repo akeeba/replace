@@ -25,13 +25,28 @@ File sets
 		<exclude name="output/*.s*" />
 		<exclude name="output/*.l*" />
 
-        <!--Optional FEF assets-->
+		<!-- Do not copy over FEF media files for other platforms -->
+        <exclude name="fef/css/fef-joomla.*" />
+        <exclude name="fef/css/fef-standalone.*" />
+        <exclude name="fef/css/styleguide.*" />
+
+		<!-- Do not copy over FEF CSS map files -->
         <exclude name="fef/css/*.css.map" />
-        <exclude name="fef/css/*.min.css" />
+
+		<!-- Do not copy optional fonts -->
+		<exclude name="fef/fonts/Montserrat/**" />
         <exclude name="fef/fonts/Open_Sans/**" />
-        <exclude name="fef/fonts/Montserrat/**" />
-        <exclude name="fef/images/**" />
-        <exclude name="fef/js/**" />
+
+		<!-- Do not copy optional font formats -->
+		<exclude name="fef/fonts/*/*.eot" />
+		<exclude name="fef/fonts/*/*.svg" />
+		<exclude name="fef/fonts/*/*.ttf" />
+
+		<!-- Do not copy FEF image files -->
+		<exclude name="fef/images/**" />
+
+		<!-- Do not copy FEF JS files -->
+		<exclude name="fef/js/**" />
 	</fileset>
 
 	<!--
