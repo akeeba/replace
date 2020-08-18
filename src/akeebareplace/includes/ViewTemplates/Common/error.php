@@ -6,6 +6,8 @@
  */
 
 wp_enqueue_style('fef', plugins_url('/fef/css/fef-wordpress.min.css', AKEEBA_REPLACE_SELF), []);
+
+/** @var Exception $e */
 ?>
 <div class="akeeba-renderer-fef akeeba-wp">
 
@@ -18,9 +20,9 @@ wp_enqueue_style('fef', plugins_url('/fef/css/fef-wordpress.min.css', AKEEBA_REP
 
 		<h3>
 			<span class="akeeba-label--red">
-				<?php echo $e->getCode() ?>
+				<?= $e->getCode() ?>
 			</span>
-			 <?php echo $e->getMessage() ?>
+			 <?= $e->getMessage() ?>
 		</h3>
 		<p>
 			<?php _e('The error above occurred while we were trying to process your request.', 'akeebareplace') ?>
@@ -39,23 +41,23 @@ wp_enqueue_style('fef', plugins_url('/fef/css/fef-wordpress.min.css', AKEEBA_REP
 		<table class="akeeba-table--leftbold--striped">
 			<tr>
 				<td>Code</td>
-				<td><?php echo $e->getCode() ?></td>
+				<td><?= $e->getCode() ?></td>
 			</tr>
 			<tr>
 				<td>Message</td>
-				<td><?php echo $e->getMessage() ?></td>
+				<td><?= $e->getMessage() ?></td>
 			</tr>
 			<tr>
 				<td>Type</td>
-				<td><?php echo get_class($e) ?></td>
+				<td><?= get_class($e) ?></td>
 			</tr>
 			<tr>
 				<td>File</td>
-				<td><?php echo $e->getFile() ?></td>
+				<td><?= $e->getFile() ?></td>
 			</tr>
 			<tr>
 				<td>Line</td>
-				<td><?php echo $e->getLine() ?></td>
+				<td><?= $e->getLine() ?></td>
 			</tr>
 			<tr>
 				<td>Trace</td>

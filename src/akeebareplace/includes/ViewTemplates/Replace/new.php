@@ -22,12 +22,12 @@ wp_enqueue_script('akeebareplace-editor', plugins_url('/js/editor.js', AKEEBA_RE
 $subheading = __('Set up a replacement job', 'akeebareplace');
 ?>
 
-<?php echo $this->getRenderedTemplate('Common', 'header', '', ['subheading' => $subheading]); ?>
-<?php echo $this->getRenderedTemplate('Common', 'errorDialog'); ?>
+<?= $this->getRenderedTemplate('Common', 'header', '', ['subheading' => $subheading]); ?>
+<?= $this->getRenderedTemplate('Common', 'errorDialog'); ?>
 
 <form
         method="post"
-        action="<?php echo $this->actionURL ?>"
+        action="<?= $this->actionURL ?>"
         class="akeeba-form--horizontal">
 
 	<div id="akeebareplace-replace-description" class="akeeba-panel--information">
@@ -41,7 +41,7 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
 			<label for="akeebareplaceDescription">
 				<?php _e('Description', 'akeebareplace') ?>
 			</label>
-			<input name="description" id="akeebareplaceDescription" type="text" value="<?php echo htmlentities($this->configuration->getDescription()) ?>" />
+			<input name="description" id="akeebareplaceDescription" type="text" value="<?= htmlentities($this->configuration->getDescription()) ?>" />
 			<p class="akeeba-help-text">
 				<?php _e('Enter a description for the replacement you are making, e.g. &ldquo;Replacing productOne with productOne&trade; in all posts&rdquo;. This will be recorded for your future reference.', 'akeebareplace') ?>
 			</p>
@@ -60,13 +60,13 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
                 <label for="akeebareplaceTextboxFrom">
 				    <?php _e('Replace this', 'akeebareplace') ;?>
                 </label>
-                <textarea id="akeebareplaceTextboxFrom" aria-label="<?php _e('Replace this', 'akeebareplace') ?>" name="replace_from"><?php echo implode("\n", array_keys($replacements)) ?></textarea>
+                <textarea id="akeebareplaceTextboxFrom" aria-label="<?php _e('Replace this', 'akeebareplace') ?>" name="replace_from"><?= implode("\n", array_keys($replacements)) ?></textarea>
             </div>
             <div class="akeeba-form-group">
                 <label for="akeebareplaceTextboxTo">
 				    <?php _e('Replace with that', 'akeebareplace') ;?>
                 </label>
-                <textarea id="akeebareplaceTextboxTo" aria-label="<?php _e('Replace with that', 'akeebareplace') ?>" name="replace_to"><?php echo implode("\n", array_values($replacements)) ?></textarea>
+                <textarea id="akeebareplaceTextboxTo" aria-label="<?php _e('Replace with that', 'akeebareplace') ?>" name="replace_to"><?= implode("\n", array_values($replacements)) ?></textarea>
             </div>
 
         </div>
@@ -86,12 +86,12 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
 		        <?php _e('Show / hide advanced options', 'akeebabackup') ?>
 			</button>
 
-			<a href="<?php echo htmlentities($this->cancelURL) ?>" class="akeeba-btn--red">
+			<a href="<?= htmlentities($this->cancelURL) ?>" class="akeeba-btn--red">
 				<span class="akion-chevron-left"></span>
 		        <?php _e('Go back', 'akeebareplace') ?>
 			</a>
 
-			<a href="<?php echo $this->resetURL ?>" class="akeeba-btn--orange">
+			<a href="<?= $this->resetURL ?>" class="akeeba-btn--orange">
 				<span class="akion-android-refresh"></span>
 		        <?php _e('Reset', 'akeebabackup') ?>
 			</a>
@@ -131,7 +131,7 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
             <label for="akeebareplaceExcludeTables">
 	            <?php _e('Exclude these tables', 'akeebareplace') ?>
             </label>
-            <?php echo Form::selectExcludeTables('excludeTables', 'akeebareplaceExcludeTables', $this->configuration->getExcludeTables(), $this->configuration->isAllTables()) ?>
+            <?= Form::selectExcludeTables('excludeTables', 'akeebareplaceExcludeTables', $this->configuration->getExcludeTables(), $this->configuration->isAllTables()) ?>
             <p class="akeeba-help-text">
 		        <?php _e('Select which tables should not have their data replaced. Useful for very big log tables with no replaceable data such as those created by security and e-commerce plugins. Use CTRL-click (CMD-click on macOS) to select multiple tables.', 'akeebareplace') ?>
             </p>
@@ -162,7 +162,7 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
             <label for="akeebareplaceBatchSize">
 	            <?php _e('Maximum batch size', 'akeebareplace') ?>
             </label>
-            <input name="batchSize" id="akeebareplaceBatchSize" type="number" min="0" max="10000" value="<?php echo $this->configuration->getMaxBatchSize() ?>" />
+            <input name="batchSize" id="akeebareplaceBatchSize" type="number" min="0" max="10000" value="<?= $this->configuration->getMaxBatchSize() ?>" />
             <p class="akeeba-help-text">
 	            <?php _e('The maximum number of database rows to read at once. The bigger this number the faster the replacement is but the more memory it needs to run.', 'akeebareplace') ?>
             </p>
@@ -236,7 +236,7 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
             <label for="akeebareplaceExcludeRows">
 			    <?php _e('Exclude specific columns', 'akeebareplace') ?>
             </label>
-            <textarea id="akeebareplaceExcludeRows" name="excludeRows"><?php echo $this->excludedColumns ?></textarea>
+            <textarea id="akeebareplaceExcludeRows" name="excludeRows"><?= $this->excludedColumns ?></textarea>
             <p class="akeeba-help-text">
 		        <?php _e('Enter the name of specific table columns to exclude in the form tableName.columnName e.g. <code>wp_posts.guid</code>. Separate multiple table and column pairs with spaces, commas or new lines e.g. <code>wp_options.option_name, wp_posts.guid</code>.', 'akeebareplace') ?>
             </p>
@@ -259,7 +259,7 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
             <label for="akeebareplaceDatabaseCollation">
 			    <?php _e('Change the database collation', 'akeebareplace') ?>
             </label>
-            <?php echo Form::selectCollation('databaseCollation', 'akeebareplaceDatabaseCollation', $this->configuration->getDatabaseCollation()) ?>
+            <?= Form::selectCollation('databaseCollation', 'akeebareplaceDatabaseCollation', $this->configuration->getDatabaseCollation()) ?>
             <p class="akeeba-help-text">
 		        <?php _e('Change the default database collation. This only affects tables which will be created after this change takes place. It does not modify existing tables. It may not always work, depending on your database server type, database server version and the privileges your database user has on the database server.', 'akeebareplace') ?>
             </p>
@@ -271,7 +271,7 @@ $subheading = __('Set up a replacement job', 'akeebareplace');
             <label for="akeebareplaceTableCollation">
 			    <?php _e('Change the collation of existing tables', 'akeebareplace') ?>
             </label>
-	        <?php echo Form::selectCollation('tableCollation', 'akeebareplaceTableCollation', $this->configuration->getTableCollation()) ?>
+	        <?= Form::selectCollation('tableCollation', 'akeebareplaceTableCollation', $this->configuration->getTableCollation()) ?>
             <p class="akeeba-help-text">
 		        <?php _e('Change the collation of tables already present in the database. This will not affect tables which will be created after this change takes place. It may not always work, depending on the table structure, your database server type, database server version and the privileges your database user has on the database server.', 'akeebareplace') ?>
             </p>

@@ -37,7 +37,7 @@ $hasBackups = $this->configuration->getBackupSQLFile() != '';
 			<span class="akion-play"></span>
 			<?php _e('Continue', 'akeebareplace') ?>
 		</button>
-		<a href="<?php echo htmlentities($this->cancelURL) ?>" class="akeeba-btn--red">
+		<a href="<?= htmlentities($this->cancelURL) ?>" class="akeeba-btn--red">
 			<span class="akion-chevron-left"></span>
 			<?php _e('Go back', 'akeebareplace') ?>
 		</a>

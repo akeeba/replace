@@ -40,11 +40,11 @@ JS;
 wp_add_inline_script('akeebareplace-replace', $js);
 ?>
 
-<?php echo $this->getRenderedTemplate('Common', 'header'); ?>
-<?php echo $this->getRenderedTemplate('Common', 'errorDialog'); ?>
-<?php echo $this->getRenderedTemplate('', 'initial_confirmation'); ?>
-<?php echo $this->getRenderedTemplate('', 'progress'); ?>
-<?php echo $this->getRenderedTemplate('', 'complete'); ?>
-<?php echo $this->getRenderedTemplate('', 'warnings'); ?>
-<?php echo $this->getRenderedTemplate('', 'retry'); ?>
-<?php echo $this->getRenderedTemplate('', 'error'); ?>
+<?= $this->getRenderedTemplate('Common', 'header'); ?>
+<?= $this->getRenderedTemplate('Common', 'errorDialog'); ?>
+<?= $this->getRenderedTemplate('', 'initial_confirmation'); ?>
+<?= $this->getRenderedTemplate('', 'progress'); ?>
+<?= $this->getRenderedTemplate('', 'complete'); ?>
+<?= $this->getRenderedTemplate('', 'warnings'); ?>
+<?= $this->getRenderedTemplate('', 'retry'); ?>
+<?= $this->getRenderedTemplate('', 'error'); ?>

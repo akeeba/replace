@@ -38,11 +38,11 @@ $hasBackups = $this->configuration->getBackupSQLFile() != '';
 				<?php endif; ?>
 			</p>
 
-			<a class="akeeba-btn--primary--big" href="<?php echo htmlentities($this->manageURL) ?>">
+			<a class="akeeba-btn--primary--big" href="<?= htmlentities($this->manageURL) ?>">
 				<span class="akion-ios-list"></span>
 				<?php _e('Manage replacement jobs' ,'akeebareplace') ?>
 			</a>
-			<a class="akeeba-btn--grey" href="<?php echo htmlentities($this->logURL) ?>">
+			<a class="akeeba-btn--grey" href="<?= htmlentities($this->logURL) ?>">
 				<span class="akion-ios-search-strong"></span>
 				<?php _e('View the log file' ,'akeebareplace') ?>
 			</a>

@@ -19,7 +19,7 @@ function akeebaReplaceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 {
 	?>
 	<div class="alignleft actions bulkactions">
-		<select id="bulk-action-selector-<?php echo $topBottom ?>">
+		<select id="bulk-action-selector-<?= $topBottom ?>">
 			<option value="-1"><?php _e('Bulk Actions') ?></option>
 			<option value="delete"><?php _e('Delete', 'akeebareplace') ?></option>
 			<option value="deleteFiles"><?php _e('Delete Files', 'akeebareplace') ?></option>
@@ -29,15 +29,15 @@ function akeebaReplaceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 		</button>
 	</div>
 
-	<?php echo Form::pagination($that->total, $that->limitStart, null, $topBottom) ?>
+	<?= Form::pagination($that->total, $that->limitStart, null, $topBottom) ?>
 	<?php
 }
 
 ?>
 
-<?php echo $this->getRenderedTemplate('Common', 'header', '', ['subheading' => $subheading]); ?>
+<?= $this->getRenderedTemplate('Common', 'header', '', ['subheading' => $subheading]); ?>
 
-<?php echo $this->getRenderedTemplate('Common', 'phpversion_warning', '', [
+<?= $this->getRenderedTemplate('Common', 'phpversion_warning', '', [
 	'minPHPVersion'         => Application::MINIMUM_PHP_VERSION,
 	'recommendedPHPVersion' => Application::RECOMMENDED_PHP_VERSION,
 	'softwareName'          => 'Akeeba Replace',
@@ -45,7 +45,7 @@ function akeebaReplaceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 
 <span class="akeebareplace-inline-header-buttons">
 	<a class="akeeba-btn--green"
-	   href="<?php echo esc_url(WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&reset=1')) ?>">
+	   href="<?= esc_url(WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&reset=1')) ?>">
 		<?php _e('Add New') ?>
 	</a>
 </span>
@@ -58,7 +58,7 @@ function akeebaReplaceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 
 
 	<p class="search-box">
-		<input type="search" name="description" value="<?php echo $this->escape($this->filters['description']) ?>"
+		<input type="search" name="description" value="<?= $this->escape($this->filters['description']) ?>"
 			   placeholder="<?php _e('Description', 'akeebareplace') ?>"/>
 		<button type="submit" id="search-submit" class="akeeba-btn">
 			<span class="akion-ios-search"></span>
@@ -91,51 +91,51 @@ function akeebaReplaceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 			?>
 			<tr>
 				<td class="check-column">
-					<input id="cb-select-<?php echo $item->id ?>" type="checkbox" name="cb[]" value="<?php echo $item->id?>" />
+					<input id="cb-select-<?= $item->id ?>" type="checkbox" name="cb[]" value="<?= $item->id?>" />
 				</td>
-				<td><?php echo (int)$item->id ?></td>
+				<td><?= (int)$item->id ?></td>
 				<td>
-					<strong><?php echo $this->escape($item->description) ?></strong>
+					<strong><?= $this->escape($item->description) ?></strong>
 					<div class="row-actions">
 						<span>
-							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&id=' . $item->id) ?>">
+							<a href="<?= WordPress::adminUrl('admin.php?page=akeebareplace&view=Replace&id=' . $item->id) ?>">
 								<?php _e('Clone', 'akeebareplace') ?>
 							</a>
 						</span>
 						<?php if ($hasFiles): ?>
 						|
 						<span class="trash">
-							<a href="<?php echo wp_nonce_url(WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=deleteFiles&id=' . $item->id), 'get_Job_deleteFiles') ?>" class="submitdelete">
+							<a href="<?= wp_nonce_url(WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=deleteFiles&id=' . $item->id), 'get_Job_deleteFiles') ?>" class="submitdelete">
 								<?php _e('Delete Files', 'akeebareplace') ?>
 							</a>
 						</span>
 						<?php endif; ?>
 						|
 						<span class="trash">
-							<a href="<?php echo wp_nonce_url(WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=delete&id=' . $item->id), 'get_Job_delete') ?>" class="submitdelete">
+							<a href="<?= wp_nonce_url(WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=delete&id=' . $item->id), 'get_Job_delete') ?>" class="submitdelete">
 								<?php _e('Delete', 'akeebareplace') ?>
 							</a>
 						</span>
 						<?php if (!empty($recordFiles['log'])): ?>
 							|
-							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Log&id=' . $item->id) ?>">
+							<a href="<?= WordPress::adminUrl('admin.php?page=akeebareplace&view=Log&id=' . $item->id) ?>">
 								<?php _e('View log' ,'akeebareplace') ?>
 							</a>
 						<?php endif; ?>
 						<?php if (!empty($recordFiles['output'])): ?>
 							|
-							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=downloadOutput&id=' . $item->id) ?>">
+							<a href="<?= WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=downloadOutput&id=' . $item->id) ?>">
 								<?php _e('Download output SQL' ,'akeebareplace') ?>
 							</a>
 						<?php endif; ?>
 						<?php if (!empty($recordFiles['backup'])): ?>
 							|
-							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=downloadBackup&id=' . $item->id) ?>">
+							<a href="<?= WordPress::adminUrl('admin.php?page=akeebareplace&view=Job&task=downloadBackup&id=' . $item->id) ?>">
 								<?php _e('Download backup' ,'akeebareplace') ?>
 							</a>
 							<!--
 							|
-							<a href="<?php echo WordPress::adminUrl('admin.php?page=akeebareplace&view=Restore&id=' . $item->id) ?>">
+							<a href="<?= WordPress::adminUrl('admin.php?page=akeebareplace&view=Restore&id=' . $item->id) ?>">
 								<?php _e('Restore backup' ,'akeebareplace') ?>
 							</a>
 							-->
@@ -143,7 +143,7 @@ function akeebaReplaceJobDefault_renderHeaderFooter($that, $topBottom = 'top')
 
 					</div>
 				</td>
-				<td><?php echo $this->escape(Form::formatDate($item->run_on)) ?></td>
+				<td><?= $this->escape(Form::formatDate($item->run_on)) ?></td>
 			</tr>
 			<?php endforeach; ?>
 		<?php else: ?>
