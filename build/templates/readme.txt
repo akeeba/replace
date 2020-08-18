@@ -3,7 +3,7 @@ Contributors: nikosdion
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=10903325
 Tags: replace, migrate, move
 Requires at least: 3.8.0
-Tested up to: 4.9
+Tested up to: 5.5
 Requires PHP: 5.4
 Stable tag: ##VERSION##
 License: GPLv3 or later
@@ -79,7 +79,7 @@ Yes.
 
 Our software was written with the express purpose of handling serialized data gracefully.
 
-= WordPress has longed moved to UTF8MB4 (UTF-8 Multibyte). Do you support it? =
+= WordPress has long moved to UTF8MB4 (UTF-8 Multibyte). Do you support it? =
 
 Yes, of course.
 
