@@ -235,6 +235,13 @@ class ReplacementProvider
 				'https://www.reallynosuchplace.com',
 				true, true
 			],
+			// This is a **REAL WORLD** example from iTheme Security data stored in the wp_options table
+			'Single array with thousands of nested elements' => [
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_huge_data.txt'),
+				'http://www.nosuchplace.com',
+				'https://www.reallynosuchplace.com',
+				true, true
+			],
 		];
 	}
 
