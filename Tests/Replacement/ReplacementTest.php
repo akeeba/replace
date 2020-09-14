@@ -55,7 +55,12 @@ class ReplacementTest extends \PHPUnit_Framework_TestCase
 	public function testReplace($serialized, $from, $to, $identical, $isSerialized)
 	{
 		// Perform the replacement
+		$timeStart = microtime(true);
 		$new = Replacement::replace($serialized, $from, $to);
+		$timeEnd = microtime(true);
+		$elapsedTime = $timeEnd - $timeStart;
+
+		self::assertLessThan(10.0, $elapsedTime, "Replacements should not take too long");
 
 		// If no replacements are expected make sure that the two strings are identical
 		if ($identical)

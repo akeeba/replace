@@ -3,7 +3,7 @@
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
-.idea
+#.idea
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -85,3 +85,19 @@ Tests/report.txt
 Tests/_reports/**
 
 vendor
+.idea/.name
+.idea/Akeeba Replace.iml
+.idea/codeStyles/
+.idea/composerJson.xml
+.idea/copyright/
+.idea/dataSources.xml
+.idea/encodings.xml
+.idea/fileTemplates/
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/phing.xml
+.idea/php-test-framework.xml
+.idea/php.xml
+.idea/scopes/
+.idea/vcs.xml

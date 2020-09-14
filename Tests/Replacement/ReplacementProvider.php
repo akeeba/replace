@@ -63,8 +63,8 @@ class ReplacementProvider
 
 	public function testReplaceProvider()
 	{
-		// $serialized, $from, $to, $identical, $isSerialized
 		return [
+			// $serialized, $from, $to, $identical, $isSerialized
 			'Replace ASCII in plain text string' => [
 				'This is a test and all is well',
 				'This is a test',
@@ -90,6 +90,7 @@ class ReplacementProvider
 				true, false
 			],
 
+			// $serialized, $from, $to, $identical, $isSerialized
 			'Replacing in string which must not be detected as serialized' => [
 				's:yn:tax',
 				'yn',
@@ -103,6 +104,7 @@ class ReplacementProvider
 				false, false
 			],
 
+			// $serialized, $from, $to, $identical, $isSerialized
 			'Replace ASCII in array' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_array.txt'),
 				'This is a test',
@@ -153,6 +155,7 @@ class ReplacementProvider
 				false, true
 			],
 
+			// $serialized, $from, $to, $identical, $isSerialized
 			'Replace ASCII with ASCII in complex object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_complex_ascii.txt'),
 				'http://www.example.com',
@@ -178,7 +181,7 @@ class ReplacementProvider
 				false, true
 			],
 
-
+			// $serialized, $from, $to, $identical, $isSerialized
 			'Replace ASCII with ASCII in simple namespaced object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_simple_ascii.txt'),
 				'http://www.example.com',
@@ -204,6 +207,7 @@ class ReplacementProvider
 				false, true
 			],
 
+			// $serialized, $from, $to, $identical, $isSerialized
 			'Replace ASCII with ASCII in namespaced complex object' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_namespace_complex_ascii.txt'),
 				'http://www.example.com',
@@ -228,6 +232,8 @@ class ReplacementProvider
 				'https://www.παράδειγμα.com',
 				false, true
 			],
+
+			// $serialized, $from, $to, $identical, $isSerialized
 			// This is a **REAL WORLD** example from 27Collective's My Listing template. I have no words.
 			'Serialized data in a serialized string, no replacement' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_double.txt'),
@@ -235,12 +241,27 @@ class ReplacementProvider
 				'https://www.reallynosuchplace.com',
 				true, true
 			],
+
+			// $serialized, $from, $to, $identical, $isSerialized
 			// This is a **REAL WORLD** example from iTheme Security data stored in the wp_options table
-			'Single array with thousands of nested elements' => [
+
+			'iTS massive array, no match' => [
 				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_huge_data.txt'),
 				'http://www.nosuchplace.com',
 				'https://www.reallynosuchplace.com',
 				true, true
+			],
+			'iTS massive array, same-length match' => [
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_huge_data.txt'),
+				'core/lib/includes/function.login-header.php',
+				'foo/bar/baz/this/is/a/test/abcdefghijkl.php',
+				false, true
+			],
+			'iTS massive array, different-length match' => [
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_huge_data.txt'),
+				'core/lib/includes/',
+				'you/have/been/replaced/',
+				false, true
 			],
 		];
 	}

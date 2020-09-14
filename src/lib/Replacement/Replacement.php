@@ -25,11 +25,39 @@ class Replacement
 	 */
 	public static function replace($original, $from, $to, $regEx = false)
 	{
+		// Only run a replacement if the data seems to match our criteria (only works for PLAIN TEXT searches)
+		if (!$regEx && (strpos($original, $from) === false))
+		{
+			return $original;
+		}
+
+		/**
+		 * Special case: $from and $to are same-length.
+		 *
+		 * Even if I have serialized data I can use the MUCH faster plain text replacement. I only need to use the
+		 * computationally expensive serialised data replacement if the replacement is of a different length.
+		 */
+		if (!$regEx && (strlen($from) == strlen($to)))
+		{
+			return self::replacePlainText($original, $from, $to, $regEx);
+		}
+
+		// Serialised data
 		if (self::isSerialised($original))
 		{
+			// Columns over AKEEBA_REPLACE_MAXIMUM_COLUMN_SIZE (default: 1MB) use the faster, precarious replacement
+			$maxColumnSize = defined('AKEEBA_REPLACE_MAXIMUM_COLUMN_SIZE') ? AKEEBA_REPLACE_MAXIMUM_COLUMN_SIZE : 1048576;
+
+			if (!$regEx && (strlen($original) > $maxColumnSize))
+			{
+				return self::replaceSerializedPrecariously($original, $from, $to);
+			}
+
+			// Smaller serialized columns (or when we have a regex) use a much more robust, slower replacement
 			return self::replaceSerialized($original, $from, $to, $regEx);
 		}
 
+		// We do not have serialised data. Use a simple, plain text replacement.
 		return self::replacePlainText($original, $from, $to, $regEx);
 	}
 
@@ -107,6 +135,31 @@ class Replacement
 	}
 
 	/**
+	 * A VERY precarious serialized data replacement
+	 *
+	 * @param   string $serialized
+	 * @param   string $from
+	 * @param   string $to
+	 *
+	 * @return  string
+	 */
+	protected static function replaceSerializedPrecariously($serialized, $from, $to)
+	{
+		$pattern = '/s:(\d{1,}):\"(.*)\"/iU';
+
+		return preg_replace_callback($pattern, function ($matches) use ($from, $to) {
+			if (strpos($matches[0], $from) === false)
+			{
+				return $matches[0];
+			}
+
+			$replacement = str_replace($from, $to, $matches[2]);
+
+			return sprintf("s:%d:\"%s\"", strlen($replacement), $replacement);
+		}, $serialized);
+	}
+
+	/**
 	 * Replace data in a serialized string. Used internally.
 	 *
 	 * The simplest and fastest approach. We use regular expressions to split the serialized data at the serialized
@@ -160,7 +213,7 @@ class Replacement
 				? mb_strlen($content, 'ASCII')
 				: strlen($content);
 			// Reformat and append the new serialised string to the output string.
-			$ret       .= sprintf('s:%d:"%s"', $newLength, $content) . ';';
+			$ret .= sprintf('s:%d:"%s"', $newLength, $content) . ';';
 
 			// Treat memory kindly
 			unset($content);
