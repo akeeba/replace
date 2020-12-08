@@ -66,7 +66,7 @@ class Application
 		}
 
 		$minPHPVersion         = self::MINIMUM_PHP_VERSION;
-		$recommendedPHPVersion = '7.3';
+		$recommendedPHPVersion = '7.4';
 		$softwareName          = 'Akeeba Replace';
 
 		if (!require_once (dirname(AKEEBA_REPLACE_SELF) . '/includes/ViewTemplates/Common/wrongphp.php'))
