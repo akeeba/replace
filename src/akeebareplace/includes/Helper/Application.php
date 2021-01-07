@@ -19,12 +19,12 @@ class Application
 	/**
 	 * Minimum required PHP version for this plugin
 	 */
-	const MINIMUM_PHP_VERSION = '5.4.0';
+	const MINIMUM_PHP_VERSION = '5.6.0';
 
 	/**
 	 * Minimum recommended PHP version
 	 */
-	const RECOMMENDED_PHP_VERSION = '7.1.0';
+	const RECOMMENDED_PHP_VERSION = '7.4.0';
 
 	/**
 	 * A copy of the $_REQUEST superglobal before WordPress adds slashes all over its content...
