@@ -319,7 +319,7 @@ class FileWriter implements WriterInterface
 		}
 
 		$fileName = $this->getPartPath($this->numParts);
-		$this->fp = @fopen($fileName, 'at');
+		$this->fp = @fopen($fileName, 'a');
 
 		if ($this->fp === false)
 		{
