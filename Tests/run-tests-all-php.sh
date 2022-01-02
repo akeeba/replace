@@ -1,4 +1,10 @@
 #!/usr/bin/env sh
+##
+# @package   AkeebaReplace
+# @copyright Copyright (c)2018-2022 Nicholas K. Dionysopoulos / Akeeba Ltd
+# @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
+#
+
 # Akeeba Replace - Unit Tests
 #
 # This script runs the Unit Tests against all interesting versions of PHP and generates a report.
