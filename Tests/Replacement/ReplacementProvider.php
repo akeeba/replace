@@ -243,6 +243,15 @@ class ReplacementProvider
 			],
 
 			// $serialized, $from, $to, $identical, $isSerialized
+			// This is a **REAL WORLD** example.
+			'Serialized data in a serialized string, with replacements' => [
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/serialized_double_2.txt'),
+				'https://nls-check.com',
+				'https://akeeba.nls-check.com',
+				false, true
+			],
+
+			// $serialized, $from, $to, $identical, $isSerialized
 			// This is a **REAL WORLD** example from iTheme Security data stored in the wp_options table
 
 			'iTS massive array, no match' => [
