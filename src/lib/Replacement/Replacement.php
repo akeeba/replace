@@ -93,7 +93,7 @@ class Replacement
 		}
 
 		// Do we have a semicolon to denote the object length?
-		$semicolonPos = strpos($string, ':', 3);
+		$semicolonPos = strpos($string, ':', 1);
 
 		if ($semicolonPos === false)
 		{

@@ -1,0 +1,1 @@
+s:208:"a:4:{s:7:"favicon";s:97:"https://nls-check.com.w01a32c2.kasserver.com/wp-content/plugins/responsive-coming-soon/img/wp.png";s:10:"meta_title";s:11:"Coming Soon";s:9:"meta_desc";s:0:"";s:9:"google_al";s:0:"";}";
