@@ -13,6 +13,129 @@ namespace Akeeba\Replace\Replacement;
 class Replacement
 {
 	/**
+	 * Does this string look like PHP serialised data? Please note that this is a quick pre-test. It's not 100% correct
+	 * but it should work in all significant real-world cases.
+	 *
+	 * @param   string  $string  The string to test
+	 *
+	 * @return  boolean  True if it looks like serialised data
+	 */
+	public static function isSerialised($string)
+	{
+		/**
+		 * Scalar values.
+		 *
+		 * s: String
+		 * i: Integer
+		 * b: Boolean
+		 * d: Decimal (float)
+		 * r: Backreference (https://wiki.php.net/rfc/custom_object_serialization). Not a scalar but always stores an
+		 *    int, so for our purposes it can be treated as a scalar.
+		 */
+		$scalar     = ['s:', 'i:', 'b:', 'd:', 'r:'];
+		/**
+		 * Structured values are the different representation of arrays and objects.
+		 *
+		 * a: Array
+		 * O: Object which is NOT implementing the Serializable interface
+		 * C: Object implementing Serializable stored in C format (https://wiki.php.net/rfc/custom_object_serialization)
+		 */
+		$structured = ['a:', 'O:', 'C:'];
+
+		// Is it null?
+		if ($string == 'N;')
+		{
+			return true;
+		}
+
+		// Is it scalar?
+		if (in_array(substr($string, 0, 2), $scalar))
+		{
+			return substr($string, -1) == ';';
+		}
+
+		// Is it structured?
+		if (!in_array(substr($string, 0, 2), $structured))
+		{
+			return false;
+		}
+
+		// Do we have a semicolon to denote the object length?
+		$semicolonPos = strpos($string, ':', 1);
+
+		if ($semicolonPos === false)
+		{
+			return false;
+		}
+
+		// Do we have another semicolon afterwards?
+		$secondPos = strpos($string, ':', $semicolonPos + 1);
+
+		if ($secondPos === false)
+		{
+			return false;
+		}
+
+		// Is the length an integer?
+		$length    = substr($string, $semicolonPos + 1, $secondPos - $semicolonPos - 1);
+		$intLength = intval($length);
+
+		if ((string) ($intLength) !== $length)
+		{
+			return false;
+		}
+
+		// You cannot have negative data lengths!
+		if ($intLength < 0)
+		{
+			return false;
+		}
+
+		/**
+		 * Just checking if the length is an integer is not enough. See the test cases 'Not object' and 'Not array'
+		 * where we have something that looks like serialised data BUT the very next character renders it invalid.
+		 *
+		 * This is what we check here. The very next character after the length and colon.
+		 *
+		 * Notes on why even empty objects and arrays still have a character afterwards:
+		 *
+		 * - Null objects still have a non-zero length after the `O:` because this is followed by the class name. For
+		 *   example, a serialised empty stdClass looks like this:  O:8:"stdClass":0:{}
+		 * - Empty arrays look like this: a:0:{}  Therefore they have a character after the second colon.
+		 */
+		$oType            = substr($string, $semicolonPos - 1, 1);
+		$afterSecondColon = (strlen($string) > $secondPos)
+			? substr($string, $secondPos + 1, 1)
+			: null;
+
+		switch ($oType)
+		{
+			// Object, Class: after the second colon I need double quotes (classname)
+			// String: after the second colon I need double quotes (literal string)
+			case 'O':
+			case 'C':
+			case 's':
+				return $afterSecondColon === '"';
+
+			// Array: after the second colon I need an opening curly brace
+			case 'a':
+				return $afterSecondColon === '{';
+
+			// Integer, float: numeric or negative sign
+			case 'i':
+			case 'd':
+				return in_array($afterSecondColon, ['0','1','2','3','4','5','6','7','8','9','-'], true);
+
+			// Anything else CAN NOT have two colons!
+			default:
+				return false;
+		}
+
+		/** @noinspection PhpUnreachableStatementInspection This is to prevent future bugs if we refactor this method */
+		return false;
+	}
+
+	/**
 	 * Replace data in a plain text or a serialized string. We automatically detect if the string looks like serialized
 	 * data.
 	 *
@@ -62,59 +185,6 @@ class Replacement
 	}
 
 	/**
-	 * Does this string look like PHP serialised data? Please note that this is a quick pre-test. It's not 100% correct
-	 * but it should work in all significant real-world cases.
-	 *
-	 * @param   string  $string  The string to test
-	 *
-	 * @return  boolean  True if it looks like serialised data
-	 */
-	public static function isSerialised($string)
-	{
-		$scalar     = ['s:', 'i:', 'b:', 'd:', 'r:'];
-		$structured = ['a:', 'O:', 'C:'];
-
-		// Is it null?
-		if ($string == 'N;')
-		{
-			return true;
-		}
-
-		// Is it scalar?
-		if (in_array(substr($string, 0, 2), $scalar))
-		{
-			return substr($string, -1) == ';';
-		}
-
-		// Is it structured?
-		if (!in_array(substr($string, 0, 2), $structured))
-		{
-			return false;
-		}
-
-		// Do we have a semicolon to denote the object length?
-		$semicolonPos = strpos($string, ':', 1);
-
-		if ($semicolonPos === false)
-		{
-			return false;
-		}
-
-		// Do we have another semicolon afterwards?
-		$secondPos = strpos($string, ':', $semicolonPos + 1);
-
-		if ($secondPos === false)
-		{
-			return false;
-		}
-
-		// Is the length an integer?
-		$length = substr($string, $semicolonPos + 1, $secondPos - $semicolonPos - 1);
-
-		return (int) $length == $length;
-	}
-
-	/**
 	 * Replace data in a plain text string. Used internally.
 	 *
 	 * @param   string  $original  The data to replace into
@@ -132,31 +202,6 @@ class Replacement
 		}
 
 		return preg_replace($from, $to, $original);
-	}
-
-	/**
-	 * A VERY precarious serialized data replacement
-	 *
-	 * @param   string $serialized
-	 * @param   string $from
-	 * @param   string $to
-	 *
-	 * @return  string
-	 */
-	protected static function replaceSerializedPrecariously($serialized, $from, $to)
-	{
-		$pattern = '/s:(\d{1,}):\"(.*)\"/iU';
-
-		return preg_replace_callback($pattern, function ($matches) use ($from, $to) {
-			if (strpos($matches[0], $from) === false)
-			{
-				return $matches[0];
-			}
-
-			$replacement = str_replace($from, $to, $matches[2]);
-
-			return sprintf("s:%d:\"%s\"", strlen($replacement), $replacement);
-		}, $serialized);
 	}
 
 	/**
@@ -226,6 +271,31 @@ class Replacement
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * A VERY precarious serialized data replacement
+	 *
+	 * @param   string  $serialized
+	 * @param   string  $from
+	 * @param   string  $to
+	 *
+	 * @return  string
+	 */
+	protected static function replaceSerializedPrecariously($serialized, $from, $to)
+	{
+		$pattern = '/s:(\d{1,}):\"(.*)\"/iU';
+
+		return preg_replace_callback($pattern, function ($matches) use ($from, $to) {
+			if (strpos($matches[0], $from) === false)
+			{
+				return $matches[0];
+			}
+
+			$replacement = str_replace($from, $to, $matches[2]);
+
+			return sprintf("s:%d:\"%s\"", strlen($replacement), $replacement);
+		}, $serialized);
 	}
 
 }
