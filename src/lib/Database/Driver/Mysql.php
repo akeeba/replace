@@ -138,6 +138,11 @@ class Mysql extends Mysqli
 	{
 		$this->connect();
 
+		if (is_null($text))
+		{
+			return 'NULL';
+		}
+
 		$result = mysql_real_escape_string($text, $this->getConnection());
 
 		if ($extra)

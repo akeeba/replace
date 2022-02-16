@@ -203,6 +203,11 @@ class Mysqli extends Driver
 	{
 		$this->connect();
 
+		if (is_null($text))
+		{
+			return 'NULL';
+		}
+
 		$result = mysqli_real_escape_string($this->connection, $text);
 
 		if ($extra)

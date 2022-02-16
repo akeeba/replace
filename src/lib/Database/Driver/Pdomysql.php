@@ -392,7 +392,12 @@ class Pdomysql extends Pdo
             return $text;
         }
 
-        $result = substr($this->connection->quote($text), 1, -1);
+	    if (is_null($text))
+	    {
+		    return 'NULL';
+	    }
+
+		$result = substr($this->connection->quote($text), 1, -1);
 
         if ($extra)
         {
