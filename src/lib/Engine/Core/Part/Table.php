@@ -282,6 +282,11 @@ class Table extends AbstractPart implements
 		$isRegularExpressions = $this->getConfig()->isRegularExpressions();
 		$liveMode             = $this->getConfig()->isLiveMode();
 
+		if ($liveMode)
+		{
+			$db->transactionStart();
+		}
+
 		// Iterate every row as long as we have enough time.
 		while (($timer->getTimeLeft() > 0.01) && ($row = $queryDb->fetchAssoc($cursor)))
 		{
@@ -295,6 +300,11 @@ class Table extends AbstractPart implements
 
 			// Be kind to the memory
 			unset($response);
+		}
+
+		if ($liveMode)
+		{
+			$db->transactionCommit();
 		}
 
 		unset($queryDb);
