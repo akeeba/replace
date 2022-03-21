@@ -216,6 +216,13 @@ class Table extends AbstractPart implements
 		// Log columns to replace
 		$this->getLogger()->debug(sprintf('Table %s replaceable columns: %s', $this->tableMeta->getName(), implode(', ', $this->replaceableColumns)));
 
+		// Do I have any replaceable data?
+		if (!$this->hasReplaceableRows())
+		{
+			$this->getLogger()->info(sprintf('Skipping table %s -- There are no rows which have any data I can replace.', $this->tableMeta->getName()));
+			$this->state = PartInterface::STATE_POSTRUN;
+		}
+
 		// Determine optimal batch size
 		$memoryLimit      = $this->memoryInfo->getMemoryLimit();
 		$usedMemory       = $this->memoryInfo->getMemoryUsage();
@@ -717,5 +724,57 @@ class Table extends AbstractPart implements
 		unset($backupSQL);
 
 		return $response;
+	}
+
+	/**
+	 * Check whether the table has any rows with data which can be replaced.
+	 *
+	 * @return  bool
+	 */
+	private function hasReplaceableRows()
+	{
+		$replacements         = $this->getConfig()->getReplacements();
+		$isRegularExpressions = $this->getConfig()->isRegularExpressions();
+
+		if (empty($replacements))
+		{
+			return false;
+		}
+
+		if (empty($this->replaceableColumns))
+		{
+			return true;
+		}
+
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true)
+			->select('COUNT(*)')
+			->from($this->db->quoteName($this->tableMeta->getName()));
+
+		foreach ($replacements as $from => $to)
+		{
+			foreach ($this->replaceableColumns as $column)
+			{
+				if ($isRegularExpressions)
+				{
+					$query->where('REGEXP_LIKE(' . $db->quoteName($column) . ',' . $db->quote($from) . ')', 'OR');
+				}
+				else
+				{
+					$query->where($db->quoteName($column) . ' LIKE ' . $db->quote('%' . $from . '%'), 'OR');
+				}
+			}
+		}
+
+		try
+		{
+			$numRows = $db->setQuery($query, 0, 1)->loadResult();
+
+			return $numRows > 0;
+		}
+		catch (\Exception $e)
+		{
+			return true;
+		}
 	}
 }
