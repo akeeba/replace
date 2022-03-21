@@ -191,8 +191,10 @@ class Table extends AbstractPart implements
 		$this->columnsMeta = $this->getDbo()->getColumnsMeta($this->tableMeta->getName());
 
 		// Run once-per-table callbacks.
-		$this->runPerTableActions($this->perTableActions, $this->tableMeta, $this->columnsMeta, $this->getLogger(),
-			$this->getOutputWriter(), $this->getBackupWriter(), $this->getDbo(), $this->getConfig());
+		$this->runPerTableActions(
+			$this->perTableActions, $this->tableMeta, $this->columnsMeta, $this->getLogger(),
+			$this->getOutputWriter(), $this->getBackupWriter(), $this->getDbo(), $this->getConfig()
+		);
 
 		$this->getLogger()->debug('Filtering the columns list');
 		$this->replaceableColumns = $this->applyFilters($this->tableMeta, $this->columnsMeta, $this->filters);
@@ -242,8 +244,12 @@ class Table extends AbstractPart implements
 		// Log the next step
 		$tableName = $this->tableMeta->getName();
 
-		$this->logger->info(sprintf("Processing up to %d rows of table %s starting with row %d",
-			$this->batch, $tableName, $this->offset + 1));
+		$this->logger->info(
+			sprintf(
+				"Processing up to %d rows of table %s starting with row %d",
+				$this->batch, $tableName, $this->offset + 1
+			)
+		);
 
 		/**
 		 * Get the next batch of rows
@@ -349,7 +355,7 @@ class Table extends AbstractPart implements
 			}
 
 			/** @var FilterInterface $o */
-			$o = new $class($this->getLogger(), $this->getDbo(), $this->getConfig());
+			$o          = new $class($this->getLogger(), $this->getDbo(), $this->getConfig());
 			$allColumns = $o->filter($tableMeta, $allColumns);
 		}
 
@@ -446,7 +452,7 @@ class Table extends AbstractPart implements
 		}
 
 		// The memory available for manipulating data is less than the free memory. The 0.75 factor is empirical.
-		$memoryLeft  = 0.75 * ($memoryLimit - $usedMemory);
+		$memoryLeft = 0.75 * ($memoryLimit - $usedMemory);
 
 		// This should never happen. I will return the default batch size and brace for impact: crash imminent!
 		if ($memoryLeft <= 0)
@@ -467,7 +473,7 @@ class Table extends AbstractPart implements
 	 *
 	 * We are returning whatever we find first: a primary key, a unique key, all columns listed
 	 *
-	 * @param   Column[] $columns
+	 * @param   Column[]  $columns
 	 *
 	 * @return  string[]
 	 */
@@ -598,8 +604,8 @@ class Table extends AbstractPart implements
 
 		// Get the base query
 		$query = $db->getQuery(true)
-			->select($columns)
-			->from($db->qn($this->tableMeta->getName()));
+		            ->select($columns)
+		            ->from($db->qn($this->tableMeta->getName()));
 
 		// If we have an auto-increment column sort by it ascending (maintains consistency)
 		if (!empty($this->autoIncrementColumn))
@@ -623,8 +629,10 @@ class Table extends AbstractPart implements
 	 *
 	 * @return  SQL
 	 */
-	protected function processRow($tableName, array $row, array $replaceableColumns, array $pkColumns,
-	                              array $replacements, $isRegularExpressions, Driver $db)
+	protected function processRow(
+		$tableName, array $row, array $replaceableColumns, array $pkColumns,
+		array $replacements, $isRegularExpressions, Driver $db
+	)
 	{
 		// Apply row filtering
 		if (!$this->applyRowFilters($tableName, $row, $this->rowFilters))
@@ -634,7 +642,7 @@ class Table extends AbstractPart implements
 
 			foreach ($pkColumns as $c)
 			{
-				$v = addcslashes($row[$c], "\\'");
+				$v     = addcslashes($row[$c], "\\'");
 				$pkSig = "$c = '$v' ,";
 			}
 
@@ -705,7 +713,8 @@ class Table extends AbstractPart implements
 		unset($newRow);
 
 		// Generate backup SQL
-		$backupSQL = sprintf($backupSQLProto,
+		$backupSQL = sprintf(
+			$backupSQLProto,
 			implode(', ', $backupSet),
 			'(' . implode(') AND (', $backupWhere) . ')'
 		);
@@ -716,7 +725,8 @@ class Table extends AbstractPart implements
 		unset($backupWhere);
 
 		// Generate output SQL
-		$outputSQL = sprintf($outputSQLProto,
+		$outputSQL = sprintf(
+			$outputSQLProto,
 			implode(', ', $outputSet),
 			'(' . implode(') AND (', $outputWhere) . ')'
 		);
