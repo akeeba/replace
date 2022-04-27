@@ -272,6 +272,15 @@ class ReplacementProvider
 				'you/have/been/replaced/',
 				false, true
 			],
+
+			// $serialized, $from, $to, $identical, $isSerialized
+			// This is a **REAL WORLD** example from WP Bakery Page Builder
+			'html_encoded site URL' => [
+				file_get_contents(AKEEBA_TEST_ROOT . '/_data/html_encoded.txt'),
+				'https%3A%2F%2Fmijnvitaliteit.nl',
+				'http%3A%2F%2Fwww.example.com',
+				false, false
+			],
 		];
 	}
 
