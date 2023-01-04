@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   AkeebaReplace
- * @copyright Copyright (c)2018-2022 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @copyright Copyright (c)2018-2023 Nicholas K. Dionysopoulos / Akeeba Ltd
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL v3 or later
  */
 
