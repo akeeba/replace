@@ -14,6 +14,11 @@ namespace Akeeba\Replace\Engine\Core\Filter\Row;
  */
 class WordPressOptions extends AbstractFilter
 {
+	private $whiteListOptionNames = [
+		// WordPress 6.3: Core blocks CSS files
+		'_transient_wp_core_block_css_files',
+	];
+
 	/**
 	 * Check whether the table row should be processed or not
 	 *
@@ -31,6 +36,18 @@ class WordPressOptions extends AbstractFilter
 		}
 
 		$name = $row['option_name'];
+
+		// Explicitly allow replacements on some transient options
+		if (in_array($name, $this->whiteListOptionNames))
+		{
+			return true;
+		}
+
+		// Explicitly allow replacements on block patterns' transients
+		if (strpos($name, '_site_transient_wp_remote_block_patterns_') !== false)
+		{
+			return true;
+		}
 
 		// Do not replace data in the field used to temporarily store the engine cache
 		if ($name === 'akeebareplace_engine_cache')
